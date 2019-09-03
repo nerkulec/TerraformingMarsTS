@@ -1,0 +1,1 @@
+let cardsList: Card[] = [];
