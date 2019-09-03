@@ -1,13 +1,13 @@
 enum ResourceType{
-    Megacredit,
-    Steel,
-    Titanium,
-    Plant,
-    Energy,
-    Heat
+    megacredit,
+    steel,
+    titanium,
+    plant,
+    energy,
+    heat
 }
 
 class Resource{
-    constructor(public type: ResourceType, public amount: number){
+    constructor(public type: ResourceType, public amount: number = 1){
     }
 }

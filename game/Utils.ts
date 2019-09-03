@@ -1,9 +1,10 @@
 
-let remove = (arr: any[], elem: any): void => {
+function remove<T>(arr: T[], elem: T): T {
     let index = arr.indexOf(elem);
     if(index > -1){
-        arr.splice(index, 1)
+        return arr.splice(index, 1)[0];
     }
+    throw Error("Element not in array");
 }
 
 let shuffle = (a: any[]): void => {

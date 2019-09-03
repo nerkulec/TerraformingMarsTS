@@ -2,6 +2,8 @@ class Game{
     deck: Card[] = cardsList.slice();
     discardedCards: Card[] = [];
 
+    players: Player[] = [];
+
     constructor(){
         shuffle(this.deck);
     }

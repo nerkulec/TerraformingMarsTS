@@ -1,14 +1,19 @@
 class Player{
     cardBuyPrice: number = 3;
-
     playedCards: Card[] = [];
     hand: Card[] = [];
     cardsToBuy: Card[] = [];
+    costReducingCards: CostReducing[] = [];
+    effectCards: OnCardPlayed[] = [];
 
+    terraformingRating: number = 20;
     resources: Map<ResourceType, number> = new Map<ResourceType, number>();
     production: Map<ResourceType, number> = new Map<ResourceType, number>();
+    collectedTags: Map<Tag, number> = new Map<Tag, number>();
+    steelWorth: number = 2;
+    titaniumWorth: number = 3;
 
-    constructor(private game: Game){
+    constructor(private game: Game, private messenger: Messenger){
     }
 
     getResource = (type: ResourceType): number => this.resources.get(type) || 0;
@@ -16,19 +21,36 @@ class Player{
     addResource = (resource: Resource): void => this.changeResource(resource.type, resource.amount);
     getProduction = (type: ResourceType): number => this.production.get(type) || 0;
     changeProduction = (type: ResourceType, amount: number): void => {this.production.set(type, this.getProduction(type)+amount)};
-    payMoney = (amount: number): void => this.changeResource(ResourceType.Megacredit, -amount);
+    payMoney = (amount: number): void => this.changeResource(ResourceType.megacredit, -amount);
 
-    cardBuyAmount = (): number => Math.max(4, Math.floor(this.getResource(ResourceType.Megacredit)/this.cardBuyPrice));
+    cardBuyAmount = (): number => Math.max(4, Math.floor(this.getResource(ResourceType.megacredit)/this.cardBuyPrice));
+
+    addCostReducingCard = (card: CostReducing): void => {this.costReducingCards.push(card)};
+    addEffectCard = (card: OnCardPlayed): void => {this.effectCards.push(card)};
+
+    getNumTags = (tag: Tag): number => this.collectedTags.get(tag) || 0;
+    addTag = (tag: Tag): void => {this.collectedTags.set(tag, this.getNumTags(tag))};
+    addTags = (tags: Tag[]): void => tags.forEach((tag: Tag) => this.addTag(tag));
+
+    costReduction = (card: Card): number => this.costReducingCards.reduce((acc, crCard) => acc+crCard.reduceCost(card), 0);
 
     drawToBuy = (n: number): void => {this.cardsToBuy = this.game.draw(n)};
     draw = (n: number): void => {this.hand = this.hand.concat(this.game.draw(n))};
-
-
     buy = (cards: Card[]): void => {
         this.payMoney(this.cardBuyPrice*cards.length);
-        for(const card of cards){
-            remove(this.cardsToBuy, card);
-            this.hand.push(card);
-        }
+        cards.forEach((card: Card) => this.hand.push(remove(this.cardsToBuy, card)));
     }
+    playFromHand = (card: Card): void => {this.playedCards.push(remove(this.hand, card))};
+    onCardPlayed = (card: Card): void => this.effectCards.forEach((effectCard) => effectCard.onCardPlayed(card));
+    request = (request: ActionRequest): void => {
+        this.messenger.request(request);
+    }
+}
+
+enum Color{
+    blue,
+    green,
+    yellow,
+    red,
+    gray
 }
