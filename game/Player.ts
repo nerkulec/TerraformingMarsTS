@@ -4,7 +4,8 @@ class Player{
     hand: Card[] = [];
     cardsToBuy: Card[] = [];
     costReducingCards: CostReducing[] = [];
-    effectCards: OnCardPlayed[] = [];
+    onTagCards: OnTagPlayed[] = [];
+    onEffectCards: OnEffectPlayed[] = [];
 
     terraformingRating: number = 20;
     resources: Map<ResourceType, number> = new Map<ResourceType, number>();
@@ -26,7 +27,8 @@ class Player{
     cardBuyAmount = (): number => Math.max(4, Math.floor(this.getResource(ResourceType.megacredit)/this.cardBuyPrice));
 
     addCostReducingCard = (card: CostReducing): void => {this.costReducingCards.push(card)};
-    addEffectCard = (card: OnCardPlayed): void => {this.effectCards.push(card)};
+    addOnTagCard = (card: OnTagPlayed): void => {this.onTagCards.push(card)};
+    addOnEffectCard = (card: OnEffectPlayed): void => {this.onEffectCards.push(card)};
 
     getNumTags = (tag: Tag): number => this.collectedTags.get(tag) || 0;
     addTag = (tag: Tag): void => {this.collectedTags.set(tag, this.getNumTags(tag))};
@@ -41,7 +43,8 @@ class Player{
         cards.forEach((card: Card) => this.hand.push(remove(this.cardsToBuy, card)));
     }
     playFromHand = (card: Card): void => {this.playedCards.push(remove(this.hand, card))};
-    onCardPlayed = (card: Card): void => this.effectCards.forEach((effectCard) => effectCard.onCardPlayed(card));
+    onTagPlayed = (card: Card): void => this.onTagCards.forEach((tagCard) => tagCard.onTagPlayed(card));
+    onEffectPlayed = (effect: GlobalEffect): void => this.onEffectCards.forEach((effectCard) => effectCard.onEffectPlayed(effect));
     request = (request: ActionRequest): void => {
         this.messenger.request(request);
     }

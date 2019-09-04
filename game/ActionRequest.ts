@@ -6,6 +6,13 @@ enum ActionType{
     PlaceHex
 }
 
-interface ActionRequest{
-    type: ActionType;
+abstract class ActionRequest{
+    constructor(private type: ActionType){
+    }
+}
+
+class SplitPayment extends ActionRequest{
+    constructor(private cost: number, private tags: Tag[]){
+        super(ActionType.SplitPayment);
+    }
 }
