@@ -1,7 +1,7 @@
 abstract class Award{
     abstract getPoints: (player: Player) => number;
 
-    assignPoints = (game: Game): Map<Player, number> => {
+    assignPoints(game: Game): Map<Player, number> {
         let standings: Player[] = game.players.slice();
         standings.sort((a, b) => this.getPoints(b)-this.getPoints(a));
         let pointAssignment: Map<Player, number> = new Map<Player, number>();
@@ -33,5 +33,5 @@ abstract class Award{
 }
 
 class Banker extends Award{
-    getPoints = (player: Player): number => player.getProduction(ResourceType.Megacredit);
+    getPoints = (player: Player): number => player.getProduction(ResourceType.megacredit);
 }

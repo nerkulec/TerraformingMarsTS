@@ -13,5 +13,5 @@ abstract class Board{
     constructor(public game: Game){
     }
 
-    getHexByCoords = (x: number, y: number): Hex => this.hexes[x][y];
+    getHex = (x: number, y: number): Hex => this.hexes[x][y];
 }

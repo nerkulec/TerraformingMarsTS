@@ -8,7 +8,7 @@ class Game{
         shuffle(this.deck);
     }
 
-    draw = (n: number): Card[] => {
+    draw(n: number): Card[] {
         let cards: Card[] = [];
         let amount: number = Math.min(n, this.deck.length);
         cards = this.deck.splice(this.deck.length-amount, amount);

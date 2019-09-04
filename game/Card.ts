@@ -33,7 +33,7 @@ abstract class Card{
     enemyProduction: Resource[] = [];
 
     hasTag = (tag: Tag): boolean => this.tags.includes(tag);
-    playable = (player: Player, board: Board): boolean => {
+    playable(player: Player, board: Board): boolean{
         if(!this.resources.every((res) => player.getResource(res.type)+res.amount >= 0)) {
             return false;
         }
@@ -53,7 +53,7 @@ abstract class Card{
         return this.requirement === undefined || this.requirement.satisfied(player, board); 
     }
 
-    pay = (player: Player): void => {
+    pay(player: Player): void{
         let tempCost: number = this.cost;
         tempCost -= player.costReduction(this);
         if(this.tags.includes(Tag.building) || this.tags.includes(Tag.space)){
@@ -108,7 +108,7 @@ abstract class Card{
 
 
 abstract class OnTagPlayed extends Card{
-    abstract onTagPlayed: (card: Card) => void;
+    abstract onTagPlayed(card: Card): void;
     play(player: Player, board: Board): void{
         player.addOnTagCard(this);
         super.play(player, board);
@@ -116,7 +116,7 @@ abstract class OnTagPlayed extends Card{
 }
 
 abstract class OnEffectPlayed extends Card{
-    abstract onEffectPlayed: (effect: GlobalEffect) => void;
+    abstract onEffectPlayed(effect: GlobalEffect): void;
     play(player: Player, board: Board): void{
         player.addOnEffectCard(this);
         super.play(player, board);
@@ -124,7 +124,7 @@ abstract class OnEffectPlayed extends Card{
 }
 
 abstract class CostReducing extends Card{
-    abstract reduceCost: (card: Card) => number;
+    abstract reduceCost(card: Card): number;
     play(player: Player, board: Board): void{
         player.addCostReducingCard(this);
         super.play(player, board);

@@ -11,7 +11,7 @@ abstract class TerraformingMarker{
         this.level = min;
     }
 
-    increment = (player: Player, times: number = 1): void => {
+    increment(player: Player, times: number = 1): void {
         for(let i=0; i<times; i++){
             if(this.level<this.max){
                 this.level += this.step;

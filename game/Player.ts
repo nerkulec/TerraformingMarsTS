@@ -38,14 +38,14 @@ class Player{
 
     drawToBuy = (n: number): void => {this.cardsToBuy = this.game.draw(n)};
     draw = (n: number): void => {this.hand = this.hand.concat(this.game.draw(n))};
-    buy = (cards: Card[]): void => {
+    buy(cards: Card[]): void{
         this.payMoney(this.cardBuyPrice*cards.length);
         cards.forEach((card: Card) => this.hand.push(remove(this.cardsToBuy, card)));
     }
     playFromHand = (card: Card): void => {this.playedCards.push(remove(this.hand, card))};
     onTagPlayed = (card: Card): void => this.onTagCards.forEach((tagCard) => tagCard.onTagPlayed(card));
     onEffectPlayed = (effect: GlobalEffect): void => this.onEffectCards.forEach((effectCard) => effectCard.onEffectPlayed(effect));
-    request = (request: ActionRequest): void => {
+    request(request: ActionRequest): void {
         this.messenger.request(request);
     }
 }
