@@ -7,7 +7,7 @@ function remove<T>(arr: T[], elem: T): T {
     throw Error("Element not in array");
 }
 
-let shuffle(a: any[]): void {
+function shuffle(a: any[]): void {
     for (let i = a.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         const x = a[i];

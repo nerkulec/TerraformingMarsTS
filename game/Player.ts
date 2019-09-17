@@ -22,9 +22,9 @@ class Player{
     addResource = (resource: Resource): void => this.changeResource(resource.type, resource.amount);
     getProduction = (type: ResourceType): number => this.production.get(type) || 0;
     changeProduction = (type: ResourceType, amount: number): void => {this.production.set(type, this.getProduction(type)+amount)};
-    payMoney = (amount: number): void => this.changeResource(ResourceType.megacredit, -amount);
+    payMoney = (amount: number): void => this.changeResource("megacredit", -amount);
 
-    cardBuyAmount = (): number => Math.max(4, Math.floor(this.getResource(ResourceType.megacredit)/this.cardBuyPrice));
+    cardBuyAmount = (): number => Math.max(4, Math.floor(this.getResource("megacredit")/this.cardBuyPrice));
 
     addCostReducingCard = (card: CostReducing): void => {this.costReducingCards.push(card)};
     addOnTagCard = (card: OnTagPlayed): void => {this.onTagCards.push(card)};
@@ -45,8 +45,8 @@ class Player{
     playFromHand = (card: Card): void => {this.playedCards.push(remove(this.hand, card))};
     onTagPlayed = (card: Card): void => this.onTagCards.forEach((tagCard) => tagCard.onTagPlayed(card));
     onEffectPlayed = (effect: GlobalEffect): void => this.onEffectCards.forEach((effectCard) => effectCard.onEffectPlayed(effect));
-    request(request: ActionRequest): void {
-        this.messenger.request(request);
+    request(request: ActionRequest, gameCycle: GameCycle): void {
+        return this.messenger.request(request, gameCycle);
     }
 }
 

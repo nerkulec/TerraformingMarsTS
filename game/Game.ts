@@ -1,4 +1,9 @@
+type GameCycle = Generator<ActionRequest, void, ActionResponse>;
+
 class Game{
+    name!: string;
+    terminated: boolean = false;
+
     deck: Card[] = cardsList.slice();
     discardedCards: Card[] = [];
 
@@ -20,5 +25,19 @@ class Game{
             cards = cards.concat(this.deck.splice(this.deck.length-rest, rest));
         }
         return cards;
+    }
+
+    * getGameCycle(): GameCycle{
+        let activePlayer = this.players[0];
+        let response: ActionResponse = yield new ChooseName(activePlayer);
+        this.name = response.string;
+    }
+
+    start(){
+        let cycle = this.getGameCycle();
+        let firstRequest = cycle.next().value;
+        if(firstRequest !== undefined){
+            firstRequest.player.request(firstRequest, cycle);
+        }
     }
 }

@@ -37,44 +37,43 @@ abstract class Card{
         if(!this.resources.every((res) => player.getResource(res.type)+res.amount >= 0)) {
             return false;
         }
-        if(!this.production.every((res) => res.type == ResourceType.megacredit 
+        if(!this.production.every((res) => res.type == "megacredit"
             ? player.getProduction(res.type)+res.amount >= -5 
             : player.getProduction(res.type)+res.amount >= 0)) {
             return false;
         }
         let tempCost: number = this.cost;
         tempCost -= player.costReduction(this);
-        let maxCost: number = player.getResource(ResourceType.megacredit)
-        maxCost += player.getResource(ResourceType.steel)*player.steelWorth;
-        maxCost += player.getResource(ResourceType.titanium)*player.titaniumWorth;
+        let maxCost: number = player.getResource("megacredit")
+        maxCost += player.getResource("steel")*player.steelWorth;
+        maxCost += player.getResource("titanium")*player.titaniumWorth;
         if(maxCost < tempCost){
             return false;
         }
         return this.requirement === undefined || this.requirement.satisfied(player, board); 
     }
 
-    pay(player: Player): void{
+    * pay(player: Player, gameCycle: GameCycle): GameCycle{
         let tempCost: number = this.cost;
         tempCost -= player.costReduction(this);
         if(this.tags.includes(Tag.building) || this.tags.includes(Tag.space)){
-            let request = new SplitPayment(tempCost, this.tags);
-            player.request(request);
-            let resources: Resource[] = [];
+            let response: ActionResponse = yield new SplitPayment(player, tempCost, this.tags);
+            let resources: Resource[] = response.resources;
             for(const res of resources){
-                if(res.type == ResourceType.steel){
-                    player.changeResource(ResourceType.steel, -res.amount);
+                if(res.type == "steel"){
+                    player.changeResource("steel", -res.amount);
                     tempCost -= res.amount*player.steelWorth;
-                }else if(res.type == ResourceType.titanium){
-                    player.changeResource(ResourceType.titanium, -res.amount);
+                }else if(res.type == "titanium"){
+                    player.changeResource("titanium", -res.amount);
                     tempCost -= res.amount*player.titaniumWorth;
                 }
             }
         }
-        player.changeResource(ResourceType.megacredit, -tempCost)
+        player.changeResource("megacredit", -tempCost)
     }
 
-    play(player: Player, board: Board): void{
-        this.pay(player);
+    * play(player: Player, board: Board, gameCycle: GameCycle): GameCycle{
+        yield* this.pay(player, gameCycle);
         player.playFromHand(this);
         player.onTagPlayed(this);
         if(this.type != CardType.red){
@@ -108,33 +107,33 @@ abstract class Card{
 
 
 abstract class OnTagPlayed extends Card{
-    abstract onTagPlayed(card: Card): void;
-    play(player: Player, board: Board): void{
+    abstract onTagPlayed(card: Card): GameCycle;
+    * play(player: Player, board: Board, gameCycle: GameCycle): GameCycle{
         player.addOnTagCard(this);
-        super.play(player, board);
+        yield* super.play(player, board, gameCycle);
     }
 }
 
 abstract class OnEffectPlayed extends Card{
     abstract onEffectPlayed(effect: GlobalEffect): void;
-    play(player: Player, board: Board): void{
+    * play(player: Player, board: Board, gameCycle: GameCycle): GameCycle{
         player.addOnEffectCard(this);
-        super.play(player, board);
+        yield* super.play(player, board, gameCycle);
     }
 }
 
 abstract class CostReducing extends Card{
     abstract reduceCost(card: Card): number;
-    play(player: Player, board: Board): void{
+    * play(player: Player, board: Board, gameCycle: GameCycle): GameCycle{
         player.addCostReducingCard(this);
-        super.play(player, board);
+        yield* super.play(player, board, gameCycle);
     }
 }
 
 abstract class Active extends Card{
     used: boolean = false;
     abstract actionAvailible(player: Player): void;
-    action(player: Player): void {
+    * action(player: Player): GameCycle {
         this.used = true;
     }
     reset(): void {

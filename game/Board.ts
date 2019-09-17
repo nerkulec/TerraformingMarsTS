@@ -15,3 +15,10 @@ abstract class Board{
 
     getHex = (x: number, y: number): Hex => this.hexes[x][y];
 }
+
+class Tharsis extends Board{
+    hexes: Hex[][] = [];
+    spaceHexes: Hex[] = [];
+    milestones: Milestone[] = [];
+    awards: Award[] = [];
+}

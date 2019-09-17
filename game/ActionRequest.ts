@@ -1,4 +1,5 @@
 enum ActionType{
+    ChooseName,
     ChooseAction,
     EnemySelection,
     SplitPayment,
@@ -7,12 +8,33 @@ enum ActionType{
 }
 
 abstract class ActionRequest{
-    constructor(private type: ActionType){
+    constructor(public player: Player, private type: ActionType){
+    }
+    getInfo(): Object{
+        return {type: this.type}
+    }
+}
+
+interface ActionResponse{
+    string: string;
+    resources: Resource[];
+}
+
+class ChooseName extends ActionRequest{
+    constructor(player: Player){
+        super(player, ActionType.ChooseName);
     }
 }
 
 class SplitPayment extends ActionRequest{
-    constructor(private cost: number, private tags: Tag[]){
-        super(ActionType.SplitPayment);
+    constructor(player: Player, private cost: number, private tags: Tag[]){
+        super(player, ActionType.SplitPayment);
+    }
+    getInfo(): Object{
+        return {
+            ...super.getInfo(),
+            cost: this.cost,
+            tags: this.tags
+        }
     }
 }
