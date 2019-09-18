@@ -1,0 +1,33 @@
+{
+  "name": "terraformingmarsts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app/app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "chai": "^4.2.0",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
+    "socket.io-as-promised": "^1.0.0",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.3"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.0"
+  },
+  "scripts": {
+    "test": "mocha -r ts-node/register tests/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nerkulec/TerraformingMarsTS.git"
+  },
+  "author": "nerkulec",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nerkulec/TerraformingMarsTS/issues"
+  },
+  "homepage": "https://github.com/nerkulec/TerraformingMarsTS#readme"
+}
