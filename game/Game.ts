@@ -1,16 +1,29 @@
-type GameCycle = Generator<ActionRequest, void, ActionResponse>;
+import {Player} from './Player';
+import {Card} from './Card';
+import {shuffle, chain} from './Utils';
+import {Board} from './Board';
+import {ActionRequest, ActionResponse, ChooseName} from './ActionRequest';
+import {cardsList} from './CardsList';
 
-class Game{
+export type GameCycle = Generator<ActionRequest, void, ActionResponse>;
+
+export class Game{
     name!: string;
+    cycle!: GameCycle;
     terminated: boolean = false;
 
     deck: Card[] = cardsList.slice();
     discardedCards: Card[] = [];
 
+    board!: Board;
     players: Player[] = [];
 
     constructor(){
         shuffle(this.deck);
+    }
+    
+    addPlayer(player: Player): void{
+        this.players.push(player);
     }
 
     draw(n: number): Card[] {
@@ -33,11 +46,23 @@ class Game{
         this.name = response.string;
     }
 
+    startGameCycle(): void{
+        this.cycle = this.getGameCycle();
+    }
+
+    extendGameCycle(cycle: GameCycle): void{
+        this.cycle = chain(this.cycle, cycle);
+    }
+
     start(){
-        let cycle = this.getGameCycle();
-        let firstRequest = cycle.next().value;
+        this.cycle = this.getGameCycle();
+        this.run();
+    }
+
+    run(){
+        let firstRequest = this.cycle.next().value;
         if(firstRequest !== undefined){
-            firstRequest.player.request(firstRequest, cycle);
+            firstRequest.player.request(firstRequest, this.cycle);
         }
     }
 }

@@ -1,23 +1,20 @@
+import {Player} from "./Player";
+import {Board} from "./Board";
+import {GameCycle, Game} from "./Game";
+import {ActionResponse, SplitPayment} from "./ActionRequest";
+import {Resource} from "./Resource";
+import {Requirement} from "./Requirement";
+import {GlobalEffect} from "./GlobalEffect";
+
 enum CardType{
     green,
     blue,
     red
 }
 
-enum Tag{
-    building,
-    space,
-    plant,
-    animal,
-    microbe,
-    science,
-    energy,
-    event,
-    jupiter,
-    earth
-}
+export type Tag = "building"|"space"|"plant"|"animal"|"microbe"|"science"|"energy"|"event"|"jupiter"|"earth";
 
-abstract class Card{
+export abstract class Card{
     type: CardType = CardType.green;
     cost: number = 0;
     requirement?: Requirement;
@@ -56,7 +53,7 @@ abstract class Card{
     * pay(player: Player, gameCycle: GameCycle): GameCycle{
         let tempCost: number = this.cost;
         tempCost -= player.costReduction(this);
-        if(this.tags.includes(Tag.building) || this.tags.includes(Tag.space)){
+        if(this.tags.includes('building') || this.tags.includes('space')){
             let response: ActionResponse = yield new SplitPayment(player, tempCost, this.tags);
             let resources: Resource[] = response.resources;
             for(const res of resources){
@@ -106,7 +103,7 @@ abstract class Card{
 
 
 
-abstract class OnTagPlayed extends Card{
+export abstract class OnTagPlayed extends Card{
     abstract onTagPlayed(card: Card): GameCycle;
     * play(player: Player, board: Board, gameCycle: GameCycle): GameCycle{
         player.addOnTagCard(this);
@@ -114,7 +111,7 @@ abstract class OnTagPlayed extends Card{
     }
 }
 
-abstract class OnEffectPlayed extends Card{
+export abstract class OnEffectPlayed extends Card{
     abstract onEffectPlayed(effect: GlobalEffect): void;
     * play(player: Player, board: Board, gameCycle: GameCycle): GameCycle{
         player.addOnEffectCard(this);
@@ -122,7 +119,7 @@ abstract class OnEffectPlayed extends Card{
     }
 }
 
-abstract class CostReducing extends Card{
+export abstract class CostReducing extends Card{
     abstract reduceCost(card: Card): number;
     * play(player: Player, board: Board, gameCycle: GameCycle): GameCycle{
         player.addCostReducingCard(this);
@@ -130,7 +127,7 @@ abstract class CostReducing extends Card{
     }
 }
 
-abstract class Active extends Card{
+export abstract class Active extends Card{
     used: boolean = false;
     abstract actionAvailible(player: Player): void;
     * action(player: Player): GameCycle {

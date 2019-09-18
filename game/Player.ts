@@ -1,4 +1,12 @@
-class Player{
+import {Card, OnEffectPlayed, CostReducing, OnTagPlayed, Tag} from "./Card";
+import {Game, GameCycle} from "./Game";
+import {remove} from "./Utils";
+import {Messenger} from "../client/Messenger";
+import {ResourceType, Resource} from "./Resource";
+import {GlobalEffect} from "./GlobalEffect";
+import {ActionRequest} from "./ActionRequest";
+
+export class Player{
     cardBuyPrice: number = 3;
     playedCards: Card[] = [];
     hand: Card[] = [];
@@ -48,12 +56,9 @@ class Player{
     request(request: ActionRequest, gameCycle: GameCycle): void {
         return this.messenger.request(request, gameCycle);
     }
+    * play(card: Card): GameCycle{
+        yield * card.play(this, this.game.board, this.game.cycle);
+    }
 }
 
-enum Color{
-    blue,
-    green,
-    yellow,
-    red,
-    gray
-}
+export type Color ="blue"|"green"|"yellow"|"red"|"gray";

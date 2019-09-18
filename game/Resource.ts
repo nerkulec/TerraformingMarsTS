@@ -1,6 +1,6 @@
-type ResourceType = "megacredit"|"steel"|"titanium"|"plant"|"energy"|"heat";
+export type ResourceType = "megacredit"|"steel"|"titanium"|"plant"|"energy"|"heat";
 
-class Resource{
+export class Resource{
     constructor(public type: ResourceType, public amount: number = 1){
     }
 }

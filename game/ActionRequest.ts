@@ -1,3 +1,7 @@
+import {Player} from "./Player";
+import {Tag} from "./Card";
+import {Resource} from "./Resource";
+
 enum ActionType{
     ChooseName,
     ChooseAction,
@@ -7,7 +11,7 @@ enum ActionType{
     PlaceHex
 }
 
-abstract class ActionRequest{
+export abstract class ActionRequest{
     constructor(public player: Player, private type: ActionType){
     }
     getInfo(): Object{
@@ -15,18 +19,18 @@ abstract class ActionRequest{
     }
 }
 
-interface ActionResponse{
+export interface ActionResponse{
     string: string;
     resources: Resource[];
 }
 
-class ChooseName extends ActionRequest{
+export class ChooseName extends ActionRequest{
     constructor(player: Player){
         super(player, ActionType.ChooseName);
     }
 }
 
-class SplitPayment extends ActionRequest{
+export class SplitPayment extends ActionRequest{
     constructor(player: Player, private cost: number, private tags: Tag[]){
         super(player, ActionType.SplitPayment);
     }

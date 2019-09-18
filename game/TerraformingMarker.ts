@@ -1,10 +1,12 @@
+import {Player} from "./Player";
+
 enum TerraformingMarkerType{
     temperature,
     oxygen,
     oceans
 }
 
-abstract class TerraformingMarker{
+export abstract class TerraformingMarker{
     level: number;
 
     constructor(public min: number, public max: number, public step: number){
@@ -21,19 +23,19 @@ abstract class TerraformingMarker{
     }
 }
 
-class Temperature extends TerraformingMarker{
+export class Temperature extends TerraformingMarker{
     constructor(){
         super(-30, 8, 2);
     }
 }
 
-class Oxygen extends TerraformingMarker{
+export class Oxygen extends TerraformingMarker{
     constructor(){
         super(0, 14, 1);
     }
 }
 
-class Oceans extends TerraformingMarker{
+export class Oceans extends TerraformingMarker{
     constructor(){
         super(0, 9, 1);
     }

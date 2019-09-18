@@ -1,18 +1,17 @@
-enum GlobalEffectType{
-    temperatureEffect,
-    oxygenEffect,
-    oceansEffect
-}
+import {Player} from "./Player";
+import {Board} from "./Board";
 
-abstract class GlobalEffect{
+export type GlobalEffectType = "temperatureEffect"|"oxygenEffect"|"oceansEffect";
+
+export abstract class GlobalEffect{
     constructor(public times: number){
     }
     abstract type: GlobalEffectType;
     abstract effect(player: Player, board: Board): void;
 }
 
-class TemperatureEffect extends GlobalEffect{
-    type = GlobalEffectType.temperatureEffect;
+export class TemperatureEffect extends GlobalEffect{
+    type = "temperatureEffect";
     constructor(public times: number = 1){
         super(times);
     }
@@ -21,8 +20,8 @@ class TemperatureEffect extends GlobalEffect{
     }
 }
 
-class OxygenEffect extends GlobalEffect{
-    type = GlobalEffectType.oxygenEffect;
+export class OxygenEffect extends GlobalEffect{
+    type = "oxygenEffect";
     constructor(public times: number = 1){
         super(times);
     }
@@ -31,8 +30,8 @@ class OxygenEffect extends GlobalEffect{
     }
 }
 
-class OceansEffect extends GlobalEffect{
-    type = GlobalEffectType.oceansEffect;
+export class OceansEffect extends GlobalEffect{
+    type = "oceansEffect";
     constructor(public times: number = 1){
         super(times);
     }

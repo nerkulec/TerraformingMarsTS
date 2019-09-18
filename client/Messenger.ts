@@ -1,10 +1,13 @@
+import {GameCycle} from '../game/Game';
+import {ActionRequest, ActionResponse} from '../game/ActionRequest';
+
 type Socket = import('socket.io').Socket;
 
-interface Messenger{
+export interface Messenger{
     request(request: ActionRequest, gameCycle: GameCycle): void;
 }
 
-class SocketMessenger implements Messenger{
+export class SocketMessenger implements Messenger{
     constructor(protected socket: Socket){
     }
 
@@ -20,7 +23,7 @@ class SocketMessenger implements Messenger{
     }
 }
 
-class MockMessenger implements Messenger{
+export class MockMessenger implements Messenger{
     constructor(private responseProvider: (info: Object) => ActionResponse){
     }
 

@@ -1,9 +1,5 @@
-enum HexType{
-    city,
-    greenery,
-    ocean
-}
+type HexType = "city"|"greenery"|"ocean";
 
-class Hex{
+export class Hex{
     
 }

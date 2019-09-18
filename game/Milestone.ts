@@ -1,8 +1,10 @@
-interface Milestone{
+import {Player} from "./Player";
+
+export interface Milestone{
     claimable: (player: Player) => boolean;
 }
 
-class Terraformer implements Milestone{
+export class Terraformer implements Milestone{
     claimable = (player: Player): boolean => player.terraformingRating >= 35;
 
 }

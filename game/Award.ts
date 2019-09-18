@@ -1,4 +1,7 @@
-abstract class Award{
+import {Player} from "./Player";
+import {Game} from "./Game";
+
+export abstract class Award{
     abstract getPoints: (player: Player) => number;
 
     assignPoints(game: Game): Map<Player, number> {
@@ -32,6 +35,6 @@ abstract class Award{
     }
 }
 
-class Banker extends Award{
-    getPoints = (player: Player): number => player.getProduction(ResourceType.megacredit);
+export class Banker extends Award{
+    getPoints = (player: Player): number => player.getProduction("megacredit");
 }
