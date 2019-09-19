@@ -1,5 +1,5 @@
 import {GameCycle} from '../game/Game';
-import {ActionRequest, ActionResponse} from '../game/ActionRequest';
+import {ActionRequest, ActionResponse, parseResponse} from '../game/ActionRequest';
 
 type Socket = import('socket.io').Socket;
 
@@ -14,8 +14,8 @@ export class SocketMessenger implements Messenger{
     request(request: ActionRequest, gameCycle: GameCycle){
         let info = request.getInfo();
         this.socket.emit('request', info);
-        this.socket.once('response', (response) => {
-            let nextRequest = gameCycle.next(response).value;
+        this.socket.once('response', (responseData) => {
+            let nextRequest = gameCycle.next(parseResponse(responseData)).value;
             if(nextRequest !== undefined){
                 nextRequest.player.request(nextRequest, gameCycle);
             }

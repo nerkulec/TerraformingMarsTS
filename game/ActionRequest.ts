@@ -2,6 +2,7 @@ import {Player} from "./Player";
 import {Tag} from "./Card";
 import {Resource, ResourceType} from "./Resource";
 import {HexType, Place} from "./Hex";
+import { ensure } from "./Utils";
 
 type ActionType = 'ChooseName'|'ChooseAction'|'EnemySelection'|'SplitPayment'|'ChooseUpTo'|'PlaceHex'|'NumberSelection'|'ResourcesRequest';
 
@@ -15,6 +16,10 @@ export abstract class ActionRequest{
 }
 
 export interface ActionResponse{
+}
+
+export function parseResponse(response: Object): ActionResponse{
+    return response; // Do some deserialization/unpacking/decompressing
 }
 
 export class StringResponse implements ActionResponse{
