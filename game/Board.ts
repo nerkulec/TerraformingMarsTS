@@ -1,5 +1,5 @@
 import {Game} from "./Game";
-import {Hex} from "./Hex";
+import {Hex, Place} from "./Hex";
 import {Milestone} from "./Milestone";
 import {Award} from "./Award";
 import {TerraformingMarker, Temperature, Oxygen, Oceans} from "./TerraformingMarker";
@@ -21,6 +21,9 @@ export abstract class Board{
     }
 
     getHex = (x: number, y: number): Hex => this.hexes[x][y];
+    placeHex(place: Place, hex: Hex){
+        // this.hexes[place.y][place.x] = hex;
+    }
 }
 
 export class Tharsis extends Board{

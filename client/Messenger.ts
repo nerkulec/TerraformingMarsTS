@@ -24,7 +24,7 @@ export class SocketMessenger implements Messenger{
 }
 
 export class MockMessenger implements Messenger{
-    constructor(private responseProvider: (info: ActionRequest) => ActionResponse){
+    constructor(private responseProvider: (request: ActionRequest) => ActionResponse){
     }
 
     request(request: ActionRequest, gameCycle: GameCycle){

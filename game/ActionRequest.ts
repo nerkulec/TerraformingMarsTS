@@ -1,8 +1,9 @@
 import {Player} from "./Player";
 import {Tag} from "./Card";
-import {Resource} from "./Resource";
+import {Resource, ResourceType} from "./Resource";
+import {HexType, Place} from "./Hex";
 
-type ActionType = 'ChooseName'|'ChooseAction'|'EnemySelection'|'SplitPayment'|'ChooseUpTo'|'PlaceHex';
+type ActionType = 'ChooseName'|'ChooseAction'|'EnemySelection'|'SplitPayment'|'ChooseUpTo'|'PlaceHex'|'NumberSelection'|'ResourcesRequest';
 
 
 export abstract class ActionRequest{
@@ -29,6 +30,16 @@ export class ResourcesResponse implements ActionResponse{
     }
 }
 
+export class PlaceResponse implements ActionResponse{
+    constructor(public places: Place[]){
+    }
+}
+
+export class PlayerResponse implements ActionResponse{
+    constructor(public player: Player){
+    }
+}
+
 export class ChooseName extends ActionRequest{
     constructor(player: Player){
         super(player, 'ChooseName');
@@ -36,7 +47,7 @@ export class ChooseName extends ActionRequest{
 }
 
 export class SplitPayment extends ActionRequest{
-    constructor(player: Player, private cost: number, private tags: Tag[]){
+    constructor(player: Player, public cost: number, public tags: Tag[]){
         super(player, 'SplitPayment');
     }
     getInfo(): Object{
@@ -44,6 +55,45 @@ export class SplitPayment extends ActionRequest{
             ...super.getInfo(),
             cost: this.cost,
             tags: this.tags
+        }
+    }
+}
+
+export class PlaceHex extends ActionRequest{
+    constructor(player: Player, public hexType: HexType, public num: number){
+        super(player, 'PlaceHex');
+    }
+    getInfo(): Object{
+        return {
+            ...super.getInfo(),
+            hexType: this.hexType,
+            num: this.num
+        }
+    }
+}
+
+export class EnemySelection extends ActionRequest{
+    constructor(player: Player){
+        super(player, 'EnemySelection');
+    }
+}
+
+export class NumberSelection extends ActionRequest{
+    constructor(player: Player){
+        super(player, 'NumberSelection');
+    }
+}
+
+export class ChooseUpTo extends ActionRequest{
+    constructor(player: Player, public resourceType: ResourceType, public upTo: number, public production=false){
+        super(player, 'ChooseUpTo');
+    }
+    getInfo(): Object{
+        return {
+            ...super.getInfo(),
+            resourceType: this.resourceType,
+            upTo: this.upTo,
+            production: this.production
         }
     }
 }
