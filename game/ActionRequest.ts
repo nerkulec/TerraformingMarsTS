@@ -2,17 +2,11 @@ import {Player} from "./Player";
 import {Tag} from "./Card";
 import {Resource} from "./Resource";
 
-enum ActionType{
-    ChooseName,
-    ChooseAction,
-    EnemySelection,
-    SplitPayment,
-    ChooseUpTo,
-    PlaceHex
-}
+type ActionType = 'ChooseName'|'ChooseAction'|'EnemySelection'|'SplitPayment'|'ChooseUpTo'|'PlaceHex';
+
 
 export abstract class ActionRequest{
-    constructor(public player: Player, private type: ActionType){
+    constructor(public player: Player, public type: ActionType){
     }
     getInfo(): Object{
         return {type: this.type}
@@ -30,16 +24,20 @@ export class NumberResponse implements ActionResponse{
     constructor(public num: number){
     }
 }
+export class ResourcesResponse implements ActionResponse{
+    constructor(public resources: Resource[]){
+    }
+}
 
 export class ChooseName extends ActionRequest{
     constructor(player: Player){
-        super(player, ActionType.ChooseName);
+        super(player, 'ChooseName');
     }
 }
 
 export class SplitPayment extends ActionRequest{
     constructor(player: Player, private cost: number, private tags: Tag[]){
-        super(player, ActionType.SplitPayment);
+        super(player, 'SplitPayment');
     }
     getInfo(): Object{
         return {

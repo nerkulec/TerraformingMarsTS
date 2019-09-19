@@ -24,12 +24,11 @@ export class SocketMessenger implements Messenger{
 }
 
 export class MockMessenger implements Messenger{
-    constructor(private responseProvider: (info: Object) => ActionResponse){
+    constructor(private responseProvider: (info: ActionRequest) => ActionResponse){
     }
 
     request(request: ActionRequest, gameCycle: GameCycle){
-        let info = request.getInfo();
-        let response = this.responseProvider(info);
+        let response = this.responseProvider(request);
         let nextRequest = gameCycle.next(response).value;
         if(nextRequest !== undefined){
             nextRequest.player.request(nextRequest, gameCycle);

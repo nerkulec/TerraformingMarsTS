@@ -6,12 +6,17 @@ import {Tharsis} from '../game/Board';
 import {Player} from '../game/Player';
 import {MockMessenger} from '../client/Messenger';
 import { OceansEffect } from '../game/GlobalEffect';
+import { OceansRequirement } from '../game/Requirement';
+import { StringResponse, ActionRequest } from '../game/ActionRequest';
 
 function prepare(){
     let game = new Game();
     let board = new Tharsis(game);
-    let player = new Player(game, new MockMessenger((info) => {
-        return {'string': 'mock-game', 'resources': []};
+    let player = new Player(game, new MockMessenger((request: ActionRequest) => {
+        if(request.type === 'ChooseName'){
+            return new StringResponse('mock-name');
+        }
+        throw Error('Unrecognized request');
     }))
     game.addPlayer(player);
     game.startGameCycle();
@@ -21,9 +26,34 @@ function prepare(){
         'player':player
     }
 }
-
-describe('Basic card', () => {
-    it('should transfer to hand', () =>{
+describe('Card.hasTag', () =>{
+    it('should recognize tag', () =>{
+        let snowAlgae = new SnowAlgae();
+        expect(snowAlgae.hasTag('plant')).to.be.true;
+        expect(snowAlgae.hasTag('space')).to.be.false;
+        expect(snowAlgae.hasTag('earth')).to.be.false;
+    })
+})
+describe('Card.playable', () =>{
+    it('should recognize lack of money', () =>{
+        let mock = prepare();
+        let snowAlgae = new SnowAlgae();
+        mock.player.globalEffect(new OceansEffect(2));
+        expect(mock.player.canPlay(snowAlgae)).to.be.false;
+        mock.player.changeResource('megacredit', 12);
+        expect(mock.player.canPlay(snowAlgae)).to.be.true;
+    })
+    it('should recognize unsatisfied requirements', () =>{
+        let mock = prepare();
+        let snowAlgae = new SnowAlgae();
+        mock.player.changeResource('megacredit', 12);
+        expect(mock.player.canPlay(snowAlgae)).to.be.false;
+        mock.player.globalEffect(new OceansEffect(2));
+        expect(mock.player.canPlay(snowAlgae)).to.be.true;
+    })
+})
+describe('Card.buy', () => {
+    it('should transfer card to hand', () =>{
         let mock = prepare();
         let snowAlgae = new SnowAlgae();
         mock.player.cardsToBuy = [snowAlgae];
@@ -40,6 +70,8 @@ describe('Basic card', () => {
         mock.player.buy([snowAlgae]);
         expect(mock.player.getResource('megacredit')).to.equal(97);
     })
+});
+describe('Card.play', () =>{
     it('should cost money to play', () =>{
         let mock = prepare();
         let snowAlgae = new SnowAlgae();

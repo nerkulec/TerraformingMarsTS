@@ -26,6 +26,6 @@ export function ensure<T>(o: any, className: Constructor<T>): T{
     if(o instanceof className){
         return o;
     }else{
-        throw Error(o+' was supposed to be '+className.name+', but is'+typeof(o));
+        throw Error(o+' was supposed to be '+className.name+', but is '+typeof(o));
     }
 }

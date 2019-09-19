@@ -1,10 +1,11 @@
 import {Player} from "./Player";
 import {Board} from "./Board";
 import {GameCycle, Game} from "./Game";
-import {ActionResponse, SplitPayment} from "./ActionRequest";
+import {ActionResponse, SplitPayment, ResourcesResponse} from "./ActionRequest";
 import {Resource} from "./Resource";
 import {Requirement} from "./Requirement";
 import {GlobalEffect} from "./GlobalEffect";
+import {ensure} from "./Utils";
 
 enum CardType{
     green,
@@ -55,7 +56,7 @@ export abstract class Card{
         tempCost -= player.costReduction(this);
         if(this.tags.includes('building') || this.tags.includes('space')){
             let response: ActionResponse = yield new SplitPayment(player, tempCost, this.tags);
-            let resources: Resource[] = response.resources;
+            let resources: Resource[] = ensure(response, ResourcesResponse).resources;
             for(const res of resources){
                 if(res.type == "steel"){
                     player.changeResource("steel", -res.amount);
