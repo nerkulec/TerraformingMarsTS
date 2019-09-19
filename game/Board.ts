@@ -16,7 +16,7 @@ export abstract class Board{
 
     numCities: number = 0;
 
-    constructor(public game: Game){
+    constructor(game: Game){
         game.board = this;
     }
 

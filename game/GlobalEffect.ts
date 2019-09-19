@@ -11,32 +11,31 @@ export abstract class GlobalEffect{
 }
 
 export class TemperatureEffect extends GlobalEffect{
-    type = "temperatureEffect";
+    type = "temperatureEffect" as GlobalEffectType;
     constructor(public times: number = 1){
         super(times);
     }
     effect(player: Player, board: Board): void {
-        board.temperature.increment(player);
+        board.temperature.increment(player, this.times);
     }
 }
 
 export class OxygenEffect extends GlobalEffect{
-    type = "oxygenEffect";
+    type = "oxygenEffect" as GlobalEffectType;
     constructor(public times: number = 1){
         super(times);
     }
     effect(player: Player, board: Board): void {
-        board.oxygen.increment(player);
+        board.oxygen.increment(player, this.times);
     }
 }
 
 export class OceansEffect extends GlobalEffect{
-    type = "oceansEffect";
+    type = "oceansEffect" as GlobalEffectType;
     constructor(public times: number = 1){
         super(times);
     }
     effect(player: Player, board: Board): void {
-        // TODO: placing of an ocean
-        board.oceans.increment(player);
+        board.oceans.increment(player, this.times);
     }
 }

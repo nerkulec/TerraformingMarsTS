@@ -55,7 +55,7 @@ export class Game{
     }
 
     start(){
-        this.cycle = this.getGameCycle();
+        this.startGameCycle();
         this.run();
     }
 

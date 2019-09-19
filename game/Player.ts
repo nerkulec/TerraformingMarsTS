@@ -3,7 +3,7 @@ import {Game, GameCycle} from "./Game";
 import {remove} from "./Utils";
 import {Messenger} from "../client/Messenger";
 import {ResourceType, Resource} from "./Resource";
-import {GlobalEffect} from "./GlobalEffect";
+import {GlobalEffect, GlobalEffectType} from "./GlobalEffect";
 import {ActionRequest} from "./ActionRequest";
 
 export class Player{
@@ -56,9 +56,11 @@ export class Player{
     request(request: ActionRequest, gameCycle: GameCycle): void {
         return this.messenger.request(request, gameCycle);
     }
+    canPlay = (card: Card): boolean => card.playable(this, this.game.board);
     * play(card: Card): GameCycle{
         yield * card.play(this, this.game.board, this.game.cycle);
     }
+    globalEffect = (effect: GlobalEffect): void => effect.effect(this, this.game.board);
 }
 
 export type Color ="blue"|"green"|"yellow"|"red"|"gray";
