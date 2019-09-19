@@ -20,8 +20,15 @@ export abstract class ActionRequest{
 }
 
 export interface ActionResponse{
-    string: string;
-    resources: Resource[];
+}
+
+export class StringResponse implements ActionResponse{
+    constructor(public str: string){
+    }
+}
+export class NumberResponse implements ActionResponse{
+    constructor(public num: number){
+    }
 }
 
 export class ChooseName extends ActionRequest{

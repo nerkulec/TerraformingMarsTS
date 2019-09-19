@@ -1,8 +1,8 @@
 import {Player} from './Player';
 import {Card} from './Card';
-import {shuffle, chain} from './Utils';
+import {shuffle, chain, ensure} from './Utils';
 import {Board} from './Board';
-import {ActionRequest, ActionResponse, ChooseName} from './ActionRequest';
+import {ActionRequest, ActionResponse, ChooseName, StringResponse} from './ActionRequest';
 import {cardsList} from './CardsList';
 
 export type GameCycle = Generator<ActionRequest, void, ActionResponse>;
@@ -43,7 +43,7 @@ export class Game{
     * getGameCycle(): GameCycle{
         let activePlayer = this.players[0];
         let response: ActionResponse = yield new ChooseName(activePlayer);
-        this.name = response.string;
+        this.name = ensure(response, StringResponse).str;
     }
 
     startGameCycle(): void{
