@@ -18,6 +18,9 @@ export class Game{
     board!: Board;
     players: Player[] = [];
 
+    finished: boolean = false;
+    afterGameCallback?: () => void;
+
     constructor(){
         shuffle(this.deck);
     }
@@ -54,6 +57,10 @@ export class Game{
         this.cycle = chain(this.cycle, cycle);
     }
 
+    afterGame(callback: () => void){
+        this.afterGameCallback = callback;
+    }
+
     start(){
         this.startGameCycle();
         this.run();
@@ -62,7 +69,20 @@ export class Game{
     run(){
         let firstRequest = this.cycle.next().value;
         if(firstRequest !== undefined){
-            firstRequest.player.request(firstRequest, this.cycle);
+            this.request(firstRequest);
         }
+    }
+
+    request(request: ActionRequest){
+        request.player.messenger.request(request, (response: ActionResponse) => {
+            let nextRequest = this.cycle.next(response).value;
+            if(nextRequest !== undefined){
+                this.request(nextRequest);
+            }else{
+                if(this.afterGameCallback){
+                    this.afterGameCallback();
+                }
+            }
+        });
     }
 }
