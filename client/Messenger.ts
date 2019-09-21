@@ -28,4 +28,12 @@ export class MockMessenger implements Messenger{
             callback(this.responseProvider(request))
         }, 100);
     }
+    // TODO:
+    every(requests: InteractionRequest[], callback: (responses: any[]) => void){
+        
+    }
+    // TODO:
+    any(requests: InteractionRequest[], callback: (responses: any[]) => void){
+        
+    }
 }
