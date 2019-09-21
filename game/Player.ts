@@ -3,8 +3,7 @@ import {Game, GameCycle} from "./Game";
 import {remove} from "./Utils";
 import {Messenger} from "../client/Messenger";
 import {ResourceType, Resource} from "./Resource";
-import {GlobalEffect, GlobalEffectType} from "./GlobalEffect";
-import {ActionRequest} from "./ActionRequest";
+import {GlobalEffect} from "./GlobalEffect";
 
 export class Player{
     cardBuyPrice: number = 3;

@@ -1,12 +1,11 @@
 import {Player} from "./Player";
 import {Board} from "./Board";
 import {GameCycle, Game} from "./Game";
-import {ActionResponse, SplitPayment, ResourcesResponse, PlaceHex, EnemySelection, PlayerResponse, PlaceResponse, NumberSelection, ChooseUpTo, NumberResponse} from "./ActionRequest";
+import {SplitPayment, PlaceHex, EnemySelection, ChooseUpTo} from "./InteractionRequest";
 import {Resource} from "./Resource";
 import {Requirement} from "./Requirement";
 import {GlobalEffect, OceansEffect} from "./GlobalEffect";
-import {ensure} from "./Utils";
-import { Hex } from "./Hex";
+import {Hex, Place} from "./Hex";
 
 type CardType = 'green'|'blue'|'red';
 export type Tag = "building"|"space"|"plant"|"animal"|"microbe"|"science"|"energy"|"event"|"jupiter"|"earth";
@@ -53,8 +52,7 @@ export abstract class Card{
         let tempCost: number = this.cost;
         tempCost -= player.costReduction(this);
         if(this.tags.includes('building') || this.tags.includes('space')){
-            let response: ActionResponse = yield new SplitPayment(player, tempCost, this.tags);
-            let resources: Resource[] = ensure(response, ResourcesResponse).resources;
+            let resources = yield new SplitPayment(player, tempCost, this.tags);
             for(const res of resources){
                 if(res.type == "steel"){
                     player.changeResource("steel", -res.amount);
@@ -77,9 +75,8 @@ export abstract class Card{
         }
         for(const effect of this.effects){
             if(effect instanceof OceansEffect){
-                let oceansPlacement = yield new PlaceHex(player, 'ocean', effect.times);
-                let places = ensure(oceansPlacement, PlaceResponse).places;
-                places.forEach((place)=>board.placeHex(place, new Hex('ocean')));
+                let places = yield new PlaceHex(player, 'ocean', effect.times);
+                places.forEach((place: Place)=>board.placeHex(place, new Hex('ocean')));
             }
             player.globalEffect(effect);
         }
@@ -90,21 +87,18 @@ export abstract class Card{
             player.changeProduction(res.type, res.amount);
         }
         if(this.enemyResources.length > 0 || this.enemyProduction.length > 0){
-            let enemyChoice = yield new EnemySelection(player);
-            let enemy = ensure(enemyChoice, PlayerResponse).player;
+            let enemy = yield new EnemySelection(player);
             for(const res of this.enemyResources){
                 let amount = res.amount;
                 if(this.upTo){
-                    let upToChoice = yield new ChooseUpTo(player, res.type, res.amount);
-                    amount = ensure(upToChoice, NumberResponse).num;
+                    amount = yield new ChooseUpTo(player, res.type, res.amount);
                 }
                 enemy.changeResource(res.type, amount);
             }
             for(const res of this.enemyProduction){
                 let amount = res.amount;
                 if(this.upTo){
-                    let upToChoice = yield new ChooseUpTo(player, res.type, res.amount, true);
-                    amount = ensure(upToChoice, NumberResponse).num;
+                    amount = yield new ChooseUpTo(player, res.type, res.amount, true);
                 }
                 enemy.changeProduction(res.type, amount);
             }

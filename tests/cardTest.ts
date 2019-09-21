@@ -6,7 +6,7 @@ import {Tharsis, Board} from '../game/Board';
 import {Player} from '../game/Player';
 import {MockMessenger} from '../client/Messenger';
 import {OceansEffect} from '../game/GlobalEffect';
-import {StringResponse, ActionRequest, PlaceHex, ChooseName, PlaceResponse, SplitPayment, ResourcesResponse, ChooseUpTo, NumberResponse, EnemySelection, PlayerResponse} from '../game/ActionRequest';
+import {InteractionRequest, PlaceHex, ChooseName, SplitPayment, ChooseUpTo, EnemySelection} from '../game/InteractionRequest';
 import {Place} from '../game/Hex';
 import {Resource} from '../game/Resource';
 import {GiantIceAsteroid} from '../game/cards/GiantIceAsteroid';
@@ -21,30 +21,30 @@ describe('Card', () =>{
     beforeEach(() =>{
         game = new Game();
         board = new Tharsis(game);
-        enemy = new Player(game, new MockMessenger((request: ActionRequest) => {
+        enemy = new Player(game, new MockMessenger((request: InteractionRequest) => {
             throw Error('Enemy should not have any choice')
         }));
-        player = new Player(game, new MockMessenger((request: ActionRequest) => {
+        player = new Player(game, new MockMessenger((request: InteractionRequest) => {
             if(request instanceof ChooseName){
-                return new StringResponse('mock-name');
+                return 'mock-name';
             }
             if(request instanceof PlaceHex){
                 if(request.hexType === 'ocean'){
-                    return new PlaceResponse([new Place(3, 7), new Place(1, 2), new Place(4, 8)].slice(0, request.num));
+                    return [new Place(3, 7), new Place(1, 2), new Place(4, 8)].slice(0, request.num);
                 }
             }
             if(request instanceof SplitPayment){
                 if(request.cost === 41){
-                    return new ResourcesResponse([new Resource('titanium', 2)])
+                    return [new Resource('titanium', 2)];
                 }
             }
             if(request instanceof ChooseUpTo){
                 if(request.upTo === 12){
-                    return new NumberResponse(7);
+                    return 7;
                 }
             }
             if(request instanceof EnemySelection){
-                return new PlayerResponse(enemy);
+                return enemy;
             }
             throw Error('Unrecognized request');
         }));

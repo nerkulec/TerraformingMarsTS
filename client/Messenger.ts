@@ -1,16 +1,16 @@
-import {ActionRequest, ActionResponse, parseResponse} from '../game/ActionRequest';
+import {InteractionRequest, parseResponse} from '../game/InteractionRequest';
 
 type Socket = import('socket.io').Socket;
 
 export interface Messenger{
-    request(request: ActionRequest, callback: (response: ActionResponse) => void): void;
+    request(request: InteractionRequest, callback: (response: any) => void): void;
 }
 
 export class SocketMessenger implements Messenger{
     constructor(protected socket: Socket){
     }
 
-    request(request: ActionRequest, callback: (response: ActionResponse) => void){
+    request(request: InteractionRequest, callback: (response: any) => void){
         let info = request.getInfo();
         this.socket.emit('request', info);
         this.socket.once('response', (responseData) => { // different request+response pair names, distinguish valid and not valid responses
@@ -20,12 +20,12 @@ export class SocketMessenger implements Messenger{
 }
 
 export class MockMessenger implements Messenger{
-    constructor(private responseProvider: (request: ActionRequest) => ActionResponse){
+    constructor(private responseProvider: (request: InteractionRequest) => any){
     }
 
-    request(request: ActionRequest, callback: (response: ActionResponse) => void){
+    request(request: InteractionRequest, callback: (response: any) => void){
         setTimeout(() => {
             callback(this.responseProvider(request))
-        }, 500);
+        }, 100);
     }
 }
