@@ -8,8 +8,8 @@ import {MockMessenger} from '../client/Messenger';
 import {OceansEffect} from '../game/GlobalEffect';
 import {StringResponse, ActionRequest, PlaceHex, ChooseName, PlaceResponse, SplitPayment, ResourcesResponse, ChooseUpTo, NumberResponse, EnemySelection, PlayerResponse} from '../game/ActionRequest';
 import {Place} from '../game/Hex';
-import { Resource } from '../game/Resource';
-import { GiantIceAsteroid } from '../game/cards/GiantIceAsteroid';
+import {Resource} from '../game/Resource';
+import {GiantIceAsteroid} from '../game/cards/GiantIceAsteroid';
 
 function prepare(){
     let game = new Game();

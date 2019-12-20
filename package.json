@@ -7,15 +7,19 @@
     "test": "tests"
   },
   "dependencies": {
+    "@types/chai": "^4.2.7",
+    "@types/mocha": "^5.2.7",
+    "@types/socket.io": "^2.1.4",
+    "@types/socket.io-client": "^1.4.32",
     "chai": "^4.2.0",
-    "socket.io": "^2.2.0",
-    "socket.io-client": "^2.2.0",
+    "socket.io": "^2.3.0",
     "socket.io-as-promised": "^1.0.0",
+    "socket.io-client": "^2.2.0",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
   },
   "devDependencies": {
-    "mocha": "^6.2.0"
+    "mocha": "^6.2.2"
   },
   "scripts": {
     "test": "mocha -r ts-node/register tests/*.ts"
