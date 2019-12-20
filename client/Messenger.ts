@@ -1,37 +1,39 @@
-import {GameCycle} from '../game/Game';
-import {ActionRequest, ActionResponse, parseResponse} from '../game/ActionRequest';
+import {InteractionRequest, parseResponse} from '../game/InteractionRequest';
 
 type Socket = import('socket.io').Socket;
 
 export interface Messenger{
-    request(request: ActionRequest, gameCycle: GameCycle): void;
+    request(request: InteractionRequest, callback: (response: any) => void): void;
 }
 
 export class SocketMessenger implements Messenger{
     constructor(protected socket: Socket){
     }
 
-    request(request: ActionRequest, gameCycle: GameCycle){
+    request(request: InteractionRequest, callback: (response: any) => void){
         let info = request.getInfo();
         this.socket.emit('request', info);
-        this.socket.once('response', (responseData) => {
-            let nextRequest = gameCycle.next(parseResponse(responseData)).value;
-            if(nextRequest !== undefined){
-                nextRequest.player.request(nextRequest, gameCycle);
-            }
+        this.socket.once('response', (responseData) => { // different request+response pair names, distinguish valid and not valid responses
+            callback(parseResponse(responseData));
         })
     }
 }
 
 export class MockMessenger implements Messenger{
-    constructor(private responseProvider: (request: ActionRequest) => ActionResponse){
+    constructor(private responseProvider: (request: InteractionRequest) => any){
     }
 
-    request(request: ActionRequest, gameCycle: GameCycle){
-        let response = this.responseProvider(request);
-        let nextRequest = gameCycle.next(response).value;
-        if(nextRequest !== undefined){
-            nextRequest.player.request(nextRequest, gameCycle);
-        }
+    request(request: InteractionRequest, callback: (response: any) => void){
+        setTimeout(() => {
+            callback(this.responseProvider(request))
+        }, 100);
+    }
+    // TODO:
+    every(requests: InteractionRequest[], callback: (responses: any[]) => void){
+        
+    }
+    // TODO:
+    any(requests: InteractionRequest[], callback: (responses: any[]) => void){
+        
     }
 }

@@ -3,8 +3,7 @@ import {Game, GameCycle} from "./Game";
 import {remove} from "./Utils";
 import {Messenger} from "../client/Messenger";
 import {ResourceType, Resource} from "./Resource";
-import {GlobalEffect, GlobalEffectType} from "./GlobalEffect";
-import {ActionRequest} from "./ActionRequest";
+import {GlobalEffect} from "./GlobalEffect";
 
 export class Player{
     cardBuyPrice: number = 3;
@@ -22,7 +21,7 @@ export class Player{
     steelWorth: number = 2;
     titaniumWorth: number = 3;
 
-    constructor(private game: Game, private messenger: Messenger){
+    constructor(private game: Game, public messenger: Messenger){
     }
 
     getResource = (type: ResourceType): number => this.resources.get(type) || 0;
@@ -53,9 +52,6 @@ export class Player{
     playFromHand = (card: Card): void => {this.playedCards.push(remove(this.hand, card))};
     onTagPlayed = (card: Card): void => this.onTagCards.forEach((tagCard) => tagCard.onTagPlayed(card));
     onEffectPlayed = (effect: GlobalEffect): void => this.onEffectCards.forEach((effectCard) => effectCard.onEffectPlayed(effect));
-    request(request: ActionRequest, gameCycle: GameCycle): void {
-        return this.messenger.request(request, gameCycle);
-    }
     canPlay = (card: Card): boolean => card.playable(this, this.game.board);
     * play(card: Card): GameCycle{
         yield * card.play(this, this.game.board, this.game.cycle);

@@ -1,11 +1,11 @@
 import {Player} from './Player';
 import {Card} from './Card';
-import {shuffle, chain, ensure} from './Utils';
+import {shuffle, chain} from './Utils';
 import {Board} from './Board';
-import {ActionRequest, ActionResponse, ChooseName, StringResponse} from './ActionRequest';
+import {InteractionRequest, ChooseName} from './InteractionRequest';
 import {cardsList} from './CardsList';
 
-export type GameCycle = Generator<ActionRequest, void, ActionResponse>;
+export type GameCycle = Generator<InteractionRequest, void, any>;
 
 export class Game{
     name!: string;
@@ -17,6 +17,9 @@ export class Game{
 
     board!: Board;
     players: Player[] = [];
+
+    finished: boolean = false;
+    afterGameCallback?: () => void;
 
     constructor(){
         shuffle(this.deck);
@@ -42,8 +45,7 @@ export class Game{
 
     * getGameCycle(): GameCycle{
         let activePlayer = this.players[0];
-        let response: ActionResponse = yield new ChooseName(activePlayer);
-        this.name = ensure(response, StringResponse).str;
+        this.name = yield new ChooseName(activePlayer);
     }
 
     startGameCycle(): void{
@@ -54,6 +56,10 @@ export class Game{
         this.cycle = chain(this.cycle, cycle);
     }
 
+    afterGame(callback: () => void){
+        this.afterGameCallback = callback;
+    }
+
     start(){
         this.startGameCycle();
         this.run();
@@ -62,7 +68,20 @@ export class Game{
     run(){
         let firstRequest = this.cycle.next().value;
         if(firstRequest !== undefined){
-            firstRequest.player.request(firstRequest, this.cycle);
+            this.request(firstRequest);
         }
+    }
+
+    request(request: InteractionRequest){
+        request.player.messenger.request(request, (response) => {
+            let nextRequest = this.cycle.next(response).value;
+            if(nextRequest !== undefined){
+                this.request(nextRequest);
+            }else{
+                if(this.afterGameCallback){
+                    this.afterGameCallback();
+                }
+            }
+        });
     }
 }

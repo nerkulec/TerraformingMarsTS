@@ -2,170 +2,163 @@ import {expect} from 'chai';
 import 'mocha';
 import {SnowAlgae} from '../game/cards/SnowAlgae';
 import {Game} from '../game/Game';
-import {Tharsis} from '../game/Board';
+import {Tharsis, Board} from '../game/Board';
 import {Player} from '../game/Player';
 import {MockMessenger} from '../client/Messenger';
 import {OceansEffect} from '../game/GlobalEffect';
-import {StringResponse, ActionRequest, PlaceHex, ChooseName, PlaceResponse, SplitPayment, ResourcesResponse, ChooseUpTo, NumberResponse, EnemySelection, PlayerResponse} from '../game/ActionRequest';
+import {InteractionRequest, PlaceHex, ChooseName, SplitPayment, ChooseUpTo, EnemySelection} from '../game/InteractionRequest';
 import {Place} from '../game/Hex';
 import {Resource} from '../game/Resource';
 import {GiantIceAsteroid} from '../game/cards/GiantIceAsteroid';
 
-function prepare(){
-    let game = new Game();
-    let board = new Tharsis(game);
-    let enemy = new Player(game, new MockMessenger((request: ActionRequest) => {
-        throw Error('Enemy should not have any choice')
-    }));
-    let player = new Player(game, new MockMessenger((request: ActionRequest) => {
-        if(request instanceof ChooseName){
-            return new StringResponse('mock-name');
-        }
-        if(request instanceof PlaceHex){
-            if(request.hexType === 'ocean'){
-                return new PlaceResponse([new Place(3, 7), new Place(1, 2), new Place(4, 8)].slice(0, request.num));
+describe('Card', () =>{
+    let game: Game;
+    let board: Board;
+    let player: Player;
+    let enemy: Player;
+    let snowAlgae: SnowAlgae;
+    let gia: GiantIceAsteroid;
+    beforeEach(() =>{
+        game = new Game();
+        board = new Tharsis(game);
+        enemy = new Player(game, new MockMessenger((request: InteractionRequest) => {
+            throw Error('Enemy should not have any choice')
+        }));
+        player = new Player(game, new MockMessenger((request: InteractionRequest) => {
+            if(request instanceof ChooseName){
+                return 'mock-name';
             }
-        }
-        if(request instanceof SplitPayment){
-            if(request.cost === 41){
-                return new ResourcesResponse([new Resource('titanium', 2)])
+            if(request instanceof PlaceHex){
+                if(request.hexType === 'ocean'){
+                    return [new Place(3, 7), new Place(1, 2), new Place(4, 8)].slice(0, request.num);
+                }
             }
-        }
-        if(request instanceof ChooseUpTo){
-            if(request.upTo === 12){
-                return new NumberResponse(7);
+            if(request instanceof SplitPayment){
+                if(request.cost === 41){
+                    return [new Resource('titanium', 2)];
+                }
             }
-        }
-        if(request instanceof EnemySelection){
-            return new PlayerResponse(enemy);
-        }
-        throw Error('Unrecognized request');
-    }));
-    game.addPlayer(player);
-    game.startGameCycle();
-    return {
-        game: game,
-        board: board,
-        player: player,
-        enemy: enemy
-    }
-}
-describe('Card.hasTag', () =>{
-    it('should recognize tag', () =>{
-        let snowAlgae = new SnowAlgae();
-        let gia = new GiantIceAsteroid();
-        expect(snowAlgae.hasTag('plant')).to.be.true;
-        expect(snowAlgae.hasTag('space')).to.be.false;
-        expect(snowAlgae.hasTag('earth')).to.be.false;
-        expect(gia.hasTag('space')).to.be.true;
-        expect(gia.hasTag('event')).to.be.true;
-        expect(gia.hasTag('plant')).to.be.false;
+            if(request instanceof ChooseUpTo){
+                if(request.upTo === 12){
+                    return 7;
+                }
+            }
+            if(request instanceof EnemySelection){
+                return enemy;
+            }
+            throw Error('Unrecognized request');
+        }));
+        game.addPlayer(player);
+        game.startGameCycle();
+        snowAlgae = new SnowAlgae();
+        gia = new GiantIceAsteroid();
     })
-})
-describe('Card.playable', () =>{
-    it('should recognize lack of money', () =>{
-        let mock = prepare();
-        let snowAlgae = new SnowAlgae();
-        mock.player.globalEffect(new OceansEffect(2));
-        expect(mock.player.canPlay(snowAlgae)).to.be.false;
-        mock.player.changeResource('megacredit', 12);
-        expect(mock.player.canPlay(snowAlgae)).to.be.true;
-    })
-    it('should take into account availible resources', () =>{
-        let mock = prepare();
-        let gia = new GiantIceAsteroid();
-        expect(mock.player.canPlay(gia)).to.be.false;
-        mock.player.changeResource('titanium', 2);
-        expect(mock.player.canPlay(gia)).to.be.false;
-        mock.player.changeResource('megacredit', 35);
-        expect(mock.player.canPlay(gia)).to.be.true;
 
+    describe('.hasTag', () =>{
+        it('should recognize tag', () =>{
+            expect(snowAlgae.hasTag('plant')).to.be.true;
+            expect(snowAlgae.hasTag('space')).to.be.false;
+            expect(snowAlgae.hasTag('earth')).to.be.false;
+            expect(gia.hasTag('space')).to.be.true;
+            expect(gia.hasTag('event')).to.be.true;
+            expect(gia.hasTag('plant')).to.be.false;
+        })
     })
-    it('should recognize unsatisfied requirements', () =>{
-        let mock = prepare();
-        let snowAlgae = new SnowAlgae();
-        mock.player.changeResource('megacredit', 12);
-        expect(mock.player.canPlay(snowAlgae)).to.be.false;
-        mock.player.globalEffect(new OceansEffect(2));
-        expect(mock.player.canPlay(snowAlgae)).to.be.true;
+    describe('.playable', () =>{
+        it('should recognize lack of money', () =>{
+            player.globalEffect(new OceansEffect(2));
+            expect(player.canPlay(snowAlgae)).to.be.false;
+            player.changeResource('megacredit', 12);
+            expect(player.canPlay(snowAlgae)).to.be.true;
+        })
+        it('should take into account availible resources', () =>{
+            expect(player.canPlay(gia)).to.be.false;
+            player.changeResource('titanium', 2);
+            expect(player.canPlay(gia)).to.be.false;
+            player.changeResource('megacredit', 35);
+            expect(player.canPlay(gia)).to.be.true;
+
+        })
+        it('should recognize unsatisfied requirements', () =>{
+            player.changeResource('megacredit', 12);
+            expect(player.canPlay(snowAlgae)).to.be.false;
+            player.globalEffect(new OceansEffect(2));
+            expect(player.canPlay(snowAlgae)).to.be.true;
+        })
     })
-})
-describe('Card.buy', () => {
-    it('should transfer card to hand', () =>{
-        let mock = prepare();
-        let snowAlgae = new SnowAlgae();
-        let gia = new GiantIceAsteroid();
-        mock.player.cardsToBuy = [snowAlgae, gia];
-        mock.player.changeResource('megacredit', 100);
-        mock.player.buy([snowAlgae]);
-        expect(mock.player.hand).to.contain(snowAlgae);
-        expect(mock.player.cardsToBuy).not.to.contain(snowAlgae);
-    })
-    it('should cost money to buy', () =>{
-        let mock = prepare();
-        let snowAlgae = new SnowAlgae();
-        mock.player.cardsToBuy = [snowAlgae];
-        mock.player.changeResource('megacredit', 100);
-        mock.player.buy([snowAlgae]);
-        expect(mock.player.getResource('megacredit')).to.equal(97);
-    })
-});
-describe('Card.play', () =>{
-    it('should cost money to play', () =>{
-        let mock = prepare();
-        let snowAlgae = new SnowAlgae();
-        mock.player.cardsToBuy = [snowAlgae];
-        mock.player.changeResource('megacredit', 100);
-        mock.player.buy([snowAlgae]);
-        mock.game.extendGameCycle(mock.player.play(snowAlgae));
-        mock.game.run();
-        expect(mock.player.getResource('megacredit')).to.equal(85);
-    })
-    it('should be able to accept payment in resources', () =>{
-        let mock = prepare();
-        let gia = new GiantIceAsteroid();
-        mock.player.cardsToBuy = [gia];
-        mock.player.changeResource('megacredit', 100);
-        mock.player.changeResource('titanium', 3);
-        mock.player.buy([gia]);
-        mock.game.extendGameCycle(mock.player.play(gia));
-        mock.game.run();
-        expect(mock.player.getResource('megacredit')).to.equal(62);
-        expect(mock.player.getResource('titanium')).to.equal(1);
-    })
-    it('should check requirement', () =>{
-        let mock = prepare();
-        let snowAlgae = new SnowAlgae();
-        mock.player.cardsToBuy = [snowAlgae];
-        mock.player.changeResource('megacredit', 100);
-        mock.player.buy([snowAlgae]);
-        expect(mock.player.canPlay(snowAlgae)).to.be.false;
-        mock.player.globalEffect(new OceansEffect(2));
-        expect(mock.player.canPlay(snowAlgae)).to.be.true;
-    })
-    it('should raise production', () => {
-        let mock = prepare();
-        let snowAlgae = new SnowAlgae();
-        mock.player.cardsToBuy = [snowAlgae];
-        mock.player.changeResource('megacredit', 100);
-        mock.player.buy([snowAlgae]);
-        expect(mock.player.getProduction('heat')).to.equal(0);
-        expect(mock.player.getProduction('plant')).to.equal(0);
-        mock.game.extendGameCycle(mock.player.play(snowAlgae));
-        mock.game.run();
-        expect(mock.player.getProduction('heat')).to.equal(1);
-        expect(mock.player.getProduction('plant')).to.equal(1);
-    })
-    it('should raise terraforming markers', () =>{
-        let mock = prepare();
-        let gia = new GiantIceAsteroid();
-        mock.player.cardsToBuy = [gia];
-        mock.player.changeResource('megacredit', 100);
-        mock.player.buy([gia]);
-        mock.game.extendGameCycle(mock.player.play(gia));
-        mock.game.run();
-        expect(mock.board.temperature.level).to.equal(-26);
-        expect(mock.board.oceans.level).to.equal(2);
-        mock.game.run();
-    })
+    describe('.buy', () => {
+        it('should transfer card to hand', () =>{
+            player.cardsToBuy = [snowAlgae, gia];
+            player.changeResource('megacredit', 100);
+            player.buy([snowAlgae]);
+            expect(player.hand).to.contain(snowAlgae);
+            expect(player.cardsToBuy).not.to.contain(snowAlgae);
+        })
+        it('should cost money to buy', () =>{
+            player.cardsToBuy = [snowAlgae];
+            player.changeResource('megacredit', 100);
+            player.buy([snowAlgae]);
+            expect(player.getResource('megacredit')).to.equal(97);
+        })
+    });
+    describe('.play', () =>{
+        it('should cost money to play', (done) =>{
+            player.cardsToBuy = [snowAlgae];
+            player.changeResource('megacredit', 100);
+            player.buy([snowAlgae]);
+            game.extendGameCycle(player.play(snowAlgae));
+            game.afterGame(() => {
+                expect(player.getResource('megacredit')).to.equal(85);
+                done();
+            });
+            game.run();
+        })
+        it('should be able to accept payment in resources', (done) =>{
+            player.cardsToBuy = [gia];
+            player.changeResource('megacredit', 100);
+            player.changeResource('titanium', 3);
+            player.buy([gia]);
+            game.extendGameCycle(player.play(gia));
+            game.afterGame(() => {
+                expect(player.getResource('megacredit')).to.equal(62);
+                expect(player.getResource('titanium')).to.equal(1);
+                done();
+            });
+            game.run();
+        })
+        it('should check requirement', () =>{
+            player.cardsToBuy = [snowAlgae];
+            player.changeResource('megacredit', 100);
+            player.buy([snowAlgae]);
+            expect(player.canPlay(snowAlgae)).to.be.false;
+            player.globalEffect(new OceansEffect(2));
+            expect(player.canPlay(snowAlgae)).to.be.true;
+        })
+        it('should raise production', (done) => {
+            player.cardsToBuy = [snowAlgae];
+            player.changeResource('megacredit', 100);
+            player.buy([snowAlgae]);
+            expect(player.getProduction('heat')).to.equal(0);
+            expect(player.getProduction('plant')).to.equal(0);
+            game.extendGameCycle(player.play(snowAlgae));
+            game.afterGame(() => {
+                expect(player.getProduction('heat')).to.equal(1);
+                expect(player.getProduction('plant')).to.equal(1);
+                done();
+            });
+            game.run();
+        })
+        it('should raise terraforming markers', (done) =>{
+            player.cardsToBuy = [gia];
+            player.changeResource('megacredit', 100);
+            player.buy([gia]);
+            game.extendGameCycle(player.play(gia));
+            game.afterGame(() => {
+                expect(board.temperature.level).to.equal(-26);
+                expect(board.oceans.level).to.equal(2);
+                done();
+            });
+            game.run();
+        })
+    });
 });
