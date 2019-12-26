@@ -1,0 +1,6 @@
+{
+    "ignore": ["tests/", ".gitignore", ".git/", "node_modules/", "data/", "**/*.json"],
+    "watch": ["app/"],
+    "exec": "npm run debug",
+    "ext": "ts"
+}

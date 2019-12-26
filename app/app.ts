@@ -2,6 +2,7 @@
 // import express = require('express');
 import socketio from 'socket.io';
 import express from 'express';
+import db from './db';
 
 const app = express();
 const port = process.env.PORT || 3000
