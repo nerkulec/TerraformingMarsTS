@@ -1,12 +1,11 @@
-import socketio = require('socket.io-client');
-let io = socketio('http://127.0.0.1:3000');
+const socket = io()
 
 console.log('Client started');
 
-io.on('connect', () => {
+socket.on('connect', () => {
     console.log('Connected to server');
 
-    io.on('hello', (fn: (data: any) => void) => {
+    socket.on('hello', (fn: (data: any) => void) => {
         fn('oh hello');
     })
 });
