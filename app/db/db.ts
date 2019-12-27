@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const dburl = process.env.MONGO_URI || 'mongodb://localhost:27017/TerraformingMarsDB'
+const dburl = process.env.MONGODB_URI || 'mongodb://localhost:27017/TerraformingMarsDB'
 
 mongoose
     .connect(dburl, {useUnifiedTopology: true, useNewUrlParser: true})

@@ -37,7 +37,8 @@
   "scripts": {
     "test": "mocha -r ts-node/register tests/*.ts",
     "test:watch": "mocha -r ts-node/register tests/*.ts --watch",
-    "start": "tsc && node build/app/app.js",
+    "tsc": "tsc",
+    "start": "npm run tsc && node build/app/app.js",
     "debug": "node -r ts-node/register --inspect=5858 app/app.ts",
     "debug_brk": "node -r ts-node/register --inspect_brk=5858 app/app.ts",
     "dev": "./node_modules/nodemon/bin/nodemon.js"
