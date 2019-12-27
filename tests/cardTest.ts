@@ -4,7 +4,7 @@ import {SnowAlgae} from '../game/cards/SnowAlgae';
 import {Game} from '../game/Game';
 import {Tharsis, Board} from '../game/Board';
 import {Player} from '../game/Player';
-import {MockMessenger} from '../client/Messenger';
+import {MockMessenger} from '../app/Messenger';
 import {OceansEffect} from '../game/GlobalEffect';
 import {InteractionRequest, PlaceHex, ChooseName, SplitPayment, ChooseUpTo, EnemySelection} from '../game/InteractionRequest';
 import {Place} from '../game/Hex';

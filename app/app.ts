@@ -1,8 +1,8 @@
-// import socketio = require('socket.io');
-// import express = require('express');
 import socketio from 'socket.io';
 import express from 'express';
-import db from './db';
+import bodyParser from 'body-parser'
+import './db/db';
+import {register, userList} from './db/user-ctrl'
 
 const app = express();
 const port = process.env.PORT || 3000
@@ -11,12 +11,23 @@ const io = socketio(server)
 
 console.log('Server started');
 
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 app.set('views', './client/views')
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) =>{
     res.render('play')
 })
+
+app.get('/register', (req, res) =>{
+    res.render('register')
+})
+
+app.post('/register', register)
+app.get('/users', userList)
 
 app.get('/client.js', (req, res) =>{
     res.sendFile('client.js', {root: './build/client'})

@@ -1,7 +1,7 @@
 import {Card, OnEffectPlayed, CostReducing, OnTagPlayed, Tag} from "./Card";
 import {Game, GameCycle} from "./Game";
 import {remove} from "./Utils";
-import {Messenger} from "../client/Messenger";
+import {Messenger} from "../app/Messenger";
 import {ResourceType, Resource} from "./Resource";
 import {GlobalEffect} from "./GlobalEffect";
 
