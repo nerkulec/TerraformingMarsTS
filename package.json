@@ -46,7 +46,8 @@
     "start": "node build/app/app.js",
     "debug": "node -r ts-node/register --inspect=5858 app/app.ts",
     "debug_brk": "node -r ts-node/register --inspect_brk=5858 app/app.ts",
-    "dev": "./node_modules/nodemon/bin/nodemon.js"
+    "dev": "./node_modules/nodemon/bin/nodemon.js",
+    "free": ""
   },
   "repository": {
     "type": "git",

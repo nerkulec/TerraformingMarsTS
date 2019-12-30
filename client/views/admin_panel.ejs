@@ -6,6 +6,10 @@
         <td> Name: <%= user.name %> </td>
         <td> Security level: <%= user.securityLevel %> </td>
         <td> Elo: <%= user.elo %> </td>
+        <td> <form method="post" action="/remove">
+            <input type="hidden" name="id" value="<%= user._id %>">
+            <input type="submit" value="Remove">
+        </form></td>
     </tr>
 <% } %>
 </table>

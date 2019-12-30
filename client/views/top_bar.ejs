@@ -1,3 +1,3 @@
-<% if(locals.error){ %> Error: <%= error %> <% } %>
-<% if(locals.message){ %> Message: <%= message %> <% } %>
-<% if(locals.user){ %> Logged in as: <%= user.name %> <% } %>
+<% if(locals.session){ if(locals.session.error){ %> <div> Error: <%= session.error %> </div> <% } %>
+<% if(locals.session.message){ %> <div> session.Message: <%= message %> </div> <% } %>
+<% if(locals.session.user){ %> <div> Logged in as: <%= session.user.name %> </div> <% }} %>

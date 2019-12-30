@@ -3,10 +3,10 @@ import express from 'express';
 import bodyParser from 'body-parser'
 import session from 'express-session';
 import db from './db/db';
-import {register, login, adminPanel} from './db/user-ctrl'
+import {register, login, adminPanel, removeUser} from './db/user-ctrl'
 import connect_mongo from 'connect-mongo'
-const MongoStore = connect_mongo(session)
 
+const MongoStore = connect_mongo(session)
 const app = express();
 const port = process.env.PORT || 3000
 const secret = process.env.SECRET || 'total_secret'
@@ -30,13 +30,15 @@ app.set('views', './client/views')
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) =>{
-    res.render('main')
+    res.render('main', {session: req.session})
 })
 
 app.get('/register', (req, res) =>{
-    res.render('register')
+    res.render('register', {session: req.session})
 })
+
 app.get('/admin', adminPanel)
+app.post('/remove', removeUser)
 
 app.post('/register', register)
 app.post('/login', login)

@@ -12,7 +12,8 @@ export const register = (req: express.Request, res: express.Response) => {
 
     User.findOne({name: req.body.name}, (err, user) => {
         if (user) {
-            res.render('register', {error: 'User already exists'})
+            req.session!.error = 'User already exists'
+            res.render('register', {session: req.session})
         }else{
             const u = new User({
                 name: req.body.name,
@@ -25,10 +26,12 @@ export const register = (req: express.Request, res: express.Response) => {
             u
                 .save()
                 .then(() => {
-                    res.render('main', {message: 'Registered succesfully!'})
+                    req.session!.message = 'Registered succesfully!'
+                    res.render('main', {session: req.session})
                 })
                 .catch((error: Error) => {
-                    res.render('register', {error: 'Sorry, something went wrong'})
+                    req.session!.error = error.message
+                    res.render('register', {session: req.session})
                 })
 
         }
@@ -43,14 +46,16 @@ export const login = (req: express.Request, res: express.Response) => {
             if(u.name === req.body.name && passwordhash.toString() === u.passwordHash){
                 console.log(`User ${u.name} logged in successfully`)
                 req.session!.user = u
-                res.render("main", {user: u})
+                res.render("main", {session: req.session})
             }else{
                 console.log(`Failed login attempt to ${u.name}`)
-                res.render("main", {error: "Invalid password"})
+                req.session!.error = "Invalid password"
+                res.render("main", {session: req.session})
             }
         }else{
             console.log(`User ${req.body.name} not found`)
-            res.render("main", {error: "Invalid username"})
+            req.session!.error = "Invalid username"
+            res.render("main", {session: req.session})
         }
     })
 }
@@ -59,11 +64,23 @@ export const login = (req: express.Request, res: express.Response) => {
 export const adminPanel = async (req: express.Request, res: express.Response) => {
     await User.find({}, (err, users) => {
         if (err) {
-            res.render('admin_panel', {error: err.message})
+            req.session!.error = err.message
+            res.render('admin_panel', {session: req.session})
         }
         if (!users.length) {
-            res.render('admin_panel', {error: 'No users found'})
+            req.session!.error = 'No users found'
+            res.render('admin_panel', {session: req.session})
         }
         res.render('admin_panel', {users})
     }).catch(err => console.log(err))
+}
+
+export const removeUser = async (req: express.Request, res: express.Response) => {
+    await User.deleteOne({_id: req.body.id})
+        .then(() => {
+            req.session!.message = 'User successfully removed'
+            res.redirect('/admin')})
+        .catch(err => {
+            req.session!.error = err.message
+            res.redirect('/admin')})
 }
