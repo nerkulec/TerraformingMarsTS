@@ -1,0 +1,11 @@
+<%- include('top_bar') %>
+<table>
+<% if(locals.users) for(let user of users){ %>
+    <tr>
+        <td> Id: <%= user._id %> </td>
+        <td> Name: <%= user.name %> </td>
+        <td> Security level: <%= user.securityLevel %> </td>
+        <td> Elo: <%= user.elo %> </td>
+    </tr>
+<% } %>
+</table>
