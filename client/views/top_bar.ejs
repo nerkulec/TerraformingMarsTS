@@ -1,13 +1,27 @@
-<% if(locals.session){ 
-    if(locals.session.error){ %>
-    <div> Error: <%= locals.session.error %> </div>
+<form method="get" action="/">
+    <input type="submit" value="Main">
+</form>
+
+<form method="get" action="/play">
+    <input type="submit" value="Play">
+</form>
+
+<form method="get" action="/admin">
+    <input type="submit" value="Admin">
+</form>
+
+<% if(session.error){ %>
+    <div> Error: <%= session.error %> </div>
 <% delete session.error} %>
-<% if(locals.session.message){ %> 
+
+<% if(session.message){ %>
     <div> Message: <%= session.message %> </div>
-<% delete locals.session.message} %>
-<% if(locals.session.user){ %>
-    <div> Logged in as: <%= session.user.name %> 
+<% delete session.message} %>
+
+<% if(session.user){ %>
+    <div> Logged in as: <%= session.user.name %>
         <form method="post" action="/logout">
             <input type="submit" value="Logout">
-        </form> </div>
-<% }} %>
+        </form>
+    </div>
+<% } %>

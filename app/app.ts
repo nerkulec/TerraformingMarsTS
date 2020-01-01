@@ -3,7 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser'
 import session from 'express-session';
 import db from './db/db';
-import {register, login, adminPanel, removeUser} from './db/user-ctrl'
+import {register, login, adminPanel, removeUser, getUser} from './db/user-ctrl'
 import connect_mongo from 'connect-mongo'
 
 const MongoStore = connect_mongo(session)
@@ -47,7 +47,7 @@ app.post('/logout', (req, res) =>{
     res.redirect('/')
 })
 
-app.get('/user/:name', )
+app.get('/user/:name', getUser)
 
 app.get('/client.js', (req, res) =>{
     res.sendFile('client.js', {root: './build/client'})

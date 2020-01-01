@@ -1,5 +1,5 @@
 <%- include('top_bar') %>
-<% if(session.user){ %>
+<% if(!session.user){ %>
     Login: 
     <form action="/login" method="post">
         <input type="text" name="name"/>

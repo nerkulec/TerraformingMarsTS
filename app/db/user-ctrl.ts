@@ -87,7 +87,7 @@ export const removeUser = async (req: express.Request, res: express.Response) =>
 export const getUser = async (req: express.Request, res: express.Response) => {
     await User.findOne({name: req.params.name})
         .then((user) =>{
-            res.render('user', {session: req.session, user: user})
+            res.render('user_profile', {session: req.session, user: user})
         })
         .catch(err => console.log(err))
 }
