@@ -27,7 +27,7 @@ export const register = (req: express.Request, res: express.Response) => {
                 .save()
                 .then(() => {
                     req.session!.message = 'Registered succesfully!'
-                    res.render('main', {session: req.session})
+                    res.redirect('/')
                 })
                 .catch((error: Error) => {
                     req.session!.error = error.message
@@ -46,17 +46,15 @@ export const login = (req: express.Request, res: express.Response) => {
             if(u.name === req.body.name && passwordhash.toString() === u.passwordHash){
                 console.log(`User ${u.name} logged in successfully`)
                 req.session!.user = u
-                res.render("main", {session: req.session})
             }else{
                 console.log(`Failed login attempt to ${u.name}`)
                 req.session!.error = "Invalid password"
-                res.render("main", {session: req.session})
             }
         }else{
             console.log(`User ${req.body.name} not found`)
             req.session!.error = "Invalid username"
-            res.render("main", {session: req.session})
         }
+        res.redirect('/')
     })
 }
 
@@ -70,17 +68,26 @@ export const adminPanel = async (req: express.Request, res: express.Response) =>
         if (!users.length) {
             req.session!.error = 'No users found'
             res.render('admin_panel', {session: req.session})
+        }else{
+            res.render('admin_panel', {session: req.session, users: users})
         }
-        res.render('admin_panel', {users})
     }).catch(err => console.log(err))
 }
 
 export const removeUser = async (req: express.Request, res: express.Response) => {
     await User.deleteOne({_id: req.body.id})
         .then(() => {
-            req.session!.message = 'User successfully removed'
-            res.redirect('/admin')})
+            req.session!.message = 'User successfully removed'})
         .catch(err => {
-            req.session!.error = err.message
+            req.session!.error = err.message})
+        .finally(() => {
             res.redirect('/admin')})
+}
+
+export const getUser = async (req: express.Request, res: express.Response) => {
+    await User.findOne({name: req.params.name})
+        .then((user) =>{
+            res.render('user', {session: req.session, user: user})
+        })
+        .catch(err => console.log(err))
 }

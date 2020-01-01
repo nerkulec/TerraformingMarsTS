@@ -1,12 +1,14 @@
 <%- include('top_bar') %>
-Login: 
-<form action="/login" method="post">
-    <input type="text" name="name"/>
-    <input type="password" name="password"/>
-    <input type="submit">
-</form>
-Enter as guest:
-<form action="/guest" method="post">
-    <input type="text" name="name"/>
-    <input type="submit">
-</form>
+<% if(session.user){ %>
+    Login: 
+    <form action="/login" method="post">
+        <input type="text" name="name"/>
+        <input type="password" name="password"/>
+        <input type="submit">
+    </form>
+    Enter as guest:
+    <form action="/guest" method="post">
+        <input type="text" name="name"/>
+        <input type="submit">
+    </form>
+<% } %>

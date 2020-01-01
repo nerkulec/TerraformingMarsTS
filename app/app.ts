@@ -42,9 +42,19 @@ app.post('/remove', removeUser)
 
 app.post('/register', register)
 app.post('/login', login)
+app.post('/logout', (req, res) =>{
+    delete req.session!.user
+    res.redirect('/')
+})
+
+app.get('/user/:name', )
 
 app.get('/client.js', (req, res) =>{
     res.sendFile('client.js', {root: './build/client'})
+})
+
+app.get('/style.css', (req, res) =>{
+    res.sendFile('style.css', {root: './client'})
 })
 
 io.on('connection', (socket) => {
