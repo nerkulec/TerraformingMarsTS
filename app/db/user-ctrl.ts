@@ -3,13 +3,6 @@ import express from 'express'
 import crypto from 'crypto-js'
 
 export const register = (req: express.Request, res: express.Response) => {
-    if (!req.body) {
-        return res.status(400).json({
-            success: false,
-            error: 'Empty request',
-        })
-    }
-
     User.findOne({name: req.body.name}, (err, user) => {
         if (user) {
             req.session!.error = 'User already exists'
@@ -38,8 +31,8 @@ export const register = (req: express.Request, res: express.Response) => {
     })
 }
 
-export const login = (req: express.Request, res: express.Response) => {
-    User.findOne({name: req.body.name}, (err, user) => {
+export const login = async (req: express.Request, res: express.Response) => {
+    await User.findOne({name: req.body.name}, (err, user) => {
         if (user) {
             let passwordhash = crypto.SHA256(req.body.password)
             let u = user.toObject()
