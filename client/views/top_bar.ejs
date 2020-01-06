@@ -6,23 +6,22 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 <nav class="navbar navbar-expand navbar-dark bg-dark">
-<div class="collapse navbar-collapse d-flex align-items-center">
+<div class="collapse navbar-collapse d-flex align-items-center pos-relative">
     <ul class="navbar-nav mr-5">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" role="button" id="dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="navbar-toggler-icon"></span>
             </a>
             <div class="dropdown-menu" aria-labelledby="dropdown-button">
-                <form method="get" action="/play">
-                    <input type="submit" class="btn btn-success w-100 rounded-0" value="Play">
-                    <input type="submit" class="dropdown-item" value="Hall of fame">
-                    <input type="submit" class="dropdown-item" value="Stats">
-                    <input type="submit" class="dropdown-item" value="Your account">
-                    <input type="submit" class="dropdown-item" value="Friends">
-                    <input type="submit" class="dropdown-item" value="Tournament">
-                    <input type="submit" class="dropdown-item" value="About">
-                    <input type="submit" class="dropdown-item" value="Contact">
-                </form>
+                    <a href="/play" class="btn btn-success w-100 rounded-0">Play</a>
+                    <a href="#" class="dropdown-item">Hall of fame</a>
+                    <a href="#" class="dropdown-item">Stats</a>
+                    <a href="#" class="dropdown-item">Your account</a>
+                    <a href="#" class="dropdown-item">Friends</a>
+                    <a href="#" class="dropdown-item">Tournament</a>
+                    <a href="#" class="dropdown-item">About</a>
+                    <a href="#" class="dropdown-item">Contact</a>
+                    <a href="/admin" class="btn btn-primary w-100 rounded-0">Admin</a>
             </div>
         </li>
     </ul>
@@ -32,7 +31,7 @@
         </div>
     <% } %>
 
-    <div class="mx-auto">
+    <div class="title pos-absolute">
         <a href="/"><h1 class="text-warning">Terraforming Mars</h1></a>
     </div>
 
@@ -48,15 +47,11 @@
 
 
 <div class="top_bar">
-    <form method="get" action="/">
-        <input type="submit" value="Main">
-    </form>
     
     
     
-    <form method="get" action="/admin">
-        <input type="submit" value="Admin">
-    </form>
+    
+    
     
     <% if(session.error){ %>
         <div> Error: <%= session.error %> </div>

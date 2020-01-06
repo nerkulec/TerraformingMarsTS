@@ -1,14 +1,43 @@
 <%- include('top_bar') %>
+<div class="content">
 <% if(!session.user){ %>
-    Login: 
-    <form action="/login" method="post">
-        <input type="text" name="name"/>
-        <input type="password" name="password"/>
-        <input type="submit">
-    </form>
-    Enter as guest:
-    <form action="/guest" method="post">
-        <input type="text" name="name"/>
-        <input type="submit">
-    </form>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="flex-column col-8 d-flex">
+                <div class="login-panel">
+                    <h4>Login:</h4>
+                    <form action="/login" method="post">
+                        <div class="form-group row align-items-center">
+                            <label for="nameInput" class="col-2 m-0">Username: </label>
+                            <input type="text" name="name" id="nameInput" class="col-8 form-control"/>
+                        </div>
+                        <div class="form-group row align-items-center">
+                            <label for="passwdInput" class="col-2 m-0">Password: </label>
+                            <input type="password" name="password" id="passwdInput" class="col-8 form-control"/>
+                        </div>
+                        <div class="form-group row align-items-center">
+                            <input type="submit" value="Login" class="col-5 mx-auto btn btn-success">
+                        </div>
+                    </form>
+                </div>
+                <div class="guest-panel">
+                    <h4>Enter as guest: </h4>
+                    <form action="/guest" method="post">
+                        <div class="form-group row align-items-center">
+                            <label for="guestNameInput" class="col-2 m-0">Nick: </label>
+                            <input type="text" name="name" id="guestNameInput" class="col-8 form-control"/>
+                        </div>
+                        <div class="form-group row align-items-center">
+                            <input type="submit" value="Join" class="col-5 mx-auto btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    
 <% } %>
+
+</div>
