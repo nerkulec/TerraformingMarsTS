@@ -41,25 +41,15 @@
         </form>
     <% } %>
 </div>
-
-    
 </nav>
+<% if(session.error){ %>
+    <div class="alert alert-danger w-100 mb-0 rounded-0" role="alert">
+        Error: <%= session.error %>
+    </div>
+<% delete session.error} %>
 
-
-<div class="top_bar">
-    
-    
-    
-    
-    
-    
-    <% if(session.error){ %>
-        <div> Error: <%= session.error %> </div>
-    <% delete session.error} %>
-    
-    <% if(session.message){ %>
-        <div> Message: <%= session.message %> </div>
-    <% delete session.message} %>
-    
-    
-</div>
+<% if(session.message){ %>
+    <div class="alert alert-info w-100 mb-0 rounded-0" role="alert">
+        Message: <%= session.message %>
+    </div>
+<% delete session.message} %>
