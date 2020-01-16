@@ -1,15 +1,28 @@
 <%- include('top_bar') %>
-<table>
-<% if(locals.users) for(let user of users){ %>
-    <tr>
-        <td> Id: <%= user._id %> </td>
-        <td> Name: <%= user.name %> </td>
-        <td> Security level: <%= user.securityLevel %> </td>
-        <td> Elo: <%= user.elo %> </td>
-        <td> <form method="post" action="/remove">
-            <input type="hidden" name="id" value="<%= user._id %>">
-            <input type="submit" value="Remove">
-        </form></td>
-    </tr>
-<% } %>
-</table>
+<div class="content">
+    <table class="table">
+        <tr>
+            <th>Id:</th>
+            <th>Name:</th>
+            <th>Security level:</th>
+            <th>Elo:</th>
+            <th></th>
+        </tr>
+        <% if(locals.users) for(let user of users){ %>
+            <tr>
+                <td>  <%= user._id %> </td>
+                <td>  <%= user.name %> </td>
+                <td>  <%= user.securityLevel %> </td>
+                <td>  <%= user.elo %> </td>
+                <td> 
+                    <form method="post" action="/remove">
+                        <input type="hidden" name="id" value="<%= user._id %>">
+                        <div class="form-group">
+                            <input type="submit" value="Remove" class="btn btn-danger rounded-0 w-30">
+                        </div>
+                    </form>
+                </td>
+            </tr>
+        <% } %>
+        </table>
+</div>
