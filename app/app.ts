@@ -1,31 +1,31 @@
-import socketio from 'socket.io';
-import express from 'express';
+import socketio from 'socket.io'
+import express from 'express'
 import bodyParser from 'body-parser'
-import session from 'express-session';
-import db from './db/db';
-import {register, login, adminPanel, removeUser, getUser} from './db/user-ctrl'
+import session from 'express-session'
 import connect_mongo from 'connect-mongo'
 
 const MongoStore = connect_mongo(session)
-const app = express();
+const dburl = process.env.MONGODB_URI || 'mongodb://localhost:27017/TerraformingMarsDB'
+const app = express()
 const port = process.env.PORT || 3000
 const secret = process.env.SECRET || 'total_secret'
 const server = app.listen(port)
 const io = socketio(server)
 
-console.log('Server started');
+console.log('Server started')
 
 app.use(session({
     secret: secret,
     resave: false,
     saveUninitialized: false,
-    store: new MongoStore({mongooseConnection: db})
-}));
+    store: new MongoStore({url: dburl})
+}))
 
 app.use(bodyParser.urlencoded({
     extended: true
-}));
-app.use(bodyParser.json());
+}))
+
+app.use(bodyParser.json())
 app.set('views', './client/views')
 app.set('view engine', 'ejs')
 
@@ -37,17 +37,27 @@ app.get('/register', (req, res) =>{
     res.render('register', {session: req.session})
 })
 
-app.get('/admin', adminPanel)
-app.post('/remove', removeUser)
+app.get('/admin', (req: any, res: any) =>{
+    res.render('admin_panel', {session: req.session})
+})
+app.post('/remove', (req: any, res: any) =>{
+    res.render('admin', {session: req.session})
+})
+app.post('/register', (req: any, res: any) =>{
+    res.render('main', {session: req.session})
+})
+app.post('/login', (req: any, res: any) =>{
+    res.render('main', {session: req.session})
+})
 
-app.post('/register', register)
-app.post('/login', login)
 app.post('/logout', (req, res) =>{
     delete req.session!.user
     res.redirect('/')
 })
 
-app.get('/user/:name', getUser)
+app.get('/user/:name', (req: any, res: any) =>{
+    res.render('user_profile', {session: req.session})
+})
 
 app.get('/client.js', (req, res) =>{
     res.sendFile('client.js', {root: './build/client'})
@@ -58,9 +68,9 @@ app.get('/style.css', (req, res) =>{
 })
 
 io.on('connection', (socket) => {
-    console.log('Client connected to server');
+    console.log('Client connected to server')
 
     socket.emit('hello', (data: any) => {
-        console.log(data);
-    });
-});
+        console.log(data)
+    })
+})
