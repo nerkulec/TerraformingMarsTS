@@ -4,3 +4,48 @@
     <div> Elo: <%= user.elo %> </div>
     <div> Recent games:</div>
 </div>
+
+<!-- 1. To co już jest (tylko lepiej)
+
+!!! Przykładowe dane musisz sobie sam przygotować, ja daję tylko opis
+
++ dodatkowo:
+user = {
+    favoriteCorporations: string[3],
+    info: string, // dluzszy opis, taki na 4 linijki mozna sie spodziewać
+    recent_games: Game[0-20], // jak wygląda Game wytłumaczone dalej
+    icon_num: int, // numerek ikonki
+    rating: float, //1-5
+    comments: Comment[0-20]
+}
+
+Game = {
+    id: int,
+    place: int, //1-5 - najlepiej dać złoty/srebrny/brązowy medal, dla miejsca 4,5 dać tylko numerek
+    corporation: string,
+    num_generations: int,
+    victory_points: int,
+    awards: string[0-3],
+    milestones: string[0-3]
+}
+
+Comment = {
+    id: int,
+    author: string,
+    text: string // treść
+}
+
+Co ma się pojawić:
+- ikonka, nazwa, elo
+- 3 ulubione korporacje
+Niżej:
+- lista gier, każda gra jako ładny taki prostokąt, można się wzorować np op.gg
+- każda klikalna i przenosi na /game/id (jeszcze nie istnieje)
+Z prawej:
+- invite (do znajomych)
+- invite (do clubu)
+- rate (1-5 gwiazdek)
+- comment
+Poniżej poprzedniej sekcji:
+- lista commentów: ikonka gracza + nazwa, niżej treść
+-->

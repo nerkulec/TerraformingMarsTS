@@ -1,0 +1,6 @@
+Ważność rzeczy do zrobienia (w kolejności):
+1. main
+2. user_profile
+3. room
+4. history
+5. play

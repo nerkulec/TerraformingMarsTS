@@ -43,5 +43,31 @@
     
     
 <% } %>
+<!-- 
+    Wejście:
+    rooms = Room[1-20]
 
+    Room = {
+        name: string,
+        room_id: int,
+        creator: string,
+        creator_id: int, // klikanie w nazwe gracza przenosi na /user/creator_id
+        mode: string,
+        players: int,
+        max_players: int, // wyświetlać players/max_players
+        elo_range: undefined or int[2], // albo nic albo dwie liczby np [1500, 1800], wyświetlić 1500-1800
+        ranked: boolean
+    }
+
+    Dla zalogowanych:
+    - u góry "stwórz pokój"
+    - niżej lista pokoi w postaci listy ładnych prostokątów, klikanie zaznacza pokój (podświetla się)
+    - na dole jest przycisk "join room" - przenosi na /room/room_id
+    - wyżej filtry - suwaki i pola do wpisywania - jak narazie: 
+                                                    - suwak ranked: [nieranked, obojetne, ranked]
+                                                    - min elo
+                                                    - max elo
+                                                    - przycisk "find more" (stronka się przeładuje, do session musisz wrzucić wszystkie dane z filtra - najlepiej w obiekcie o nazwie 'filter')
+    - w trakcie wybierania filtrów filtruj też widoczne pokoje (będzie ich ubywać, użytkownik kliknie "find more" i się przeładuje)
+-->
 </div>
