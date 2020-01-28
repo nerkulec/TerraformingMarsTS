@@ -1,0 +1,59 @@
+form{
+    margin: 0;
+}
+
+h1,h2,h3,h4,h5,h6{
+    margin: 0;
+}
+
+a:hover{
+    text-decoration: none !important;
+}
+
+label{
+    font-size: 18px;
+}
+
+.pos-absolute{
+    position: absolute;
+}
+
+.pos-relative{
+    position: relative;
+}
+
+.content{
+    background-image: linear-gradient(to bottom, rgba(155,153,152,1), rgba(52,25,14,0.8));
+    padding: 3em;
+    height: 100%;
+}
+
+.title{
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.login-panel{
+    padding: 3em;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-top: 2px solid #1E701B;
+    border-left: 2px solid #1E701B;
+    border-right: 2px solid #1E701B;
+}
+
+.guest-panel{
+    padding: 3em;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom: 2px solid #185FEF;
+    border-left: 2px solid #185FEF;
+    border-right: 2px solid #185FEF;
+}
+
+.register-panel{
+    padding: 3em;
+    border: 2px solid #34190E;
+    border-radius: 5px;
+}
+

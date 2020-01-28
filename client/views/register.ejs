@@ -1,6 +1,31 @@
 <%- include('top_bar') %>
+
+<div class="content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="flex-column col-8 d-flex">
+                <div class="register-panel">
+                    <h4>Register: </h4>
+                    <form action="/register" method="POST">
+                        <div class="form-group row align-items-center">
+                            <label for="registerName" class="col-2 m-0">Name: </label>
+                            <input type="text" name="name" id="registerName" class="col-8 form-control"/>
+                        </div>
+                        <div class="form-group row align-items-center">
+                            <label for="registerPass" class="col-2 m-0">Password: </label>
+                            <input type="text" name="name" id="registerPass" class="col-8 form-control"/>
+                        </div>
+                        <div class="form-group row align-items-center">
+                            <input type="submit" value="Register" class="col-5 mx-auto btn btn-dark">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <form method="post">
-    <input type="text" name="name"/>
+    
     <input type="text" name="password"/>
     <input type="submit"/>
 </form>

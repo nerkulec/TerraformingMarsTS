@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "bootstrap": "^4.4.1",
     "connect-mongo": "^3.2.0",
     "crypto-js": "^3.1.9-1",
     "ejs": "^3.0.1",
@@ -20,6 +21,7 @@
     "socket.io-client": "^2.2.0"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.12.0",
     "@types/chai": "^4.2.7",
     "@types/connect-mongo": "^3.0.0",
     "@types/crypto-js": "^3.1.43",
@@ -47,7 +49,8 @@
     "debug": "node -r ts-node/register --inspect=5858 app/app.ts",
     "debug_brk": "node -r ts-node/register --inspect_brk=5858 app/app.ts",
     "dev": "./node_modules/nodemon/bin/nodemon.js",
-    "free": ""
+    "free": "",
+    "go": "npm run tsc && npm run start"
   },
   "repository": {
     "type": "git",
