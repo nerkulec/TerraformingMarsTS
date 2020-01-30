@@ -40,7 +40,24 @@
             
         </div>
     </div>
-    
+    <div>
+        <% 
+        rooms = [{
+            name: "bartek room",
+            creator: "bartek",
+            players: 3,
+            max_players: 5,
+            id: 17
+        }]
+        %>
+        <% for(room of rooms){ %>
+            <div>
+                Name: <%= room.name %> Creator <%=  room.creator %>
+                <%= room.players %>/<%= room.max_players %>
+                <form action="/room/<%= room.id %>" method="post"> <input type="submit" value="Enter"/> </form>
+            </div>
+        <% } %> 
+    </div>
     
 <% } %>
 <!-- 
