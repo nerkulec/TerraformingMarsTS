@@ -25,6 +25,9 @@ export abstract class Card{
     enemyResources: Resource[] = [];
     enemyProduction: Resource[] = [];
 
+    collectedAmount: number = 0;
+    collects?: string;
+
     upTo: boolean = false;
 
     hasTag = (tag: Tag): boolean => this.tags.includes(tag);
@@ -40,8 +43,12 @@ export abstract class Card{
         let tempCost: number = this.cost;
         tempCost -= player.costReduction(this);
         let maxCost: number = player.getResource("megacredit")
-        maxCost += player.getResource("steel")*player.steelWorth;
-        maxCost += player.getResource("titanium")*player.titaniumWorth;
+        if(this.hasTag("building")){
+            maxCost += player.getResource("steel")*player.steelWorth;
+        }
+        if(this.hasTag("space")){
+            maxCost += player.getResource("titanium")*player.titaniumWorth;
+        }
         if(maxCost < tempCost){
             return false;
         }
@@ -128,7 +135,7 @@ export abstract class OnEffectPlayed extends Card{
     }
 }
 
-export abstract class CostReducing extends Card{
+export abstract class CostReducingCard extends Card{
     abstract reduceCost(card: Card): number;
     * play(player: Player, board: Board, gameCycle: GameCycle): GameCycle{
         player.addCostReducingCard(this);
@@ -136,9 +143,10 @@ export abstract class CostReducing extends Card{
     }
 }
 
-export abstract class Active extends Card{
+export abstract class ActiveCard extends Card{
+    type: CardType = "blue";
     used: boolean = false;
-    abstract actionAvailible(player: Player): void;
+    abstract actionAvailible(player: Player): boolean;
     * action(player: Player): GameCycle {
         this.used = true;
     }
