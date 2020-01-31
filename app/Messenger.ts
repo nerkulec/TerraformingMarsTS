@@ -2,7 +2,7 @@ import {InteractionRequest} from '../game/InteractionRequest'
 import createIoPromise, {RequestResponseRecord, IoPromiseRecord} from 'socket.io-promise'
 import {timeoutPromise} from '../game/Utils'
 
-type Socket = import('socket.io').Socket;
+type Socket = import('socket.io').Socket
 
 export abstract class Messenger{
     abstract async requester(request: InteractionRequest): Promise<any>
