@@ -1,39 +1,46 @@
-import {InteractionRequest, parseResponse} from '../game/InteractionRequest';
+import {InteractionRequest} from '../game/InteractionRequest'
+import createIoPromise, {RequestResponseRecord, IoPromiseRecord} from 'socket.io-promise'
+import {timeoutPromise} from '../game/Utils'
 
 type Socket = import('socket.io').Socket;
 
-export interface Messenger{
-    request(request: InteractionRequest, callback: (response: any) => void): void;
+export abstract class Messenger{
+    abstract async requester(request: InteractionRequest): Promise<any>
+
+    async request(request: InteractionRequest): Promise<any>{
+        const response = await this.requester(request)
+        if(request.valid(response)){
+            return response
+        }else{
+            throw new Error('Invalid promise')
+        }
+    }
+
+    async every(requests: InteractionRequest[]){
+        const promises = requests.map(request => this.request(request))
+        return await Promise.all(promises)
+    }
+
+    async any(requests: InteractionRequest[]){
+        const promises = requests.map(request => this.request(request))
+        return await Promise.race(promises)
+    }
 }
 
-export class SocketMessenger implements Messenger{
+export class SocketMessenger extends Messenger{
+    ioPromise: IoPromiseRecord<RequestResponseRecord>
+    requester = (request: InteractionRequest) => this.ioPromise(request.getInfo())
+
     constructor(protected socket: Socket){
-    }
-
-    request(request: InteractionRequest, callback: (response: any) => void){
-        let info = request.getInfo();
-        this.socket.emit('request', info);
-        this.socket.once('response', (responseData) => { // different request+response pair names, distinguish valid and not valid responses
-            callback(parseResponse(responseData));
-        })
+        super()
+        this.ioPromise = createIoPromise(socket)
     }
 }
 
-export class MockMessenger implements Messenger{
-    constructor(private responseProvider: (request: InteractionRequest) => any){
-    }
+export class MockMessenger extends Messenger{
+    requester = (request: InteractionRequest) => timeoutPromise(this.responseProvider(request), 100)
 
-    request(request: InteractionRequest, callback: (response: any) => void){
-        setTimeout(() => {
-            callback(this.responseProvider(request))
-        }, 100);
-    }
-    // TODO:
-    every(requests: InteractionRequest[], callback: (responses: any[]) => void){
-        
-    }
-    // TODO:
-    any(requests: InteractionRequest[], callback: (responses: any[]) => void){
-        
+    constructor(private responseProvider: (request: InteractionRequest) => any){
+        super()
     }
 }

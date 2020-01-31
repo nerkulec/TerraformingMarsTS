@@ -1,11 +1,11 @@
 import {Player} from "./Player";
 import {Board} from "./Board";
-import {GameCycle, Game} from "./Game";
-import {SplitPayment, PlaceHex, EnemySelection, ChooseUpTo} from "./InteractionRequest";
+import {Game} from "./Game";
 import {Resource} from "./Resource";
 import {Requirement} from "./Requirement";
 import {GlobalEffect, OceansEffect} from "./GlobalEffect";
 import {Hex, Place} from "./Hex";
+import {SplitPayment, PlaceHex, EnemySelection, ChooseUpTo} from "./InteractionRequest";
 
 type CardType = 'green'|'blue'|'red';
 export type Tag = "building"|"space"|"plant"|"animal"|"microbe"|"science"|"energy"|"event"|"jupiter"|"earth";
@@ -44,10 +44,10 @@ export abstract class Card{
         tempCost -= player.costReduction(this);
         let maxCost: number = player.getResource("megacredit")
         if(this.hasTag("building")){
-            maxCost += player.getResource("steel")*player.steelWorth;
+            maxCost += player.getResource("steel") * player.steelWorth;
         }
         if(this.hasTag("space")){
-            maxCost += player.getResource("titanium")*player.titaniumWorth;
+            maxCost += player.getResource("titanium") * player.titaniumWorth;
         }
         if(maxCost < tempCost){
             return false;
@@ -55,26 +55,26 @@ export abstract class Card{
         return this.requirement === undefined || this.requirement.satisfied(player, board); 
     }
 
-    * pay(player: Player, gameCycle: GameCycle): GameCycle{
+    async pay(player: Player){
         let tempCost: number = this.cost;
         tempCost -= player.costReduction(this);
         if(this.tags.includes('building') || this.tags.includes('space')){
-            let resources = yield new SplitPayment(player, tempCost, this.tags);
+            let resources = await player.request(new SplitPayment(player, tempCost, this.tags))
             for(const res of resources){
                 if(res.type == "steel"){
                     player.changeResource("steel", -res.amount);
-                    tempCost -= res.amount*player.steelWorth;
+                    tempCost -= res.amount * player.steelWorth;
                 }else if(res.type == "titanium"){
                     player.changeResource("titanium", -res.amount);
-                    tempCost -= res.amount*player.titaniumWorth;
+                    tempCost -= res.amount * player.titaniumWorth;
                 }
             }
         }
         player.changeResource("megacredit", -tempCost)
     }
 
-    * play(player: Player, board: Board, gameCycle: GameCycle): GameCycle{
-        yield* this.pay(player, gameCycle);
+    async play(player: Player, board: Board){
+        await this.pay(player);
         player.playFromHand(this);
         player.onTagPlayed(this);
         if(this.type != 'red'){
@@ -82,7 +82,7 @@ export abstract class Card{
         }
         for(const effect of this.effects){
             if(effect instanceof OceansEffect){
-                let places = yield new PlaceHex(player, 'ocean', effect.times);
+                let places = await player.request(new PlaceHex(player, 'ocean', effect.times));
                 places.forEach((place: Place)=>board.placeHex(place, new Hex('ocean')));
             }
             player.globalEffect(effect);
@@ -94,18 +94,18 @@ export abstract class Card{
             player.changeProduction(res.type, res.amount);
         }
         if(this.enemyResources.length > 0 || this.enemyProduction.length > 0){
-            let enemy = yield new EnemySelection(player);
+            let enemy = await player.request(new EnemySelection(player));
             for(const res of this.enemyResources){
                 let amount = res.amount;
                 if(this.upTo){
-                    amount = yield new ChooseUpTo(player, res.type, res.amount);
+                    amount = await player.request(new ChooseUpTo(player, res.type, res.amount));
                 }
                 enemy.changeResource(res.type, amount);
             }
             for(const res of this.enemyProduction){
                 let amount = res.amount;
                 if(this.upTo){
-                    amount = yield new ChooseUpTo(player, res.type, res.amount, true);
+                    amount = await player.request(new ChooseUpTo(player, res.type, res.amount, true));
                 }
                 enemy.changeProduction(res.type, amount);
             }
@@ -120,26 +120,26 @@ export abstract class Card{
 
 
 export abstract class OnTagPlayed extends Card{
-    abstract onTagPlayed(card: Card): GameCycle;
-    * play(player: Player, board: Board, gameCycle: GameCycle): GameCycle{
+    abstract onTagPlayed(card: Card): void;
+    async play(player: Player, board: Board){
         player.addOnTagCard(this);
-        yield* super.play(player, board, gameCycle);
+        await super.play(player, board);
     }
 }
 
 export abstract class OnEffectPlayed extends Card{
     abstract onEffectPlayed(effect: GlobalEffect): void;
-    * play(player: Player, board: Board, gameCycle: GameCycle): GameCycle{
+    async play(player: Player, board: Board){
         player.addOnEffectCard(this);
-        yield* super.play(player, board, gameCycle);
+        await super.play(player, board);
     }
 }
 
 export abstract class CostReducingCard extends Card{
     abstract reduceCost(card: Card): number;
-    * play(player: Player, board: Board, gameCycle: GameCycle): GameCycle{
+    async play(player: Player, board: Board){
         player.addCostReducingCard(this);
-        yield* super.play(player, board, gameCycle);
+        await super.play(player, board);
     }
 }
 
@@ -147,7 +147,7 @@ export abstract class ActiveCard extends Card{
     type: CardType = "blue";
     used: boolean = false;
     abstract actionAvailible(player: Player): boolean;
-    * action(player: Player): GameCycle {
+    async action(player: Player) {
         this.used = true;
     }
     reset(): void {

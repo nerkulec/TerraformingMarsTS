@@ -16,11 +16,6 @@ export function shuffle(a: any[]): void {
     }
 }
 
-export function * chain<T1, T2>(a: Generator<T1, void,  T2>, b: Generator<T1, void, T2>): Generator<T1, void, T2>{
-    yield * a;
-    yield * b;
-}
-
 type Constructor<T> = {new (...args: any[]): T};
 export function ensure<T>(o: any, className: Constructor<T>): T{
     if(o instanceof className){
@@ -29,3 +24,5 @@ export function ensure<T>(o: any, className: Constructor<T>): T{
         throw Error(o+' was supposed to be '+className.name+', but is '+typeof(o));
     }
 }
+
+export const timeoutPromise = (value: any, time: number) => new Promise((resolve, reject) => setTimeout(() => resolve(value), time))
