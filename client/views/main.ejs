@@ -1,6 +1,8 @@
 <%- include('top_bar') %>
 <div class="content">
     <div class="container">
+<% if(!session.user){ %>
+    
         <div class="row justify-content-center">
             <div class="flex-column col-8 d-flex">
                 <div class="login-panel">
@@ -38,9 +40,24 @@
             </div>
             
         </div>
+    
+    
+<% } else{ %>
+
+    <div class="row justify-content-center">
+        <div class="flex-column col-8 d-flex">
+            <a href="/room">
+                <button class="btn btn-info">STWÓRZ POKÓJ</button>
+            </a>
+            <hr class="w-100">
+            <%
+                while (con.query("SELECT * FROM ")) {
+                    
+                }
+            %>
+        </div>
     </div>
-    
-    
+
 <% } %>
 <!-- 
     Wejście:
@@ -69,4 +86,6 @@
                                                     - przycisk "find more" (stronka się przeładuje, do session musisz wrzucić wszystkie dane z filtra - najlepiej w obiekcie o nazwie 'filter')
     - w trakcie wybierania filtrów filtruj też widoczne pokoje (będzie ich ubywać, użytkownik kliknie "find more" i się przeładuje)
 -->
+
+    </div>
 </div>
