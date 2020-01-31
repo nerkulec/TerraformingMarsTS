@@ -71,6 +71,20 @@ export async function get_rooms(settings: any){
 // FROM rooms
 // JOIN users ON users.in_room = rooms.id
 
+export async function get_room(req: any, res: any) {
+    const {room_id} = req.params
+    const rooms = (await db.query(`
+        SELECT *
+        FROM rooms
+        WHERE id = $1`, [room_id])).rows
+    if(rooms.length !== 1){
+        req.session.error = 'Room not found'
+        res.redirect('/')
+    }else{
+        res.render('room', {session: req.session, room: rooms[0]})
+    }
+}
+
 export async function history(req: any, res: any) {
     const {user_id, n} = req.body
     const games = await get_games(user_id, n)
