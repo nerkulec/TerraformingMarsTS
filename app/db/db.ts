@@ -50,6 +50,14 @@ export async function get_rooms(settings: any){
     n = n || 20
     only_public = only_public || true
     not_full = not_full || true
+    const rooms = (await db.query(`
+        SELECT *
+        FROM rooms`)).rows
+    for(let room of rooms){
+        room.creator = 'placeholder'
+        room.players = 0
+    }
+    return rooms
 
 }
 // SELECT rooms.name,
