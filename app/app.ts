@@ -3,6 +3,8 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import connect_mongo from 'connect-mongo'
+import {register, login} from './db/db'
+require('dotenv').config()
 
 const MongoStore = connect_mongo(session)
 const dburl = process.env.MONGODB_URI || 'mongodb://localhost:27017/TerraformingMarsDB'
@@ -43,12 +45,8 @@ app.get('/admin', (req: any, res: any) =>{
 app.post('/remove', (req: any, res: any) =>{
     res.render('admin', {session: req.session})
 })
-app.post('/register', (req: any, res: any) =>{
-    res.render('main', {session: req.session})
-})
-app.post('/login', (req: any, res: any) =>{
-    res.render('main', {session: req.session})
-})
+app.post('/register', register)
+app.post('/login', login)
 
 app.post('/logout', (req, res) =>{
     delete req.session!.user

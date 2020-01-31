@@ -65,6 +65,14 @@ export class EnemySelection extends InteractionRequest{
     }
 }
 
+export class CardSelection extends InteractionRequest{
+    constructor(player: Player){
+        super(player);
+    }
+    getInfo(): Object{
+        return {}
+    }
+}
 export class NumberSelection extends InteractionRequest{
     constructor(player: Player){
         super(player);

@@ -1,4 +1,4 @@
-import {Card, OnEffectPlayed, CostReducing, OnTagPlayed, Tag} from "./Card";
+import {Card, OnEffectPlayed, CostReducingCard, OnTagPlayed, Tag} from "./Card";
 import {Game, GameCycle} from "./Game";
 import {remove} from "./Utils";
 import {Messenger} from "../app/Messenger";
@@ -10,7 +10,7 @@ export class Player{
     playedCards: Card[] = [];
     hand: Card[] = [];
     cardsToBuy: Card[] = [];
-    costReducingCards: CostReducing[] = [];
+    costReducingCards: CostReducingCard[] = [];
     onTagCards: OnTagPlayed[] = [];
     onEffectCards: OnEffectPlayed[] = [];
 
@@ -21,7 +21,7 @@ export class Player{
     steelWorth: number = 2;
     titaniumWorth: number = 3;
 
-    constructor(private game: Game, public messenger: Messenger){
+    constructor(public game: Game, public messenger: Messenger){
     }
 
     getResource = (type: ResourceType): number => this.resources.get(type) || 0;
@@ -33,7 +33,7 @@ export class Player{
 
     cardBuyAmount = (): number => Math.max(4, Math.floor(this.getResource("megacredit")/this.cardBuyPrice));
 
-    addCostReducingCard = (card: CostReducing): void => {this.costReducingCards.push(card)};
+    addCostReducingCard = (card: CostReducingCard): void => {this.costReducingCards.push(card)};
     addOnTagCard = (card: OnTagPlayed): void => {this.onTagCards.push(card)};
     addOnEffectCard = (card: OnEffectPlayed): void => {this.onEffectCards.push(card)};
 
