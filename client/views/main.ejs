@@ -45,16 +45,35 @@
 <% } else{ %>
 
     <div class="row justify-content-center">
-        <div class="flex-column col-8 d-flex">
+        <div class="flex-column col-8 d-flex align-items-center">
             <a href="/room">
                 <button class="btn btn-info">STWÓRZ POKÓJ</button>
             </a>
             <hr class="w-100">
             <%
-                while (con.query("SELECT * FROM ")) {
-                    
+                Room = {
+                    name: 'testName',
+                    room_id: 32,
+                    creator: 'testUser',
+                    creator_id: 2, // klikanie w nazwe gracza przenosi na /user/creator_id
+                    mode: 'testMode',
+                    players: 2,
+                    max_players: 5, // wyświetlać players/max_players
+                    elo_range: [800, 1200], // albo nic albo dwie liczby np [1500, 1800], wyświetlić 1500-1800
+                    ranked: 1
                 }
+                
             %>
+            
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action" id="<% =Room.room_id %>">
+                    <% =Room.name %>
+                </a>
+            </div>
+
+            <!--
+                nazwa, kto stworzyl, ilosc graczy, czy ranked, elo-zakres(jezeli jest)
+            -->
         </div>
     </div>
 
