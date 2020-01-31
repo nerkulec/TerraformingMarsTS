@@ -31,8 +31,9 @@ app.use(bodyParser.json())
 app.set('views', './client/views')
 app.set('view engine', 'ejs')
 
-app.get('/', (req, res) =>{
-    res.render('main', {session: req.session})
+app.get('/', async (req, res) =>{
+    const rooms = await get_rooms({n: 20, only_public: true, not_full: true})
+    res.render('main', {session: req.session, rooms: rooms})
 })
 
 app.get('/register', (req, res) =>{
