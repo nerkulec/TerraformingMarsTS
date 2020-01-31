@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import session from 'express-session'
 import connect_mongo from 'connect-mongo'
 import {register, login} from './db/db'
+require('dotenv').config()
 
 const MongoStore = connect_mongo(session)
 const dburl = process.env.MONGODB_URI || 'mongodb://localhost:27017/TerraformingMarsDB'

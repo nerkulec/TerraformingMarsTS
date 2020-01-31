@@ -1,8 +1,9 @@
 import pg from 'pg'
+require('dotenv').config()
 
 const db = new pg.Pool({
-    host: 'localhost',
-    database: 'terraformingmars',
+    host: process.env.DATABASE_URL || 'localhost',
+    database: process.env.DB_NAME || 'terraformingmars',
     user: process.env.DB_USER || 'admin',
     password: process.env.DB_PASSWORD || 'secret-password'
 })
