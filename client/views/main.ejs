@@ -47,32 +47,50 @@
 
     <div class="row justify-content-center">
         <div class="flex-column col-8 d-flex align-items-center">
-            <a href="/room">
-                <button class="btn btn-info">STWÓRZ POKÓJ</button>
+            <a href="#">
+                <button class="btn btn-info">CREATE ROOM</button>
             </a>
             <hr class="w-100">
+
+            <form class="row w-100 mb-5">
+                <div class="col-12 d-flex justify-content-between">
+                    <span>Unranked</span>
+                    <span class="mr-3">Auto</span>
+                    <span>Ranked</span>
+                </div>
+                <div class="col-12 form-group">
+                    <input type="range" class="custom-range" min="0" max="2" id="ranked">
+                </div>
+                <div class="col-6 form-group w-50 text-center">
+                    <label for="min_elo">Min. Elo</label>
+                    <input type="number" class="form-control w-50 m-auto" id="min_elo">
+                </div>
+                <div class="col-6 form-group w-50 text-center">
+                    <label for="max_elo">Max. Elo</label>
+                    <input type="number" class="form-control w-50 m-auto" id="max_elo">
+                </div>
+                <div class="form-group m-auto">
+                    <input type="submit" class="btn btn-success" value="Find more">
+                </div>
+            </form>
+
             
             <div class="list-group w-100">
                 <% for(room of rooms){ %>
-                    <div>
-                        Name: <%= room.name %> Creator <%= room.creator %>
-                        <%= room.players %>/<%= room.max_players %>
-                        <form action="/room/<%= room.id %>" method="get"> <input type="submit" value="Enter"/> </form>
-                    </div>
-                    <br/>
-                    <div href="#" class="row list-group-item list-group-item-action d-flex w-100 align-items-center" id="<%= room.room_id %>">
-                        <div class="col-3"><%= room.name %></div>
-                        <div class="col-3 room-creator-name">
-                            by <a href="/user/creator_id"><%= room.creator %></a>
+                    <div class="row d-flex list-group-item list-group-item-action mx-0 p-0 border-0 room-box">
+                        <a href="#" class="col-9 d-flex w-100 h-100 px-3 py-3 align-items-center room-details" id="<%= room.room_id %>">
+                            <div class="col-3"><%= room.name %></div>
+                            <div class="col-2"><%= room.ranked %></div>
+                            <div class="col-2"><%= room.elo_range %></div>
+                            <div class="col-2"><%= room.players %>/<%= room.max_players %></div>  
+                        </a>
+                        <div class="col-3 room-creator-name d-flex align-items-center justify-content-center">
+                            by &nbsp;<a href="/user/<%= room.creator_id %>"><%= room.creator %></a>
                         </div>
-                        <div class="col-2"><%= room.ranked %></div>
-                        <div class="col-2"><%= room.elo_range %></div>
-                        <div class="col-2"><%= room.players %>/<%= room.max_players %></div>
                     </div>
-                    <br/>
                 <% } %>
-                
             </div>
+            <a href="/room/<%= room.room_id %>" class="btn btn-success w-50">Join Room</a>
 
             <!--
                 nazwa, kto stworzyl, ilosc graczy, czy ranked, elo-zakres(jezeli jest)
