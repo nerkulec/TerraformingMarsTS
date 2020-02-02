@@ -1,4 +1,5 @@
 import pg from 'pg'
+import {Game} from '../../game/Game'
 require('dotenv').config()
 
 const db = new pg.Pool({
@@ -23,6 +24,10 @@ export async function register(req: any, res: any) {
         req.session.message = 'Registered successfully!'
         res.redirect('/')
     }
+}
+
+export async function remove_user(id: number){
+    await db.query(`DELETE FROM users WHERE id = $1`, [id])
 }
 
 async function get_games(user_id: number, n: number = 20) {
@@ -91,15 +96,47 @@ export async function history(req: any, res: any) {
     res.render('history', {session: req.session, games: games})
 }
 
+export async function get_users(){
+    const users = (await db.query(`SELECT * FROM users`)).rows
+    return users
+}
+
+export async function get_friends(user_id: number){
+    const users = (await db.query(`SELECT * 
+        FROM users
+        JOIN friends ON users.id = friend1 OR users.id = friend2
+        WHERE friend1 = $1 OR friend2 = $1`, [user_id])).rows
+    return users
+}
+
 export async function login(req: any, res: any) {
-    const {name, password} = req.body
-    const users = (await db.query('SELECT * FROM users WHERE name = $1 AND password_hash = crypt($2, password_hash)', [name, password])).rows
-    if(users.length !== 1){
-        req.session.error = 'Wrong password or username'
-        res.redirect('/')
+    const {name, password, guest} = req.body
+    if(guest){
+        const users = (await db.query('SELECT * FROM users WHERE name = $1', [name])).rows
+        if(users.length >= 0){
+            req.session.error = 'There exists a user with that name'
+            res.redirect('/')
+        }else{
+            res.session.user = {
+                name: 'guest-'+name,
+                guest: true
+            }
+            req.session.message = 'Logged in successfully (as guest)'
+            res.redirect('/')
+        }
     }else{
-        req.session.user = users[0]
-        req.session.message = 'Logged in successfully'
-        res.redirect('/')
+        const users = (await db.query('SELECT * FROM users WHERE name = $1 AND password_hash = crypt($2, password_hash)', [name, password])).rows
+        if(users.length !== 1){
+            req.session.error = 'Wrong password or username'
+            res.redirect('/')
+        }else{
+            req.session.user = users[0]
+            req.session.message = 'Logged in successfully'
+            res.redirect('/')
+        }
     }
+}
+
+export async function record_game(game: Game){
+    const num_players = game.players.length
 }

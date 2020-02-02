@@ -10,13 +10,13 @@
         </tr>
         <% if(locals.users) for(let user of users){ %>
             <tr>
-                <td>  <%= user._id %> </td>
+                <td>  <%= user.id %> </td>
                 <td>  <%= user.name %> </td>
                 <td>  <%= user.securityLevel %> </td>
                 <td>  <%= user.elo %> </td>
                 <td> 
                     <form method="post" action="/remove">
-                        <input type="hidden" name="id" value="<%= user._id %>">
+                        <input type="hidden" name="id" value="<%= user.id %>">
                         <div class="form-group">
                             <input type="submit" value="Remove" class="btn btn-danger rounded-0 w-30">
                         </div>
