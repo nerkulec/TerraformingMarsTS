@@ -59,11 +59,11 @@ label{
 
 .room-details, .room-details:hover{
     color: #000;
-    transition: 0.2;
+    transition: 0.2s;
 }
 
 .room-details:focus{
-    background-color: #1E701B;
+    background-color: rgb(100, 167, 98);
 }
 
 .room-creator-name{
@@ -73,4 +73,25 @@ label{
 .room-creator-name a, .room-creator-name a:hover{
     color: #185FEF;
 }
+
+.elo-input{
+    opacity: 0;
+}
+
+@keyframes eloAnimation{
+    0%{
+        transform: translateX(50px);
+    }
+
+    100%{
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.elo-input-animate{
+    transition: eloAnimation 0.2s;
+}
+
+
 
