@@ -57,3 +57,20 @@ label{
     border-radius: 5px;
 }
 
+.room-details, .room-details:hover{
+    color: #000;
+    transition: 0.2;
+}
+
+.room-details:focus{
+    background-color: #1E701B;
+}
+
+.room-creator-name{
+    font-size: 80%;
+}
+
+.room-creator-name a, .room-creator-name a:hover{
+    color: #185FEF;
+}
+
