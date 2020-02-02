@@ -73,7 +73,6 @@
                     <input type="submit" class="btn btn-success" value="Find more">
                 </div>
             </form>
-
             
             <div class="list-group w-100">
                 <% for(room of rooms){ %>
@@ -90,7 +89,7 @@
                     </div>
                 <% } %>
             </div>
-            <a href="/room/<%= room.room_id %>" class="btn btn-success w-50">Join Room</a>
+            <a href="/room/<%= room.room_id %>" class="btn btn-success w-50 mt-2">Join Room</a>
 
             <!--
                 nazwa, kto stworzyl, ilosc graczy, czy ranked, elo-zakres(jezeli jest)
