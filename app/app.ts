@@ -3,7 +3,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import connect_mongo from 'connect-mongo'
-import {register, login} from './db/db'
+import {register, login, get_rooms, get_room, get_friends, get_users, remove_user} from './db/db'
 require('dotenv').config()
 
 const MongoStore = connect_mongo(session)
@@ -31,19 +31,27 @@ app.use(bodyParser.json())
 app.set('views', './client/views')
 app.set('view engine', 'ejs')
 
-app.get('/', (req, res) =>{
-    res.render('main', {session: req.session})
+app.get('/', async (req, res) =>{
+    if(req.session!.user && !req.session!.user.guest){
+        const rooms = await get_rooms({n: 20, only_public: true, not_full: true})
+        const friends = await get_friends(req.session!.user.id)
+        res.render('main', {session: req.session, rooms: rooms, friends: friends})
+    }else{
+        res.render('main', {session: req.session})
+    }
 })
 
 app.get('/register', (req, res) =>{
     res.render('register', {session: req.session})
 })
 
-app.get('/admin', (req: any, res: any) =>{
-    res.render('admin_panel', {session: req.session})
+app.get('/admin', async (req: any, res: any) =>{
+    const users = await get_users()
+    res.render('admin_panel', {session: req.session, users: users})
 })
-app.post('/remove', (req: any, res: any) =>{
-    res.render('admin', {session: req.session})
+app.post('/remove', async (req: any, res: any) =>{
+    await remove_user(req.body.id)
+    res.redirect('/admin')
 })
 app.post('/register', register)
 app.post('/login', login)
@@ -56,6 +64,8 @@ app.post('/logout', (req, res) =>{
 app.get('/user/:name', (req: any, res: any) =>{
     res.render('user_profile', {session: req.session})
 })
+
+app.get('/room/:room_id', get_room)
 
 app.get('/client.js', (req, res) =>{
     res.sendFile('client.js', {root: './build/client'})

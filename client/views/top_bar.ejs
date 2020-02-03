@@ -21,7 +21,9 @@
                     <a href="#" class="dropdown-item">Tournament</a>
                     <a href="#" class="dropdown-item">About</a>
                     <a href="#" class="dropdown-item">Contact</a>
+                    <% if(session.user && session.user.name == 'admin'){ %>
                     <a href="/admin" class="btn btn-primary w-100 rounded-0">Admin</a>
+                    <% } %>
             </div>
         </li>
     </ul>
