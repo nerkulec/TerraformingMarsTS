@@ -60,25 +60,28 @@
                         <span>Ranked</span>
                     </div>
                     <div class="col-6 d-flex justify-content-between w-75">
-                        <span>Unranked</span>
-                        <span class="mr-3">Any</span>
-                        <span>Ranked</span>
+                        <span>Basic</span>
+                        <span class="pos-absolute anytext-position">Any</span>
+                        <span>Advanced</span>
                     </div>
                     <div class="col-6 form-group w-75">
                         <input type="range" class="custom-range" min="0" max="2">
                     </div>
-                    <div class="col-6 form-group w-75">
+                    <div class="col-6 form-group w-75 mb-5">
                         <input type="range" class="custom-range" min="0" max="2">
                     </div>
+                    <span class="col-6 text-center font-weight-bolder">Prelude</span>
+                    <span class="col-6 text-center font-weight-bolder">Venus</span>
                     <div class="col-6 d-flex justify-content-between w-75">
-                        <span>Unranked</span>
-                        <span class="mr-3">Any</span>
-                        <span>Ranked</span>
+                        <span>Yes</span>
+                        <span>No</span>
                     </div>
+
+                    
                     <div class="col-6 d-flex justify-content-between w-75">
-                        <span>Unranked</span>
-                        <span class="mr-3">Any</span>
-                        <span>Ranked</span>
+                        <span>Yes</span>
+                        
+                        <span>No</span>
                     </div>
                     <div class="col-6 form-group w-75">
                         <input type="range" class="custom-range" min="0" max="2">
@@ -113,12 +116,14 @@
             <div class="list-group w-100">
                 <% for(room of rooms){ %>
                     <div class="row d-flex list-group-item list-group-item-action mx-0 my-3 p-0 border-0 room-box rounded">
-                        <a href="?room=<%= room.id %>" class="col-9 d-flex w-100 h-100 px-3 py-3 align-items-center room-details" id="<%= room.room_id %>">
-                            <div class="col-3"><%= room.name %></div>
-                            <div class="col-2"><%= room.ranked %></div>
-                            <div class="col-2"><%= room.elo_range %></div>
-                            <div class="col-2"><%= room.players %>/<%= room.max_players %></div>  
-                        </a>
+                        <div class="col-9 d-flex w-100 px-3 align-items-center">
+                            <a href="?room=<%= room.id %>" class="row d-flex room-details w-100 h-100 py-3" id="<%= room.room_id %>">
+                                <div class="col-3"><%= room.name %></div>
+                                <div class="col-2"><%= room.ranked %></div>
+                                <div class="col-2"><%= room.elo_range %></div>
+                                <div class="col-2"><%= room.players %>/<%= room.max_players %></div>  
+                            </a>
+                        </div>
                         <div class="col-3 room-creator-name d-flex align-items-center justify-content-center">
                             by &nbsp;<a href="/user/<%= room.creator_id %>"><%= room.creator %></a>
                         </div>
