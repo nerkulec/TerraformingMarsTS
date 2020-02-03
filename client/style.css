@@ -65,19 +65,37 @@ label{
 
 .room-box{
     transition: 0.2s;
+    background-color: #fff;
 }
 
 .room-box:hover{
+    background-color: #17a2b8;
+    color: #fff;
     transform: scaleY(1.1) scaleX(1.06);
+    cursor: pointer;
 }
 
-.room-box:focus{
-    background-color: rgb(100, 167, 98);
-}
-
-.room-details, .room-details:hover{
-    color: #000;
+.enter-icon{
+    opacity: 1;
+    color: #fff;
     transition: 0.2s;
+    transform: scale(1.4);
+}
+
+.room-link:hover .enter-icon{
+    transform: translateX(5px) scale(1.5);
+}
+
+.room-box:hover .room-creator-name{
+    color: #fff;
+}
+
+.room-box:hover .room-creator-name a{
+    color: #34190E;
+}
+
+.room-details{
+    color: #000;
 }
 
 .room-creator-name{
@@ -90,21 +108,28 @@ label{
 
 .elo-input{
     opacity: 0;
-}
-
-@keyframes eloAnimation{
-    0%{
-        transform: translateX(50px);
-    }
-
-    100%{
-        transform: translateX(0);
-        opacity: 1;
-    }
+    transform: translateX(50px);
+    transition: 0.3s;
 }
 
 .elo-input-animate{
-    transition: eloAnimation 0.2s;
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/*venuscolor - #E6A929*/
+/*preludecolor - #CD5D8F*/
+
+.prelude{
+    color: #CD5D8F;
+    background-color: lightgrey;
+    border-radius: 50px;
+}
+
+.venus{
+    color: #E6A929;
+    background-color: lightgrey;
+    border-radius: 50px;
 }
 
 
