@@ -32,6 +32,10 @@ export class Player{
         return await this.messenger.request(request)
     }
 
+    async execute(action: any){
+        
+    }
+
     getResource = (type: ResourceType): number => this.resources.get(type) || 0
     changeResource = (type: ResourceType, amount: number): void => {this.resources.set(type, this.getResource(type)+amount)}
     addResource = (resource: Resource): void => this.changeResource(resource.type, resource.amount)

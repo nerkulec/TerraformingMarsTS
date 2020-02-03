@@ -1,4 +1,4 @@
-import {Player} from "./Player"
+import {Player, Color} from "./Player"
 import {Tag} from "./Card"
 import {ResourceType} from "./Resource"
 import {HexType} from "./Hex"
@@ -11,11 +11,14 @@ type Info = {
     resourceType?: ResourceType,
     upTo?: number,
     production?: boolean,
-    tags?: Tag[]
+    tags?: Tag[],
+    second?: boolean,
+    colors?: Color[]
 }
 
 export abstract class InteractionRequest{
     abstract type: string
+    message?: string
     constructor(public player: Player){
     }
     getInfo(): Info{
@@ -25,14 +28,37 @@ export abstract class InteractionRequest{
         console.log('WARNING: no validation of response')
         return true
     }
+    parse(response: any): any{
+        return response
+    }
+}
+
+export class ChooseAction extends InteractionRequest{
+    type = 'chooseAction'
+    constructor(player: Player, public second: boolean = false){
+        super(player)
+    }
+    getInfo(): Info{
+        let info = super.getInfo()
+        info.second = this.second
+        return info
+    }
 }
 
 export class ChooseColor extends InteractionRequest{
     type = 'ChooseColor'
-}
-
-export class ChooseName extends InteractionRequest{
-    type = 'ChooseName'
+    constructor(player: Player, public colors: Color[]){
+        super(player)
+    }
+    getInfo(): Info{
+        let info = super.getInfo()
+        info.colors = this.colors
+        return info
+    }
+    parse(response: any): any{
+        response.player = this.player
+        return response
+    }
 }
 
 export class SplitPayment extends InteractionRequest{

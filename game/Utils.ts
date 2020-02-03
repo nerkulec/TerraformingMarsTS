@@ -16,6 +16,11 @@ export function shuffle(a: any[]): void {
     }
 }
 
+export function roll(a: any[]): void{
+    const first = a.shift()
+    a.push(first!)
+}
+
 type Constructor<T> = {new (...args: any[]): T}
 export function ensure<T>(o: any, className: Constructor<T>): T{
     if(o instanceof className){

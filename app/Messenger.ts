@@ -8,12 +8,16 @@ export abstract class Messenger{
     abstract async requester(request: InteractionRequest): Promise<any>
 
     async request(request: InteractionRequest): Promise<any>{
-        const response = await this.requester(request)
-        if(request.valid(response)){
-            return response
-        }else{
-            throw new Error('Invalid promise')
+        let response
+        for(let i=0; i<10; i++){
+            response = request.parse(await this.requester(request))
+            if(request.valid(response)){
+                break
+            }else{
+                request.message = 'Invalid response'
+            }
         }
+        return response
     }
 
     async every(requests: InteractionRequest[]){

@@ -1,19 +1,20 @@
-import {Player} from './Player'
+import {Player, Color} from './Player'
 import {Card} from './Card'
-import {shuffle} from './Utils'
+import {shuffle, roll, remove} from './Utils'
 import {Board} from './Board'
-import {InteractionRequest, ChooseName} from './InteractionRequest'
+import {InteractionRequest, ChooseColor, ChooseAction} from './InteractionRequest'
 import {cardsList} from './CardsList'
 
 export class Game{
     name!: string
-    terminated: boolean = false
 
     deck: Card[] = cardsList.slice()
     discardedCards: Card[] = []
 
     board!: Board
     players: Player[] = []
+
+    generation: number = 1
 
     finished: boolean = false
     afterGameCallback?: () => void
@@ -38,6 +39,51 @@ export class Game{
             cards = cards.concat(this.deck.splice(this.deck.length-rest, rest))
         }
         return cards
+    }
+
+    async setColors(){
+        let players = this.players.slice()
+        let colors: Color[] = ['blue', 'green', 'yellow', 'red', 'gray']
+        for(let i=0; i<players.length; i++){
+            let promises = []
+            for(const player of players){
+                promises.push(player.request(new ChooseColor(player, colors)))
+            }
+            const choice = await Promise.race(promises)
+            choice.player.color = choice.color
+            remove(players, choice.player)
+            remove(colors, choice.color)
+        }
+    }
+
+    async start(){
+        await this.setColors()
+        shuffle(this.players)
+        // TODO: setup
+
+        while(!this.finished){
+            let roundPlayers = this.players.slice()
+            for(const player of roundPlayers){
+                let action = await player.request(new ChooseAction(player))
+                if(action==='pass'){
+                    remove(roundPlayers, player)
+                    continue
+                }else{
+                    await player.execute(action)
+                }
+                action = await player.request(new ChooseAction(player, true))
+                if(action==='pass'){
+                    continue
+                }else{
+                    await player.execute(action)
+                }
+            }
+            roll(this.players)
+        }
+
+        if(this.afterGameCallback){
+            this.afterGameCallback()
+        }
     }
 
     afterGame(callback: () => void){
