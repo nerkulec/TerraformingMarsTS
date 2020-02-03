@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json())
 app.set('views', './client/views')
 app.set('view engine', 'ejs')
-app.use('/img', express.static(__dirname + '/client/imgs'))
+app.use('/img', express.static(__dirname + '/../client/imgs/'))
 
 app.get('/', async (req, res) =>{
     const rooms = await get_rooms({n: 20, only_public: true, not_full: true})
