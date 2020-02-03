@@ -6,9 +6,7 @@ import {Tharsis, Board} from '../game/Board'
 import {Player} from '../game/Player'
 import {MockMessenger} from '../app/Messenger'
 import {OceansEffect} from '../game/GlobalEffect'
-import {InteractionRequest, PlaceHex, ChooseName, SplitPayment, ChooseUpTo, EnemySelection} from '../game/InteractionRequest'
-import {Place} from '../game/Hex'
-import {Resource} from '../game/Resource'
+import {InteractionRequest, PlaceHex, SplitPayment, ChooseUpTo, EnemySelection, ChooseAction} from '../game/InteractionRequest'
 import {GiantIceAsteroid} from '../game/cards/GiantIceAsteroid'
 
 describe('Card', () =>{
@@ -25,17 +23,17 @@ describe('Card', () =>{
             throw Error('Enemy should not have any choice')
         }), {name: 'Damian'})
         player = new Player(game, new MockMessenger((request: InteractionRequest) => {
-            if(request instanceof ChooseName){
-                return 'mock-name'
+            if(request instanceof ChooseAction){
+                return {playCard: 'snow algae', handNum: 0}
             }
             if(request instanceof PlaceHex){
                 if(request.hexType === 'ocean'){
-                    return [new Place(3, 7), new Place(1, 2), new Place(4, 8)].slice(0, request.num)
+                    return [[3, 7], [1, 2], [4, 8]].slice(0, request.num)
                 }
             }
             if(request instanceof SplitPayment){
                 if(request.cost === 41){
-                    return [new Resource('titanium', 2)]
+                    return [['titanium', 2]]
                 }
             }
             if(request instanceof ChooseUpTo){
@@ -44,11 +42,12 @@ describe('Card', () =>{
                 }
             }
             if(request instanceof EnemySelection){
-                return enemy
+                return 1
             }
             throw Error('Unrecognized request')
         }), {name: 'Bartek'})
         game.addPlayer(player)
+        game.addPlayer(enemy)
         snowAlgae = new SnowAlgae()
         gia = new GiantIceAsteroid()
     })

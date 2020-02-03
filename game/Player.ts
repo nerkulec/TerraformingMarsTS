@@ -33,7 +33,9 @@ export class Player{
     }
 
     async execute(action: any){
-        
+        if(action.playCard){
+            await this.play(action.playCard)
+        }
     }
 
     getResource = (type: ResourceType): number => this.resources.get(type) || 0

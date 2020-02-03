@@ -58,11 +58,12 @@ export class Game{
 
     async start(){
         await this.setColors()
-        shuffle(this.players)
+        let players = this.players.slice()
+        shuffle(players)
         // TODO: setup
 
         while(!this.finished){
-            let roundPlayers = this.players.slice()
+            let roundPlayers = players.slice()
             for(const player of roundPlayers){
                 let action = await player.request(new ChooseAction(player))
                 if(action==='pass'){
@@ -78,7 +79,7 @@ export class Game{
                     await player.execute(action)
                 }
             }
-            roll(this.players)
+            roll(players)
         }
 
         if(this.afterGameCallback){

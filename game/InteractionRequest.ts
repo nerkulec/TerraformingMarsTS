@@ -1,7 +1,7 @@
 import {Player, Color} from "./Player"
 import {Tag} from "./Card"
-import {ResourceType} from "./Resource"
-import {HexType} from "./Hex"
+import {ResourceType, Resource} from "./Resource"
+import {HexType, Place} from "./Hex"
 
 type Info = {
     type: string,
@@ -43,6 +43,19 @@ export class ChooseAction extends InteractionRequest{
         info.second = this.second
         return info
     }
+    valid(response: any){
+        if(response.playCard){
+            return response.playCard.playable(this.player, this.player.game.board)
+        }else{
+            return super.valid(response)
+        }
+    }
+    parse(response: any){
+        if(response.playCard){
+            response.playCard = this.player.hand[response.handNum]
+        }
+        return response
+    }
 }
 
 export class ChooseColor extends InteractionRequest{
@@ -72,6 +85,13 @@ export class SplitPayment extends InteractionRequest{
         info.tags = this.tags
         return info
     }
+    parse(response: any){
+        for(let i=0; i<response.length; i++){
+            const resource = response[i]
+            response[i] = new Resource(resource[0], resource[1])
+        }
+        return response
+    }
 }
 
 export class PlaceHex extends InteractionRequest{
@@ -85,12 +105,22 @@ export class PlaceHex extends InteractionRequest{
         info.num = this.num
         return info
     }
+    parse(response: any){
+        for(let i=0; i<response.length; i++){
+            const place = response[i]
+            response[i] = new Place(place[0], place[1])                
+        }
+        return response
+    }
 }
 
 export class EnemySelection extends InteractionRequest{
     type = 'EnemySelection'
     constructor(player: Player){
         super(player)
+    }
+    parse(response: any){
+        return this.player.game.players[response]
     }
 }
 
