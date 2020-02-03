@@ -52,23 +52,59 @@
             </a>
             <hr class="w-100">
 
-            <form class="row w-100 mb-5">
-                <div class="col-12 d-flex justify-content-between">
-                    <span>Unranked</span>
-                    <span class="mr-3">Auto</span>
-                    <span>Ranked</span>
+            <form class="w-100 mb-5">
+                <div class="row d-flex justiy-content-center">
+                    <div class="col-6 d-flex justify-content-between w-75">
+                        <span>Unranked</span>
+                        <span class="mr-3">Any</span>
+                        <span>Ranked</span>
+                    </div>
+                    <div class="col-6 d-flex justify-content-between w-75">
+                        <span>Unranked</span>
+                        <span class="mr-3">Any</span>
+                        <span>Ranked</span>
+                    </div>
+                    <div class="col-6 form-group w-75">
+                        <input type="range" class="custom-range" min="0" max="2">
+                    </div>
+                    <div class="col-6 form-group w-75">
+                        <input type="range" class="custom-range" min="0" max="2">
+                    </div>
+                    <div class="col-6 d-flex justify-content-between w-75">
+                        <span>Unranked</span>
+                        <span class="mr-3">Any</span>
+                        <span>Ranked</span>
+                    </div>
+                    <div class="col-6 d-flex justify-content-between w-75">
+                        <span>Unranked</span>
+                        <span class="mr-3">Any</span>
+                        <span>Ranked</span>
+                    </div>
+                    <div class="col-6 form-group w-75">
+                        <input type="range" class="custom-range" min="0" max="2">
+                    </div>
+                    <div class="col-6 form-group w-75">
+                        <input type="range" class="custom-range" min="0" max="2">
+                    </div>
                 </div>
-                <div class="col-12 form-group">
-                    <input type="range" class="custom-range" min="0" max="2" id="ranked">
+                
+                <!--Jeśli user nie chce elo-range-->
+                
+                <div class="d-flex justify-content-center align-items-center w-100">
+                    <div class="col-4 custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="eloSwitch" value="1">
+                        <label class="custom-control-label" for="eloSwitch">Select elo-range</label>
+                    </div>
+                    <div class="col-4 form-group w-50 text-center elo-input elo-input-animate">
+                        <label for="min_elo">Min. elo</label>
+                        <input type="number" class="form-control w-50 m-auto" id="min_elo">
+                    </div>
+                    <div class="col-4 form-group w-50 text-center elo-input">
+                        <label for="max_elo">Max. elo</label>
+                        <input type="number" class="form-control w-50 m-auto" id="max_elo">
+                    </div>
                 </div>
-                <div class="col-6 form-group w-50 text-center">
-                    <label for="min_elo">Min. Elo</label>
-                    <input type="number" class="form-control w-50 m-auto" id="min_elo">
-                </div>
-                <div class="col-6 form-group w-50 text-center">
-                    <label for="max_elo">Max. Elo</label>
-                    <input type="number" class="form-control w-50 m-auto" id="max_elo">
-                </div>
+                
                 <div class="form-group m-auto">
                     <input type="submit" class="btn btn-success" value="Find more">
                 </div>
@@ -76,8 +112,8 @@
             
             <div class="list-group w-100">
                 <% for(room of rooms){ %>
-                    <div class="row d-flex list-group-item list-group-item-action mx-0 p-0 border-0 room-box">
-                        <a href="#" class="col-9 d-flex w-100 h-100 px-3 py-3 align-items-center room-details" id="<%= room.room_id %>">
+                    <div class="row d-flex list-group-item list-group-item-action mx-0 my-3 p-0 border-0 room-box rounded">
+                        <a href="?room=<%= room.id %>" class="col-9 d-flex w-100 h-100 px-3 py-3 align-items-center room-details" id="<%= room.room_id %>">
                             <div class="col-3"><%= room.name %></div>
                             <div class="col-2"><%= room.ranked %></div>
                             <div class="col-2"><%= room.elo_range %></div>
