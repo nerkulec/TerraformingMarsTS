@@ -1,4 +1,4 @@
-import {InteractionRequest} from '../game/InteractionRequest'
+import {InteractionRequest, ChooseAction} from '../game/InteractionRequest'
 import createIoPromise, {RequestResponseRecord, IoPromiseRecord} from 'socket.io-promise'
 import {timeoutPromise} from '../game/Utils'
 
@@ -14,6 +14,7 @@ export abstract class Messenger{
             if(request.valid(response)){
                 break
             }else{
+                console.log('Invalid response')
                 request.message = 'Invalid response'
             }
         }
@@ -42,9 +43,18 @@ export class SocketMessenger extends Messenger{
 }
 
 export class MockMessenger extends Messenger{
-    requester = (request: InteractionRequest) => timeoutPromise(this.responseProvider(request), 100)
+    responses: {[key: string]: any[]} = {}
 
-    constructor(private responseProvider: (request: InteractionRequest) => any){
-        super()
+    requester = (request: InteractionRequest) => {
+        let r = this.responses[request.type]
+        return timeoutPromise(r.shift(), 100)
+    }
+
+    addResponse(type: string, response: any) {
+        this.responses[type] = (this.responses[type] || []).concat([response])
+    }
+
+    addResponses(type: string, responses: any[]) {
+        this.responses[type] = (this.responses[type] || []).concat(responses)
     }
 }

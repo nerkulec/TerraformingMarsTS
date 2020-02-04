@@ -3,49 +3,41 @@ import 'mocha'
 import {SnowAlgae} from '../game/cards/SnowAlgae'
 import {Game} from '../game/Game'
 import {Tharsis, Board} from '../game/Board'
-import {Player} from '../game/Player'
+import {MockPlayer} from '../game/Player'
 import {MockMessenger} from '../app/Messenger'
 import {OceansEffect} from '../game/GlobalEffect'
-import {InteractionRequest, PlaceHex, SplitPayment, ChooseUpTo, EnemySelection, ChooseAction} from '../game/InteractionRequest'
 import {GiantIceAsteroid} from '../game/cards/GiantIceAsteroid'
 
 describe('Card', () =>{
     let game: Game
     let board: Board
-    let player: Player
-    let enemy: Player
+    let player: MockPlayer
+    let enemy: MockPlayer
     let snowAlgae: SnowAlgae
     let gia: GiantIceAsteroid
     beforeEach(() =>{
         game = new Game()
         board = new Tharsis(game)
-        enemy = new Player(game, new MockMessenger((request: InteractionRequest) => {
-            throw Error('Enemy should not have any choice')
-        }), {name: 'Damian'})
-        player = new Player(game, new MockMessenger((request: InteractionRequest) => {
-            if(request instanceof ChooseAction){
-                return {playCard: 'snow algae', handNum: 0}
-            }
-            if(request instanceof PlaceHex){
-                if(request.hexType === 'ocean'){
-                    return [[3, 7], [1, 2], [4, 8]].slice(0, request.num)
-                }
-            }
-            if(request instanceof SplitPayment){
-                if(request.cost === 41){
-                    return [['titanium', 2]]
-                }
-            }
-            if(request instanceof ChooseUpTo){
-                if(request.upTo === 12){
-                    return 7
-                }
-            }
-            if(request instanceof EnemySelection){
-                return 1
-            }
-            throw Error('Unrecognized request')
-        }), {name: 'Bartek'})
+        enemy = new MockPlayer(game, new MockMessenger(), {name: 'bartek'})
+        player = new MockPlayer(game, new MockMessenger(), {name: 'damian'})
+        //     if(request instanceof SplitPayment){
+        //         if(request.cost === 41){
+        //             return [['titanium', 2]]
+        //         }
+        //     }
+        //     if(request instanceof ChooseUpTo){
+        //         if(request.upTo === 12){
+        //             return 7
+        //         }
+        //     }
+        //     if(request instanceof EnemySelection){
+        //         return 1
+        //     }
+        //     throw Error('Unrecognized request')
+        // }), {name: 'Bartek'})
+        player.messenger.addResponse('ChooseColor', {color: 'green'})
+        enemy.messenger.addResponse('ChooseColor', {color: 'red'})
+        enemy.messenger.addResponse('ChooseAction', 'end')
         game.addPlayer(player)
         game.addPlayer(enemy)
         snowAlgae = new SnowAlgae()
@@ -100,27 +92,27 @@ describe('Card', () =>{
         })
     })
     describe('.play', () =>{
-        it('should cost money to play', async (done) =>{
+        it('should cost money to play', async () =>{
             player.cardsToBuy = [snowAlgae]
             player.changeResource('megacredit', 100)
             player.buy([snowAlgae])
-            await player.play(snowAlgae)
-            game.afterGame(() => {
-                expect(player.getResource('megacredit')).to.equal(85)
-                done()
-            })
+            player.globalEffect(new OceansEffect(2))
+            player.messenger.addResponses('ChooseAction', [{handNum: 0}, 'pass'])
+            await game.start()
+            expect(player.getResource('megacredit')).to.equal(85)
         })
-        it('should be able to accept payment in resources', async (done) =>{
+        it('should be able to accept payment in resources', async () =>{
             player.cardsToBuy = [gia]
             player.changeResource('megacredit', 100)
             player.changeResource('titanium', 3)
             player.buy([gia])
-            await player.play(gia)
-            game.afterGame(() => {
-                expect(player.getResource('megacredit')).to.equal(62)
-                expect(player.getResource('titanium')).to.equal(1)
-                done()
-            })
+            player.messenger.addResponses('ChooseAction', [{handNum: 0}, 'pass'])
+            player.messenger.addResponse('SplitPayment', [['titanium', 2]])
+            player.messenger.addResponse('PlaceHex', [[1,2],[3,4]])
+            player.messenger.addResponse('EnemySelection', 1)            
+            await game.start()
+            expect(player.getResource('megacredit')).to.equal(62)
+            expect(player.getResource('titanium')).to.equal(1)
         })
         it('should check requirement', () =>{
             player.cardsToBuy = [snowAlgae]
@@ -130,29 +122,29 @@ describe('Card', () =>{
             player.globalEffect(new OceansEffect(2))
             expect(player.canPlay(snowAlgae)).to.be.true
         })
-        it('should raise production', async (done) => {
+        it('should raise production', async () => {
             player.cardsToBuy = [snowAlgae]
             player.changeResource('megacredit', 100)
             player.buy([snowAlgae])
+            player.globalEffect(new OceansEffect(2))
             expect(player.getProduction('heat')).to.equal(0)
             expect(player.getProduction('plant')).to.equal(0)
-            await player.play(snowAlgae)
-            game.afterGame(() => {
-                expect(player.getProduction('heat')).to.equal(1)
-                expect(player.getProduction('plant')).to.equal(1)
-                done()
-            })
+            player.messenger.addResponses('ChooseAction', [{handNum: 0}, 'pass'])
+            await game.start()
+            expect(player.getProduction('heat')).to.equal(1)
+            expect(player.getProduction('plant')).to.equal(1)
         })
-        it('should raise terraforming markers', async (done) =>{
+        it('should raise terraforming markers', async () =>{
             player.cardsToBuy = [gia]
             player.changeResource('megacredit', 100)
             player.buy([gia])
-            await player.play(gia)
-            game.afterGame(() => {
-                expect(board.temperature.level).to.equal(-26)
-                expect(board.oceans.level).to.equal(2)
-                done()
-            })
+            player.messenger.addResponses('ChooseAction', [{handNum: 0}, 'pass'])
+            player.messenger.addResponse('SplitPayment', [['titanium', 2]])
+            player.messenger.addResponse('PlaceHex', [[1,2],[3,4]])
+            player.messenger.addResponse('EnemySelection', 1)
+            await game.start()
+            expect(board.temperature.level).to.equal(-26)
+            expect(board.oceans.level).to.equal(2)
         })
     })
 })

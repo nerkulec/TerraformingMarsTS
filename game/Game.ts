@@ -59,13 +59,17 @@ export class Game{
     async start(){
         await this.setColors()
         let players = this.players.slice()
-        shuffle(players)
+        // shuffle(players)
         // TODO: setup
 
-        while(!this.finished){
+        while(!this.finished){ // GENERATION
             let roundPlayers = players.slice()
-            for(const player of roundPlayers){
+            for(const player of roundPlayers){ // TURN
                 let action = await player.request(new ChooseAction(player))
+                if(action==='end'){
+                    this.finished = true
+                    break
+                }
                 if(action==='pass'){
                     remove(roundPlayers, player)
                     continue
@@ -81,13 +85,5 @@ export class Game{
             }
             roll(players)
         }
-
-        if(this.afterGameCallback){
-            this.afterGameCallback()
-        }
-    }
-
-    afterGame(callback: () => void){
-        this.afterGameCallback = callback
     }
 }

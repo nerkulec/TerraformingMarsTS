@@ -25,7 +25,7 @@ export abstract class InteractionRequest{
         return {type: this.type+'|'+this.player.name}
     }
     valid(response: any): boolean{
-        console.log('WARNING: no validation of response')
+        // console.log('WARNING: no validation of response')
         return true
     }
     parse(response: any): any{
@@ -34,7 +34,7 @@ export abstract class InteractionRequest{
 }
 
 export class ChooseAction extends InteractionRequest{
-    type = 'chooseAction'
+    type = 'ChooseAction'
     constructor(player: Player, public second: boolean = false){
         super(player)
     }
@@ -44,14 +44,17 @@ export class ChooseAction extends InteractionRequest{
         return info
     }
     valid(response: any){
-        if(response.playCard){
+        if(typeof response !== "string" &&'handNum' in response){
             return response.playCard.playable(this.player, this.player.game.board)
         }else{
             return super.valid(response)
         }
     }
     parse(response: any){
-        if(response.playCard){
+        if(typeof response === "string"){
+            return response
+        }
+        if('handNum' in response){
             response.playCard = this.player.hand[response.handNum]
         }
         return response

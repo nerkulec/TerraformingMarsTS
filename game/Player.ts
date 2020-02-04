@@ -1,7 +1,7 @@
 import {Card, OnEffectPlayed, CostReducingCard, OnTagPlayed, Tag} from "./Card"
 import {Game, } from "./Game"
 import {remove} from "./Utils"
-import {Messenger} from "../app/Messenger"
+import {Messenger, MockMessenger} from "../app/Messenger"
 import {ResourceType, Resource} from "./Resource"
 import {GlobalEffect} from "./GlobalEffect"
 import {InteractionRequest} from "./InteractionRequest"
@@ -74,3 +74,9 @@ export class Player{
 }
 
 export type Color ="blue"|"green"|"yellow"|"red"|"gray"
+
+export class MockPlayer extends Player {
+    constructor(public game: Game, public messenger: MockMessenger, playerInfo: any) {
+        super(game, messenger, playerInfo)
+    }
+}
