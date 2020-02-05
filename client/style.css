@@ -14,6 +14,25 @@ label{
     font-size: 18px;
 }
 
+::-webkit-scrollbar{
+    width: 10px;
+    margin: 0;
+    padding: 0;
+}
+
+::-webkit-scrollbar-track{
+    width: 10px;
+    background-color: darkgray;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: rgb(70, 70, 70);
+}
+
+::-webkit-scrollbar{
+    width: 10px;
+}
+
 .pos-absolute{
     position: absolute;
 }
@@ -41,8 +60,9 @@ label{
 
 .right-panel{
     width: 25%;
-    height: 100vh;
     float: left;
+    right: 0;
+    overflow: scroll;
 }
 
 .title{
@@ -94,7 +114,7 @@ label{
 }
 
 .room-link:hover .enter-icon{
-    transform: translateX(5px) scale(1.5);
+    transform: translateX(8px) scale(1.6);
 }
 
 .room-box:hover .room-creator-name{
@@ -143,5 +163,43 @@ label{
     border-radius: 50px;
 }
 
+.status-dot{
+    height: 10px;
+    width: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 1px;
+}
 
+.online{
+    background-color: #1e7e34;
+    box-shadow: #1e7e34;
+}
+
+.icon{
+    height: 30px;
+    width: 30px;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+}
+
+.friend-room-icon{
+    transform: scale(1.1);
+    transition: 0.2s;
+}
+
+.friend-room-icon:hover{
+    transform: scale(1.4);
+    cursor: pointer;
+}
+
+.friend-name a{
+    color: #000;
+    transition: 0.2s;
+}
+
+.friend-name a:hover{
+    color: #000;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
 

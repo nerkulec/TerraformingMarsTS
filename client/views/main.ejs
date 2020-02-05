@@ -44,7 +44,7 @@
     
 <% } else{ %>
 
-    <div class="left-panel mt-5">
+    <div class="left-panel pt-5 h-100">
         <div class="row justify-content-center">
             <div class="flex-column col-8 d-flex align-items-center">
                 <a href="#">
@@ -164,15 +164,94 @@
             </div>
         </div>
     </div>
-    <div class="right-panel m-0 ">
-        <div class="card text-center rounded-0 h-100">
+    <div class="right-panel m-0 position-fixed h-100">
+        <div class="card text-center rounded-0 h-100 w-100 border-0">
             <div class="card-header">
-                <h4>Friends</h4>
+                <h5 class="m-0">Friends</h5>
             </div>
-            <div class="card-body">
-                <% for (friend of friends){ %>
+            <div class="card-body p-0">
+                <ul class="list-group">
+                    <% user = {
+                        name: 'Agent123',
+                        id: 3,
+                        icon: 4,
+                        elo: 84,
+                        in_room: false,
+                        in_game: true
+                    } 
+
+                    let roomStatus, gameStatus
+
+                    user.in_room === true ? roomStatus = 'In room' : roomStatus = '';
+                    user.in_game === true ? gameStatus = 'In game' : gameStatus = '';
                     
-                <% } %>
+                    %>
+                        <li class="list-group-item d-flex align-items-center rounded-0">
+                            <span class="status-dot mr-3"></span>
+                            <span class="icon mr-1"></span>
+                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
+                            
+                            <% if (roomStatus === 'In room') {%>
+                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
+                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
+                            <% } %>
+                            <% if (gameStatus === 'In game') {%>
+                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
+                            <%}%>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <span class="status-dot online mr-3"></span>
+                            <span class="icon mr-1"></span>
+                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
+                            
+                            <% if (roomStatus === 'In room') {%>
+                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
+                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
+                            <% } %>
+                            <% if (gameStatus === 'In game') {%>
+                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
+                            <%}%>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <span class="status-dot mr-3"></span>
+                            <span class="icon mr-1"></span>
+                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
+                            
+                            <% if (roomStatus === 'In room') {%>
+                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
+                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
+                            <% } %>
+                            <% if (gameStatus === 'In game') {%>
+                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
+                            <%}%>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <span class="status-dot online mr-3"></span>
+                            <span class="icon mr-1"></span>
+                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
+                            
+                            <% if (roomStatus === 'In room') {%>
+                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
+                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
+                            <% } %>
+                            <% if (gameStatus === 'In game') {%>
+                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
+                            <%}%>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <span class="status-dot mr-3"></span>
+                            <span class="icon mr-1"></span>
+                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
+                            
+                            <% if (roomStatus === 'In room') {%>
+                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
+                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
+                            <% } %>
+                            <% if (gameStatus === 'In game') {%>
+                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
+                            <%}%>
+                        </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -181,6 +260,16 @@
 <% } %>
 <!-- 
     Wejście:
+
+    user = {
+    favoriteCorporations: string[3],
+    info: string, // dluzszy opis, taki na 4 linijki mozna sie spodziewać
+    recent_games: Game[0-20], // jak wygląda Game wytłumaczone dalej
+    icon_num: int, // numerek ikonki
+    rating: float, //1-5
+    comments: Comment[0-20]
+}
+
     rooms = Room[1-20]
 
     Room = {
