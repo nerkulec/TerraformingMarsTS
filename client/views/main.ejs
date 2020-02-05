@@ -193,7 +193,7 @@
                             
                             <% if (roomStatus === 'In room') {%>
                                 <span class="ml-auto text-success"> <%= roomStatus %> </span>
-                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
+                                <span class="ml-2"><a href="/room/<%= room.id %>"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></a></span>    
                             <% } %>
                             <% if (gameStatus === 'In game') {%>
                                 <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
