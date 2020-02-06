@@ -13,24 +13,23 @@ const port = process.env.PORT || 3000
 const secret = process.env.SECRET || 'total_secret'
 const server = app.listen(port)
 const io = socketio(server)
-
-console.log('Server started')
-
-app.use(session({
+const sessionMW = session({
     secret: secret,
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({url: dburl})
-}))
+})
 
-app.use(bodyParser.urlencoded({
-    extended: true
-}))
+app.use(sessionMW)
+io.use((socket, next) => sessionMW(socket.request, socket.request.res, next))
 
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.set('views', './client/views')
 app.set('view engine', 'ejs')
 app.use('/img', express.static('./client/imgs/'))
+
+console.log('Server started')
 
 app.get('/', async (req, res) =>{
     const rooms = await get_rooms({n: 20, only_public: true, not_full: true})
@@ -69,6 +68,7 @@ app.get('/style.css', (req, res) =>{
 
 io.on('connection', (socket) => {
     console.log('Client connected to server')
+    console.log(socket.request.session)
 
     socket.emit('hello', (data: any) => {
         console.log(data)
