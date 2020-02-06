@@ -9,6 +9,6 @@ export class GiantIceAsteroid extends Card{
         this.type = 'red'
         this.tags = ['space', 'event']
         this.effects = [new TemperatureEffect(2), new OceansEffect(2)]
-        this.enemyResources = [new Resource('plant', -12)]
+        this.enemyResources = [new Resource('plant', -12, true)]
     }
 }

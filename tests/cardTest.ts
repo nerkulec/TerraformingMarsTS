@@ -20,21 +20,6 @@ describe('Card', () =>{
         board = new Tharsis(game)
         enemy = new MockPlayer(game, new MockMessenger(), {name: 'bartek'})
         player = new MockPlayer(game, new MockMessenger(), {name: 'damian'})
-        //     if(request instanceof SplitPayment){
-        //         if(request.cost === 41){
-        //             return [['titanium', 2]]
-        //         }
-        //     }
-        //     if(request instanceof ChooseUpTo){
-        //         if(request.upTo === 12){
-        //             return 7
-        //         }
-        //     }
-        //     if(request instanceof EnemySelection){
-        //         return 1
-        //     }
-        //     throw Error('Unrecognized request')
-        // }), {name: 'Bartek'})
         player.messenger.addResponse('ChooseColor', {color: 'green'})
         enemy.messenger.addResponse('ChooseColor', {color: 'red'})
         enemy.messenger.addResponse('ChooseAction', 'end')
@@ -109,7 +94,8 @@ describe('Card', () =>{
             player.messenger.addResponses('ChooseAction', [{handNum: 0}, 'pass'])
             player.messenger.addResponse('SplitPayment', [['titanium', 2]])
             player.messenger.addResponse('PlaceHex', [[1,2],[3,4]])
-            player.messenger.addResponse('EnemySelection', 1)            
+            player.messenger.addResponse('EnemySelection', 1)
+            player.messenger.addResponse('ChooseUpTo', 7)
             await game.start()
             expect(player.getResource('megacredit')).to.equal(62)
             expect(player.getResource('titanium')).to.equal(1)
@@ -139,12 +125,27 @@ describe('Card', () =>{
             player.changeResource('megacredit', 100)
             player.buy([gia])
             player.messenger.addResponses('ChooseAction', [{handNum: 0}, 'pass'])
-            player.messenger.addResponse('SplitPayment', [['titanium', 2]])
+            player.messenger.addResponse('SplitPayment', [])
             player.messenger.addResponse('PlaceHex', [[1,2],[3,4]])
             player.messenger.addResponse('EnemySelection', 1)
+            player.messenger.addResponse('ChooseUpTo', 7)
             await game.start()
             expect(board.temperature.level).to.equal(-26)
             expect(board.oceans.level).to.equal(2)
+        })
+
+        it('should remove opponents resources', async () =>{
+            player.cardsToBuy = [gia]
+            player.changeResource('megacredit', 100)
+            enemy.changeResource('plant', 10)
+            player.buy([gia])
+            player.messenger.addResponses('ChooseAction', [{handNum: 0}, 'pass'])
+            player.messenger.addResponse('SplitPayment', [[]])
+            player.messenger.addResponse('PlaceHex', [[1,2],[3,4]])
+            player.messenger.addResponse('EnemySelection', 1)
+            player.messenger.addResponse('ChooseUpTo', -7)
+            await game.start()
+            expect(enemy.getResource('plant')).to.equal(3)
         })
     })
 })

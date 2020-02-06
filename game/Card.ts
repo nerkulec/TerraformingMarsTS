@@ -97,14 +97,14 @@ export abstract class Card{
             let enemy = await player.request(new EnemySelection(player))
             for(const res of this.enemyResources){
                 let amount = res.amount
-                if(this.upTo){
+                if(res.upTo){
                     amount = await player.request(new ChooseUpTo(player, res.type, res.amount))
                 }
                 enemy.changeResource(res.type, amount)
             }
             for(const res of this.enemyProduction){
                 let amount = res.amount
-                if(this.upTo){
+                if(res.upTo){
                     amount = await player.request(new ChooseUpTo(player, res.type, res.amount, true))
                 }
                 enemy.changeProduction(res.type, amount)

@@ -56,6 +56,12 @@ export class Game{
         }
     }
 
+    isFinished(){
+        return this.board.temperature.level==8 &&
+               this.board.oxygen.level==14 &&
+               this.board.oceans.level==9
+    }
+
     async start(){
         await this.setColors()
         let players = this.players.slice()
@@ -82,6 +88,10 @@ export class Game{
                 }else{
                     await player.execute(action)
                 }
+            }
+            if(this.isFinished()){
+                this.finished = true
+                break
             }
             roll(players)
         }

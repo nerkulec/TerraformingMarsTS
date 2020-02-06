@@ -47,7 +47,7 @@ export class MockMessenger extends Messenger{
 
     requester = (request: InteractionRequest) => {
         let r = this.responses[request.type]
-        return timeoutPromise(r.shift(), 100)
+        return timeoutPromise(r.shift(), 10)
     }
 
     addResponse(type: string, response: any) {
