@@ -30,6 +30,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json())
 app.set('views', './client/views')
 app.set('view engine', 'ejs')
+app.use('/img', express.static('./client/imgs/'))
 
 app.get('/', async (req, res) =>{
     if(req.session!.user && !req.session!.user.guest){

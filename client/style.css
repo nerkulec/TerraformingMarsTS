@@ -14,6 +14,25 @@ label{
     font-size: 18px;
 }
 
+::-webkit-scrollbar{
+    width: 0;
+    margin: 0;
+    padding: 0;
+}
+
+::-webkit-scrollbar-track{
+    width: 0;
+    background-color: darkgray;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: rgb(70, 70, 70);
+}
+
+::-webkit-scrollbar{
+    width: 0;
+}
+
 .pos-absolute{
     position: absolute;
 }
@@ -22,10 +41,28 @@ label{
     position: relative;
 }
 
+.anytext-position{
+    right: 46%;
+}
+
 .content{
-    background-image: linear-gradient(to bottom, rgba(155,153,152,1), rgba(52,25,14,0.8));
-    padding: 3em;
+    background-image: linear-gradient(to bottom, rgba(155,153,152,0.7), rgba(52,25,14,0.8)), url(/img/background.jpg);
+    background-position: top;
+    background-size: cover;
     height: 100%;
+}
+
+.left-panel{
+    width: 75%;
+    margin: 0;
+    float: left;
+}
+
+.right-panel{
+    width: 25%;
+    float: left;
+    right: 0;
+    overflow: scroll;
 }
 
 .title{
@@ -57,13 +94,39 @@ label{
     border-radius: 5px;
 }
 
-.room-details, .room-details:hover{
-    color: #000;
-    transition: 0.2;
+.room-box{
+    transition: 0.2s;
+    background-color: #fff;
 }
 
-.room-details:focus{
-    background-color: #1E701B;
+.room-box:hover{
+    background-color: #17a2b8;
+    color: #fff;
+    transform: scaleY(1.1) scaleX(1.06);
+    cursor: pointer;
+}
+
+.enter-icon{
+    opacity: 1;
+    color: #fff;
+    transition: 0.2s;
+    transform: scale(1.4);
+}
+
+.room-link:hover .enter-icon{
+    transform: translateX(8px) scale(1.6);
+}
+
+.room-box:hover .room-creator-name{
+    color: #fff;
+}
+
+.room-box:hover .room-creator-name a{
+    color: #34190E;
+}
+
+.room-details{
+    color: #000;
 }
 
 .room-creator-name{
@@ -72,5 +135,71 @@ label{
 
 .room-creator-name a, .room-creator-name a:hover{
     color: #185FEF;
+}
+
+.elo-input{
+    opacity: 0;
+    transform: translateX(50px);
+    transition: 0.3s;
+}
+
+.elo-input-animate{
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/*venuscolor - #E6A929*/
+/*preludecolor - #CD5D8F*/
+
+.prelude{
+    color: #CD5D8F;
+    background-color: lightgrey;
+    border-radius: 50px;
+}
+
+.venus{
+    color: #E6A929;
+    background-color: lightgrey;
+    border-radius: 50px;
+}
+
+.status-dot{
+    height: 10px;
+    width: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 1px;
+}
+
+.online{
+    background-color: #1e7e34;
+    box-shadow: #1e7e34;
+}
+
+.icon{
+    height: 30px;
+    width: 30px;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+}
+
+.friend-room-icon{
+    transform: scale(1.1);
+    transition: 0.2s;
+}
+
+.friend-room-icon:hover{
+    transform: scale(1.4);
+    cursor: pointer;
+}
+
+.friend-name a{
+    color: #000;
+    transition: 0.2s;
+}
+
+.friend-name a:hover{
+    color: #000;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
