@@ -170,19 +170,11 @@
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-group">
-                        <% user = {
-                            name: 'Agent123',
-                            id: 3,
-                            icon: 4,
-                            elo: 84,
-                            in_room: true,
-                            in_game: false
-                        } 
-    
+                        <% for(let user of friends){
                         let roomStatus, gameStatus
     
-                        user.in_room === true ? roomStatus = 'In room' : roomStatus = '';
-                        user.in_game === true ? gameStatus = 'In game' : gameStatus = '';
+                        roomStatus = user.in_room ? 'In room' : ''
+                        gameStatus = user.in_game ? 'In game' : ''
                         
                         %>
                         <li class="list-group-item d-flex align-items-center bg-transparent border-0 rounded-0">
@@ -201,6 +193,7 @@
                                 <span class="ml-auto in-game font-weight-bolder"> <%= gameStatus %> </span>
                             <%}%>
                         </li>
+                        <% } %>
                     </ul>
                 </div>
             </div>
