@@ -1,87 +1,99 @@
-import {Player} from './Player';
-import {Card} from './Card';
-import {shuffle, chain} from './Utils';
-import {Board} from './Board';
-import {InteractionRequest, ChooseName} from './InteractionRequest';
-import {cardsList} from './CardsList';
-
-export type GameCycle = Generator<InteractionRequest, void, any>;
+import {Player, Color} from './Player'
+import {Card} from './Card'
+import {shuffle, roll, remove} from './Utils'
+import {Board} from './Board'
+import {InteractionRequest, ChooseColor, ChooseAction} from './InteractionRequest'
+import {cardsList} from './CardsList'
 
 export class Game{
-    name!: string;
-    cycle!: GameCycle;
-    terminated: boolean = false;
+    name!: string
 
-    deck: Card[] = cardsList.slice();
-    discardedCards: Card[] = [];
+    deck: Card[] = cardsList.slice()
+    discardedCards: Card[] = []
 
-    board!: Board;
-    players: Player[] = [];
+    board!: Board
+    players: Player[] = []
 
-    finished: boolean = false;
-    afterGameCallback?: () => void;
+    generation: number = 1
+
+    finished: boolean = false
+    afterGameCallback?: () => void
 
     constructor(){
-        shuffle(this.deck);
+        shuffle(this.deck)
     }
     
     addPlayer(player: Player): void{
-        this.players.push(player);
+        this.players.push(player)
     }
 
     draw(n: number): Card[] {
-        let cards: Card[] = [];
-        let amount: number = Math.min(n, this.deck.length);
-        cards = this.deck.splice(this.deck.length-amount, amount);
+        let cards: Card[] = []
+        let amount: number = Math.min(n, this.deck.length)
+        cards = this.deck.splice(this.deck.length-amount, amount)
         if(amount < n){
-            this.deck = this.discardedCards;
-            shuffle(this.deck);
-            this.discardedCards = [];
-            let rest: number = n - amount;
-            cards = cards.concat(this.deck.splice(this.deck.length-rest, rest));
+            this.deck = this.discardedCards
+            shuffle(this.deck)
+            this.discardedCards = []
+            let rest: number = n - amount
+            cards = cards.concat(this.deck.splice(this.deck.length-rest, rest))
         }
-        return cards;
+        return cards
     }
 
-    * getGameCycle(): GameCycle{
-        let activePlayer = this.players[0];
-        this.name = yield new ChooseName(activePlayer);
-    }
-
-    startGameCycle(): void{
-        this.cycle = this.getGameCycle();
-    }
-
-    extendGameCycle(cycle: GameCycle): void{
-        this.cycle = chain(this.cycle, cycle);
-    }
-
-    afterGame(callback: () => void){
-        this.afterGameCallback = callback;
-    }
-
-    start(){
-        this.startGameCycle();
-        this.run();
-    }
-
-    run(){
-        let firstRequest = this.cycle.next().value;
-        if(firstRequest !== undefined){
-            this.request(firstRequest);
+    async setColors(){
+        let players = this.players.slice()
+        let colors: Color[] = ['blue', 'green', 'yellow', 'red', 'gray']
+        for(let i=0; i<players.length; i++){
+            let promises = []
+            for(const player of players){
+                promises.push(player.request(new ChooseColor(player, colors)))
+            }
+            const choice = await Promise.race(promises)
+            choice.player.color = choice.color
+            remove(players, choice.player)
+            remove(colors, choice.color)
         }
     }
 
-    request(request: InteractionRequest){
-        request.player.messenger.request(request, (response) => {
-            let nextRequest = this.cycle.next(response).value;
-            if(nextRequest !== undefined){
-                this.request(nextRequest);
-            }else{
-                if(this.afterGameCallback){
-                    this.afterGameCallback();
+    isFinished(){
+        return this.board.temperature.level==8 &&
+               this.board.oxygen.level==14 &&
+               this.board.oceans.level==9
+    }
+
+    async start(){
+        await this.setColors()
+        let players = this.players.slice()
+        // shuffle(players)
+        // TODO: setup
+
+        while(!this.finished){ // GENERATION
+            let roundPlayers = players.slice()
+            for(const player of roundPlayers){ // TURN
+                let action = await player.request(new ChooseAction(player))
+                if(action==='end'){
+                    this.finished = true
+                    break
+                }
+                if(action==='pass'){
+                    remove(roundPlayers, player)
+                    continue
+                }else{
+                    await player.execute(action)
+                }
+                action = await player.request(new ChooseAction(player, true))
+                if(action==='pass'){
+                    continue
+                }else{
+                    await player.execute(action)
                 }
             }
-        });
+            if(this.isFinished()){
+                this.finished = true
+                break
+            }
+            roll(players)
+        }
     }
 }

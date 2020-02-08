@@ -1,4 +1,4 @@
-export type HexType = "city"|"greenery"|"ocean";
+export type HexType = "city"|"greenery"|"ocean"
 
 export class Place{
     constructor(public x: number, public y: number){
