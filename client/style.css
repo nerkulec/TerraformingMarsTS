@@ -1,3 +1,8 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
 form{
     margin: 0;
 }
@@ -33,6 +38,10 @@ label{
     width: 0;
 }
 
+.content{
+    padding-top: 58px;
+}
+
 .pos-absolute{
     position: absolute;
 }
@@ -53,16 +62,20 @@ label{
 }
 
 .left-panel{
-    width: 75%;
+    width: 80%;
     margin: 0;
     float: left;
 }
 
 .right-panel{
-    width: 25%;
+    width: 20%;
     float: left;
     right: 0;
     overflow: scroll;
+}
+
+.right-panel div{
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .title{
@@ -171,7 +184,7 @@ label{
 }
 
 .online{
-    background-color: #1e7e34;
+    background-color: #48a313;
     box-shadow: #1e7e34;
 }
 
@@ -180,6 +193,24 @@ label{
     width: 30px;
     border: 1px solid lightgrey;
     border-radius: 2px;
+}
+
+.message-icon, .profile-icon{
+    color: #fff;
+    transform: scale(1.2);
+    transition: 0.2s;
+}
+
+.message-icon:hover, .profile-icon:hover{
+    transform: scale(1.2) translateY(-3px);
+}
+
+.in-game{
+    color: #17a2b8;
+}
+
+.in-room{
+    color: #48a313;
 }
 
 .friend-room-icon{
@@ -193,13 +224,15 @@ label{
 }
 
 .friend-name a{
-    color: #000;
+    color: #fff;
     transition: 0.2s;
 }
 
 .friend-name a:hover{
-    color: #000;
+    color: #fff;
     font-weight: 600;
     letter-spacing: 0.5px;
 }
+
+
 

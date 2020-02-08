@@ -1,19 +1,18 @@
 <%- include('top_bar') %>
 <div class="content">
-    <div class="container-fluid p-0">
 <% if(!session.user){ %>
-    
-        <div class="row justify-content-center">
+    <div class="container margin-minus">
+        <div class="row justify-content-center px-5 pt-5">
             <div class="flex-column col-8 d-flex">
                 <div class="login-panel">
                     <h4>Login: </h4>
                     <form action="/login" method="post">
                         <div class="form-group row align-items-center">
-                            <label for="nameInput" class="col-2 m-0">Username: </label>
+                            <label for="nameInput" class="col-2 mb-0 mr-2">Username: </label>
                             <input type="text" name="name" id="nameInput" class="col-8 form-control"/>
                         </div>
                         <div class="form-group row align-items-center">
-                            <label for="passwdInput" class="col-2 m-0">Password: </label>
+                            <label for="passwdInput" class="col-2 mb-0 mr-2">Password: </label>
                             <input type="password" name="password" id="passwdInput" class="col-8 form-control"/>
                         </div>
                         <div class="form-group row align-items-center">
@@ -43,298 +42,163 @@
     </div>
     
 <% } else{ %>
-
-    <div class="left-panel pt-5 h-100">
-        <div class="row justify-content-center">
-            <div class="flex-column col-8 d-flex align-items-center">
-                <a href="#">
-                    <button class="btn btn-info">CREATE ROOM</button>
-                </a>
-                <hr class="w-100">
-    
-                <form class="w-100 mb-5">
-                    <div class="row d-flex justiy-content-center">
-                        <div class="col-6 d-flex justify-content-between w-75">
-                            <span>Unranked</span>
-                            <span class="mr-3">Any</span>
-                            <span>Ranked</span>
-                        </div>
-                        <div class="col-6 d-flex justify-content-between w-75">
-                            <span>Basic</span>
-                            <span class="pos-absolute anytext-position">Any</span>
-                            <span>Advanced</span>
-                        </div>
-                        <div class="col-6 form-group w-75">
-                            <input type="range" class="custom-range" min="0" max="2">
-                        </div>
-                        <div class="col-6 form-group w-75 mb-5">
-                            <input type="range" class="custom-range" min="0" max="2">
-                        </div>
-                        <div class="col-12 d-flex justify-content-around">
-                            <span class="text-center font-weight-bolder prelude px-5">Prelude</span>
-                            <span class="text-center font-weight-bolder venus px-5">Venus</span>
-                        </div>
-                        <div class="col-6 d-flex justify-content-between w-75">
-                            <span>Yes</span>
-                            <span>No</span>
-                        </div>
-    
-                        
-                        <div class="col-6 d-flex justify-content-between w-75">
-                            <span>Yes</span>
-                            
-                            <span>No</span>
-                        </div>
-                        <div class="col-6 form-group w-75">
-                            <input type="range" class="custom-range" min="0" max="2">
-                        </div>
-                        <div class="col-6 form-group w-75">
-                            <input type="range" class="custom-range" min="0" max="2">
-                        </div>
-                    </div>
-                    
-                    <script>
-                        function eloSwitcher() {
-                            let switchValue = document.getElementById('eloSwitch');
-                            let eloInputs = document.querySelector('.elo-input');
-                            
-                            switchValue.checked ? 
-                            eloInputs.classList.add('elo-input-animate') : 
-                            eloInputs.classList.remove('elo-input-animate');
-    
-                        }
-                    </script>
-                    
-                    <div class="d-flex justify-content-center align-items-center w-100">
-                        <div class="col-4 custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="eloSwitch" onclick="eloSwitcher()">
-                            <label class="custom-control-label" for="eloSwitch">Select elo-range</label>
-                        </div>
-                        <div class="col-8 d-flex elo-input">
-                            <div class="form-group w-50 text-center">
-                                <label for="min_elo">Min. elo</label>
-                                <input type="number" class="form-control w-50 m-auto" id="min_elo">
+    <div class="container-fluid">
+        <div class="left-panel pt-5 h-100">
+            <div class="row justify-content-center">
+                <div class="flex-column col-8 d-flex align-items-center">
+                    <a href="#">
+                        <button class="btn btn-info">CREATE ROOM</button>
+                    </a>
+                    <hr class="w-100">
+        
+                    <form class="w-100 mb-5">
+                        <div class="row d-flex justiy-content-center">
+                            <div class="col-6 d-flex justify-content-between w-75">
+                                <span>Unranked</span>
+                                <span class="mr-3">Any</span>
+                                <span>Ranked</span>
                             </div>
-                            <div class="form-group w-50 text-center">
-                                <label for="max_elo">Max. elo</label>
-                                <input type="number" class="form-control w-50 m-auto" id="max_elo">
+                            <div class="col-6 d-flex justify-content-between w-75">
+                                <span>Basic</span>
+                                <span class="pos-absolute anytext-position">Any</span>
+                                <span>Advanced</span>
+                            </div>
+                            <div class="col-6 form-group w-75">
+                                <input type="range" class="custom-range" min="0" max="2">
+                            </div>
+                            <div class="col-6 form-group w-75 mb-5">
+                                <input type="range" class="custom-range" min="0" max="2">
+                            </div>
+                            <div class="col-12 d-flex justify-content-around">
+                                <span class="text-center font-weight-bolder prelude px-5">Prelude</span>
+                                <span class="text-center font-weight-bolder venus px-5">Venus</span>
+                            </div>
+                            <div class="col-6 d-flex justify-content-between w-75">
+                                <span>Yes</span>
+                                <span>No</span>
+                            </div>
+        
+                            
+                            <div class="col-6 d-flex justify-content-between w-75">
+                                <span>Yes</span>
+                                
+                                <span>No</span>
+                            </div>
+                            <div class="col-6 form-group w-75">
+                                <input type="range" class="custom-range" min="0" max="2">
+                            </div>
+                            <div class="col-6 form-group w-75">
+                                <input type="range" class="custom-range" min="0" max="2">
                             </div>
                         </div>
                         
-                    </div>
-                    
-                    <div class="form-group m-auto">
-                        <input type="submit" class="btn btn-success" value="Find more">
-                    </div>
-                </form>
-                
-                <div class="list-group w-100">
-                    <% for(room of rooms){ %>
-                        <%
-                            let ifRank, eloRange;
-                            room.ranked === false ? ifRank = 'Unranked' : ifRank = 'Ranked';
+                        <script>
+                            function eloSwitcher() {
+                                let switchValue = document.getElementById('eloSwitch');
+                                let eloInputs = document.querySelector('.elo-input');
+                                
+                                switchValue.checked ? 
+                                eloInputs.classList.add('elo-input-animate') : 
+                                eloInputs.classList.remove('elo-input-animate');
+        
+                            }
+                        </script>
                         
-                            room.elo_range === undefined ? 
-                            eloRange = 'Any elo' : 
-                            eloRange = room.elo_range[0] + ' - ' + room.elo_range[1];    
-                        %>
-                        
-                        <div class="row d-flex mx-0 my-3 p-0 border-0 room-box rounded">
-                            <div class="col-9 d-flex w-100 px-3 align-items-center">
-                                <div class="row d-flex room-details w-100 h-100 py-3">
-                                    <div class="col-3"><%= room.name %></div>
-                                    <div class="col-3"><%= ifRank %></div>
-                                    <div class="col-3"><%= eloRange %></div>
-                                    <div class="col-3"><%= room.players %>/<%= room.max_players %></div>  
+                        <div class="d-flex justify-content-center align-items-center w-100">
+                            <div class="col-4 custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="eloSwitch" onclick="eloSwitcher()">
+                                <label class="custom-control-label" for="eloSwitch">Select elo-range</label>
+                            </div>
+                            <div class="col-8 d-flex elo-input">
+                                <div class="form-group w-50 text-center">
+                                    <label for="min_elo">Min. elo</label>
+                                    <input type="number" class="form-control w-50 m-auto" id="min_elo">
+                                </div>
+                                <div class="form-group w-50 text-center">
+                                    <label for="max_elo">Max. elo</label>
+                                    <input type="number" class="form-control w-50 m-auto" id="max_elo">
                                 </div>
                             </div>
-                            <div class="col-2 room-creator-name d-flex align-items-center justify-content-center">
-                                by &nbsp;<a href="/user/<%= room.creator_id %>"><%= room.creator %></a>
-                            </div>
-                            <div class="col-1 d-flex align-items-center room-link p-0 justify-content-center">
-                                <a href="/room/<%= room.id %>"><i class="fas fa-sign-in-alt enter-icon"></i></a>
-                            </div>
+                            
                         </div>
-                    <% } %>
-                </div>
-    
-                <!--
-                    nazwa, kto stworzyl, ilosc graczy, czy ranked, elo-zakres(jezeli jest)
-                -->
-            </div>
-        </div>
-    </div>
-    <div class="right-panel m-0 position-fixed h-100">
-        <div class="card text-center rounded-0 h-100 w-100 border-0">
-            <div class="card-header">
-                <h5 class="m-0">Friends</h5>
-            </div>
-            <div class="card-body p-0">
-                <ul class="list-group">
-                    <% user = {
-                        name: 'Agent123',
-                        id: 3,
-                        icon: 4,
-                        elo: 84,
-                        in_room: false,
-                        in_game: true
-                    } 
-
-                    let roomStatus, gameStatus
-
-                    user.in_room === true ? roomStatus = 'In room' : roomStatus = '';
-                    user.in_game === true ? gameStatus = 'In game' : gameStatus = '';
-                    
-                    %>
-                        <li class="list-group-item d-flex align-items-center rounded-0">
-                            <span class="status-dot mr-3"></span>
-                            <span class="icon mr-1"></span>
-                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
-                            
-                            <% if (roomStatus === 'In room') {%>
-                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
-                                <span class="ml-2"><a href="/room/<%= room.id %>"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></a></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') {%>
-                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
-                            <%}%>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <span class="status-dot online mr-3"></span>
-                            <span class="icon mr-1"></span>
-                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
-                            
-                            <% if (roomStatus === 'In room') {%>
-                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
-                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') {%>
-                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
-                            <%}%>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <span class="status-dot mr-3"></span>
-                            <span class="icon mr-1"></span>
-                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
-                            
-                            <% if (roomStatus === 'In room') {%>
-                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
-                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') {%>
-                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
-                            <%}%>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <span class="status-dot online mr-3"></span>
-                            <span class="icon mr-1"></span>
-                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
-                            
-                            <% if (roomStatus === 'In room') {%>
-                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
-                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') {%>
-                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
-                            <%}%>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <span class="status-dot mr-3"></span>
-                            <span class="icon mr-1"></span>
-                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
-                            
-                            <% if (roomStatus === 'In room') {%>
-                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
-                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') {%>
-                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
-                            <%}%>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <span class="status-dot online mr-3"></span>
-                            <span class="icon mr-1"></span>
-                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
-                            
-                            <% if (roomStatus === 'In room') {%>
-                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
-                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') {%>
-                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
-                            <%}%>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <span class="status-dot online mr-3"></span>
-                            <span class="icon mr-1"></span>
-                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
-                            
-                            <% if (roomStatus === 'In room') {%>
-                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
-                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') {%>
-                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
-                            <%}%>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <span class="status-dot online mr-3"></span>
-                            <span class="icon mr-1"></span>
-                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
-                            
-                            <% if (roomStatus === 'In room') {%>
-                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
-                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') {%>
-                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
-                            <%}%>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <span class="status-dot online mr-3"></span>
-                            <span class="icon mr-1"></span>
-                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
-                            
-                            <% if (roomStatus === 'In room') {%>
-                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
-                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') {%>
-                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
-                            <%}%>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <span class="status-dot online mr-3"></span>
-                            <span class="icon mr-1"></span>
-                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
-                            
-                            <% if (roomStatus === 'In room') {%>
-                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
-                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') {%>
-                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
-                            <%}%>
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            <span class="status-dot online mr-3"></span>
-                            <span class="icon mr-1"></span>
-                            <span class="m-0 friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
-                            
-                            <% if (roomStatus === 'In room') {%>
-                                <span class="ml-auto text-success"> <%= roomStatus %> </span>
-                                <span class="ml-2"><i class="fas fa-sign-in-alt text-success friend-room-icon font-weight-bolder"></i></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') {%>
-                                <span class="ml-auto text-info font-weight-bolder"> <%= gameStatus %> </span>
-                            <%}%>
-                        </li>
                         
-                </ul>
+                        <div class="form-group m-auto">
+                            <input type="submit" class="btn btn-success" value="Find more">
+                        </div>
+                    </form>
+                    
+                    <div class="list-group w-100">
+                        <% for(room of rooms){ %>
+                            <%
+                                let ifRank, eloRange;
+                                room.ranked === false ? ifRank = 'Unranked' : ifRank = 'Ranked';
+                            
+                                room.elo_range === undefined ? 
+                                eloRange = 'Any elo' : 
+                                eloRange = room.elo_range[0] + ' - ' + room.elo_range[1];    
+                            %>
+                            
+                            <div class="row d-flex mx-0 my-3 p-0 border-0 room-box rounded">
+                                <div class="col-9 d-flex w-100 px-3 align-items-center">
+                                    <div class="row d-flex room-details w-100 h-100 py-3">
+                                        <div class="col-3"><%= room.name %></div>
+                                        <div class="col-3"><%= ifRank %></div>
+                                        <div class="col-3"><%= eloRange %></div>
+                                        <div class="col-3"><%= room.players %>/<%= room.max_players %></div>  
+                                    </div>
+                                </div>
+                                <div class="col-2 room-creator-name d-flex align-items-center justify-content-center">
+                                    by &nbsp;<a href="/user/<%= room.creator_id %>"><%= room.creator %></a>
+                                </div>
+                                <div class="col-1 d-flex align-items-center room-link p-0 justify-content-center">
+                                    <a href="/room/<%= room.id %>"><i class="fas fa-sign-in-alt enter-icon"></i></a>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+        
+                    <!--
+                        nazwa, kto stworzyl, ilosc graczy, czy ranked, elo-zakres(jezeli jest)
+                    -->
+                </div>
+            </div>
+        </div>
+        <div class="right-panel m-0 position-fixed h-100">
+            <div class="card text-center rounded-0 h-100 w-100 border-0">
+                <div class="card-header">
+                    <h5 class="m-0 text-warning">Friends</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group">
+                        <% for(let user of friends){
+                        let roomStatus, gameStatus
+    
+                        roomStatus = user.in_room ? 'In room' : ''
+                        gameStatus = user.in_game ? 'In game' : ''
+                        
+                        %>
+                        <li class="list-group-item d-flex align-items-center bg-transparent border-0 rounded-0">
+                            <span class="status-dot online mr-3"></span>
+                            <span class="mr-2"><a href="#"><i class="fas fa-envelope-square message-icon"></i></a></span>
+                            <span class="mr-2"><a href="#"><i class="far fa-user profile-icon"></i></a></span>
+                            <span class="icon mr-1"></span>
+                            <span class="friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
+                            
+                                
+                            <% if (roomStatus === 'In room') {%>
+                                <span class="ml-auto in-room font-weight-bolder"> <%= roomStatus %> </span>
+                                <span class="ml-2"><a href="/room/<%= room.id %>"><i class="fas fa-sign-in-alt in-room friend-room-icon font-weight-bolder"></i></a></span>    
+                            <% } %>
+                            <% if (gameStatus === 'In game') {%>
+                                <span class="ml-auto in-game font-weight-bolder"> <%= gameStatus %> </span>
+                            <%}%>
+                        </li>
+                        <% } %>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-    
 
 <% } %>
 <!-- 

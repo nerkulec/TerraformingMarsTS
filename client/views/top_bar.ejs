@@ -10,7 +10,7 @@
 <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
 <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
 
-<nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
+<nav class="navbar navbar-expand navbar-dark bg-dark position-absolute w-100">
 <div class="collapse navbar-collapse d-flex align-items-center pos-relative">
     <ul class="navbar-nav mr-5">
         <li class="nav-item dropdown">
@@ -26,7 +26,9 @@
                     <a href="#" class="dropdown-item">Tournament</a>
                     <a href="#" class="dropdown-item">About</a>
                     <a href="#" class="dropdown-item">Contact</a>
+                    <% if(session.user && session.user.name == 'admin'){ %>
                     <a href="/admin" class="btn btn-primary w-100 rounded-0">Admin</a>
+                    <% } %>
             </div>
         </li>
     </ul>
