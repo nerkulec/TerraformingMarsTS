@@ -56,12 +56,13 @@ export async function get_rooms(settings: any){
     only_public = only_public || true
     not_full = not_full || true
     const rooms = (await db.query(`
-        SELECT *
-        FROM rooms`)).rows
-    for(let room of rooms){
-        room.creator = 'placeholder'
-        room.players = 0
-    }
+        SELECT rooms.id, rooms.name, owner_id, ranked, min_elo, max_elo,
+        max_players, rooms.name AS creator, COUNT(room_players) as players
+        FROM rooms
+        JOIN users AS owner ON rooms.owner_id = owner.id
+        FULL OUTER JOIN users AS room_players ON room_players.in_room = rooms.id
+        WHERE rooms.id IS NOT NULL
+        GROUP BY rooms.id`)).rows
     return rooms
 
 }
