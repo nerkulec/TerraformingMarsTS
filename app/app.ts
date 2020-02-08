@@ -79,7 +79,5 @@ io.on('connection', (socket) => {
     console.log('Client connected to server')
     console.log(socket.request.session)
 
-    socket.emit('hello', (data: any) => {
-        console.log(data)
-    })
+    
 })
