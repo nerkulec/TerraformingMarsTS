@@ -1,3 +1,8 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
 form{
     margin: 0;
 }
@@ -12,6 +17,29 @@ a:hover{
 
 label{
     font-size: 18px;
+}
+
+::-webkit-scrollbar{
+    width: 0;
+    margin: 0;
+    padding: 0;
+}
+
+::-webkit-scrollbar-track{
+    width: 0;
+    background-color: darkgray;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: rgb(70, 70, 70);
+}
+
+::-webkit-scrollbar{
+    width: 0;
+}
+
+.content{
+    padding-top: 58px;
 }
 
 .pos-absolute{
@@ -30,8 +58,24 @@ label{
     background-image: linear-gradient(to bottom, rgba(155,153,152,0.7), rgba(52,25,14,0.8)), url(/img/background.jpg);
     background-position: top;
     background-size: cover;
-    padding: 3em;
     height: 100%;
+}
+
+.left-panel{
+    width: 80%;
+    margin: 0;
+    float: left;
+}
+
+.right-panel{
+    width: 20%;
+    float: left;
+    right: 0;
+    overflow: scroll;
+}
+
+.right-panel div{
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .title{
@@ -83,7 +127,7 @@ label{
 }
 
 .room-link:hover .enter-icon{
-    transform: translateX(5px) scale(1.5);
+    transform: translateX(8px) scale(1.6);
 }
 
 .room-box:hover .room-creator-name{
@@ -130,6 +174,64 @@ label{
     color: #E6A929;
     background-color: lightgrey;
     border-radius: 50px;
+}
+
+.status-dot{
+    height: 10px;
+    width: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 1px;
+}
+
+.online{
+    background-color: #48a313;
+    box-shadow: #1e7e34;
+}
+
+.icon{
+    height: 30px;
+    width: 30px;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+}
+
+.message-icon, .profile-icon{
+    color: #fff;
+    transform: scale(1.2);
+    transition: 0.2s;
+}
+
+.message-icon:hover, .profile-icon:hover{
+    transform: scale(1.2) translateY(-3px);
+}
+
+.in-game{
+    color: #17a2b8;
+}
+
+.in-room{
+    color: #48a313;
+}
+
+.friend-room-icon{
+    transform: scale(1.1);
+    transition: 0.2s;
+}
+
+.friend-room-icon:hover{
+    transform: scale(1.4);
+    cursor: pointer;
+}
+
+.friend-name a{
+    color: #fff;
+    transition: 0.2s;
+}
+
+.friend-name a:hover{
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 
