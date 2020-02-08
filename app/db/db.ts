@@ -102,10 +102,10 @@ export async function get_users(){
 }
 
 export async function get_friends(user_id: number){
-    const users = (await db.query(`SELECT * 
+    const users = (await db.query(`SELECT *
         FROM users
-        JOIN friends ON users.id = friend1 OR users.id = friend2
-        WHERE friend1 = $1 OR friend2 = $1`, [user_id])).rows
+        JOIN friends ON users.id = friend2
+        WHERE friend1 = $1`, [user_id])).rows
     return users
 }
 
