@@ -3,7 +3,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import connect_mongo from 'connect-mongo'
-import {register, login, get_rooms, get_room, get_friends, get_users, remove_user} from './db/db'
+import {register, login, get_rooms, get_room, get_friends, get_users, remove_user, get_friends_inv} from './db'
 require('dotenv').config()
 
 const MongoStore = connect_mongo(session)
@@ -20,6 +20,8 @@ const sessionMW = session({
     store: new MongoStore({url: dburl})
 })
 
+let sockets: {[key: number]: any} = {}
+
 app.use(sessionMW)
 io.use((socket, next) => sessionMW(socket.request, socket.request.res, next))
 
@@ -28,6 +30,13 @@ app.use(bodyParser.json())
 app.set('views', './client/views')
 app.set('view engine', 'ejs')
 app.use('/img', express.static('./client/imgs/'))
+app.use((req, res, next) =>{
+    const id = req.session?.user?.id
+    if(id && id in sockets){
+        req.socket = sockets[id]
+    }
+    next()
+})
 
 console.log('Server started')
 
@@ -54,7 +63,17 @@ app.post('/remove', async (req: any, res: any) =>{
     res.redirect('/admin')
 })
 app.post('/register', register)
-app.post('/login', login)
+app.post('/login', login, async (req, res) =>{
+    const friends = await get_friends_inv(req.session!.user.id)
+    for(let friend of friends){
+        const socket = sockets[friend.id]
+        if(socket){
+            socket.emit('friend_login', req.session!.user.id)
+        }else{
+            console.log('Did not find socket for user '+friend.name)
+        }
+    }
+})
 
 app.post('/logout', (req, res) =>{
     delete req.session!.user
@@ -77,7 +96,14 @@ app.get('/style.css', (req, res) =>{
 
 io.on('connection', (socket) => {
     console.log('Client connected to server')
-    console.log(socket.request.session)
-
-    
+    const id = socket.request.session?.user?.id
+    if(id){
+        sockets[id] = socket
+    }
+    socket.on('disconnect', () => {
+        const id = socket.request.session?.user?.id
+        if(id && id in sockets){
+            delete sockets[id]
+        }
+    })    
 })
