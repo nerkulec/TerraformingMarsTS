@@ -1,5 +1,5 @@
 import pg from 'pg'
-import {Game} from '../../game/Game'
+import {Game} from '../game/Game'
 require('dotenv').config()
 
 const db = new pg.Pool({
@@ -103,14 +103,22 @@ export async function get_users(){
 }
 
 export async function get_friends(user_id: number){
-    const users = (await db.query(`SELECT *
+    const users = (await db.query(`SELECT users.id AS id, name, elo, icon, in_room
         FROM users
         JOIN friends ON users.id = friend2
         WHERE friend1 = $1`, [user_id])).rows
     return users
 }
 
-export async function login(req: any, res: any) {
+export async function get_friends_inv(user_id: number){ // Get users for which this user is a friend of
+    const users = (await db.query(`SELECT users.id AS id, name, elo, icon, in_room
+        FROM users
+        JOIN friends ON users.id = friend1
+        WHERE friend2 = $1`, [user_id])).rows
+    return users
+}
+
+export async function login(req: any, res: any, next: Function) {
     const {name, password, guest} = req.body
     if(guest){
         const users = (await db.query('SELECT * FROM users WHERE name = $1', [name])).rows
@@ -132,8 +140,10 @@ export async function login(req: any, res: any) {
             res.redirect('/')
         }else{
             req.session.user = users[0]
+            delete req.session.user.password_hash
             req.session.message = 'Logged in successfully'
             res.redirect('/')
+            next()
         }
     }
 }

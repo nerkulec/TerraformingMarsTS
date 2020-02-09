@@ -79,6 +79,10 @@ function update_player(player: Player){
     
 }
 
+function switch_online(id: number){
+    
+}
+
 type Message = {
 
 }
@@ -100,18 +104,28 @@ console.log('Client started')
 
 socket.on('connect', () => {
     console.log('Connected to server')
-        /*setInterval(()=>{
-            let room = {
-                name: 'test',
-                room_id: 13,
-                creator: 'testCreator',
-                creator_id: 52, // klikanie w nazwe gracza przenosi na /user/creator_id
-                players: 3,
-                max_players: 5, // wyświetlać players/max_players
-                elo_range: undefined, // albo nic albo dwie liczby np [1500, 1800], wyświetlić 1500-1800
-                ranked: true
-            }
-            add_room(room)
-        }, 20000)
-        */
+
+    socket.on('add_room', (room: Room) => {
+        add_room(room)
+    })
+
+    socket.on('remove_room', (id: number) => {
+        remove_room(id)
+    })
+
+    socket.on('friend_login', (id: number) => {
+        switch_online(id)
+    })
+
+    socket.on('update_player', (player: Player) => {
+        update_player(player)
+    })
+
+    socket.on('add_message', (message: Message) => {
+        add_message(message)
+    })
+
+    socket.on('add_notification', (notification: Notification) => {
+        add_notification(notification)
+    })
 })
