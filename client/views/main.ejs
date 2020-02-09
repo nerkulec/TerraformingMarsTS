@@ -170,12 +170,12 @@
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-group">
-                        <% for(let user of friends){
-                        let roomStatus, gameStatus
+                        <% 
+                            for(let user of friends){
+                                let roomStatus, gameStatus
     
-                        roomStatus = user.in_room ? 'In room' : ''
-                        gameStatus = user.in_game ? 'In game' : ''
-                        
+                                roomStatus = user.in_room ? 'In room' : ''
+                                gameStatus = user.in_game ? 'In game' : '' 
                         %>
                         <li class="list-group-item d-flex align-items-center bg-transparent border-0 rounded-0">
                             <span class="status-dot online mr-3"></span>
@@ -185,13 +185,13 @@
                             <span class="friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
                             
                                 
-                            <% if (roomStatus === 'In room') {%>
+                            <% if (roomStatus === 'In room') { %>
                                 <span class="ml-auto in-room font-weight-bolder"> <%= roomStatus %> </span>
                                 <span class="ml-2"><a href="/room/<%= room.id %>"><i class="fas fa-sign-in-alt in-room friend-room-icon font-weight-bolder"></i></a></span>    
                             <% } %>
-                            <% if (gameStatus === 'In game') {%>
+                            <% if (gameStatus === 'In game') { %>
                                 <span class="ml-auto in-game font-weight-bolder"> <%= gameStatus %> </span>
-                            <%}%>
+                            <% } %>
                         </li>
                         <% } %>
                     </ul>

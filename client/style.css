@@ -1,6 +1,11 @@
 body{
     margin: 0;
     padding: 0;
+    background-image: linear-gradient(to bottom, rgba(155,153,152,0.7), rgba(52,25,14,0.8)), url(/img/background.jpg);
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    height: 100%;
 }
 
 form{
@@ -42,6 +47,10 @@ label{
     padding-top: 58px;
 }
 
+.top-0{
+    top: 0;
+}
+
 .pos-absolute{
     position: absolute;
 }
@@ -55,10 +64,7 @@ label{
 }
 
 .content{
-    background-image: linear-gradient(to bottom, rgba(155,153,152,0.7), rgba(52,25,14,0.8)), url(/img/background.jpg);
-    background-position: top;
-    background-size: cover;
-    height: 100%;
+    
 }
 
 .left-panel{
