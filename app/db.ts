@@ -77,19 +77,44 @@ export async function get_rooms(settings: any){
 // FROM rooms
 // JOIN users ON users.in_room = rooms.id
 
-export async function get_room(req: any, res: any) {
+export async function get_room(req: any, res: any, next: Function) {
     const {room_id} = req.params
-    const rooms = (await db.query(`
+    const users = (await db.query(`
         SELECT *
         FROM rooms
-        WHERE id = $1`, [room_id])).rows
-    if(rooms.length !== 1){
-        req.session.error = 'Room not found'
-        res.redirect('/')
+        JOIN users ON users.in_room = rooms.id
+        WHERE rooms.id = $1`, [room_id])).rows
+    if(users.length === 0){
+        next()
     }else{
-        res.render('room', {session: req.session, room: rooms[0]})
+        res.render('room', {session: req.session, users: users})
     }
 }
+
+export async function make_room(req: any, res: any) {
+    const name = req.session.user.name +'\'s room'
+    const id = req.session.user.id
+    const room_id = (await db.query(`INSERT INTO rooms
+        (owner_id, name) VALUES ($1, $2)
+        RETURNING id`, [id, name])).rows[0].id
+    await db.query(`UPDATE users
+        SET in_room=$1
+        WHERE id=$2`, [room_id, id])
+    res.redirect('/room/' + room_id)
+}
+
+// export async function leave_room(user_id: number){
+//     const room_id = (await db.query(`SELECT in_room 
+//         FROM users WHERE id = $1`, [user_id])).rows[0].in_room
+//     if(room_id){
+//         await db.query(`UPDATE users SET in_room=NULL WHERE id=$1`, [user_id])
+//         const num = (await db.query(`SELECT COUNT(*)
+//             FROM users WHERE in_room=$1`, [room_id])).rows[0].count
+//         if(num === 0){
+//             await db.query(`DELETE FROM rooms WHERE id=$1`, [room_id])
+//         }
+//     }
+// }
 
 export async function history(req: any, res: any) {
     const {user_id, n} = req.body

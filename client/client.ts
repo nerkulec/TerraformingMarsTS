@@ -84,6 +84,8 @@ function switch_online(player: Player){
 
     let status = player_nu!.querySelector('.status-dot')
     status!.classList.toggle('online', player.online)
+
+    console.log(`User ${player.id} became ${player.online?'online':'offline'}`)
 }
 
 type Message = {
@@ -116,7 +118,7 @@ socket.on('connect', () => {
         remove_room(id)
     })
 
-    socket.on('friend_login', (player: Player) => {
+    socket.on('switch_online', (player: Player) => {
         switch_online(player)
     })
 
