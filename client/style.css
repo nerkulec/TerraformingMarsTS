@@ -63,10 +63,6 @@ label{
     right: 46%;
 }
 
-.content{
-    
-}
-
 .left-panel{
     width: 80%;
     margin: 0;
@@ -87,6 +83,7 @@ label{
 .title{
     left: 50%;
     transform: translateX(-50%);
+    font-family: 'Russo One', sans-serif;
 }
 
 .login-panel{
@@ -209,6 +206,7 @@ label{
 
 .message-icon:hover, .profile-icon:hover{
     transform: scale(1.2) translateY(-3px);
+    cursor: pointer;
 }
 
 .in-game{
@@ -229,15 +227,37 @@ label{
     cursor: pointer;
 }
 
-.friend-name a{
+.friend-name{
     color: #fff;
     transition: 0.2s;
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
-.friend-name a:hover{
-    color: #fff;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+.messages-panel{
+    width: auto;
+    height: 35vh;
+    margin-left: -15px;
+    bottom: 0;
+    right: 20%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.top-msg-panel{
+    height: 15%;
+    width: 300px;
+}
+
+.msg-content{
+    height: 85%;
+}
+
+.close-msg{
+    transform: scale(1.3);
+}
+
+.close-msg:hover{
+    cursor: pointer;
 }
 
 

@@ -2,7 +2,7 @@ const socket = io()
 
 type Player = {
     id: number,
-    name: string
+    online: boolean
 }
 
 type Room = {
@@ -79,8 +79,11 @@ function update_player(player: Player){
     
 }
 
-function switch_online(id: number){
-    
+function switch_online(player: Player){
+    let player_nu = document.getElementById(''+player.id+'')
+
+    let status = player_nu!.querySelector('.status-dot')
+    status!.classList.toggle('online', player.online)
 }
 
 type Message = {
@@ -113,8 +116,8 @@ socket.on('connect', () => {
         remove_room(id)
     })
 
-    socket.on('friend_login', (id: number) => {
-        switch_online(id)
+    socket.on('friend_login', (player: Player) => {
+        switch_online(player)
     })
 
     socket.on('update_player', (player: Player) => {
