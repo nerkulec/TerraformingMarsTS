@@ -1,7 +1,10 @@
 const socket = io()
 
+let friends: Player[] = [] 
+
 type Player = {
     id: number,
+    name: string,
     online: boolean
 }
 
@@ -17,9 +20,7 @@ type Room = {
 }
 
 function add_rooms(rooms: Room[]){
-    for(let room of rooms){
-        add_room(room);
-    }
+    rooms.forEach(add_room)
 }
 
 function add_room(room: Room){
@@ -71,6 +72,35 @@ function add_room(room: Room){
         room_el.appendChild(room_enter)
 }
 
+function add_friends(friends: Player[]){
+    friends.forEach(add_friend)
+}
+
+function add_friend(friend: Player){
+
+//     roomStatus = user.in_room ? 'In room' : ''
+//     gameStatus = user.in_game ? 'In game' : ''
+
+// <li class="list-group-item d-flex align-items-center bg-transparent border-0 rounded-0" id="<%= user.id %>">
+//     <span class="status-dot online mr-3"></span>
+//     <span class="mr-2"><i onclick="show_message()" class="fas fa-envelope-square message-icon"></i></span>
+//     <span class="mr-2"><a ><i class="far fa-user profile-icon"></i></a></span>
+//     <span class="icon mr-1"></span>
+//     <span class="friend-name"><%= user.name %></span>
+    
+        
+//     <% if (roomStatus === 'In room') { %>
+//         <span class="ml-auto in-room font-weight-bolder"> <%= roomStatus %> </span>
+//         <span class="ml-2"><a href="/room/<%= room.id %>"><i class="fas fa-sign-in-alt in-room friend-room-icon font-weight-bolder"></i></a></span>    
+//     <% } %>
+//     <% if (gameStatus === 'In game') { %>
+//         <span class="ml-auto in-game font-weight-bolder"> <%= gameStatus %> </span>
+//     <% } %>
+// </li>
+// <% } %>
+    friends.push(friend)
+}
+
 function remove_room(room_id: number){
     
 }
@@ -84,14 +114,23 @@ function switch_online(player: Player){
 
     let status = player_nu!.querySelector('.status-dot')
     status!.classList.toggle('online', player.online)
+
+    console.log(`User ${player.id} became ${player.online?'online':'offline'}`)
 }
 
 type Message = {
+    from: number,
+    to: number,
+    text: string
+}
 
+function add_messages(messages: Message[]){
+    messages.forEach(add_message)
 }
 
 function add_message(message: Message){
-    
+    console.log('Added message:')
+    console.log(message)
 }
 
 type Info = {
@@ -101,6 +140,10 @@ type Info = {
 function add_notification(notification: Info){
     // Friend invite
     // Room invite
+}
+
+async function get_dms(id: number){
+    socket.emit('get_dms', id, add_messages)
 }
 
 console.log('Client started')
@@ -116,7 +159,7 @@ socket.on('connect', () => {
         remove_room(id)
     })
 
-    socket.on('friend_login', (player: Player) => {
+    socket.on('switch_online', (player: Player) => {
         switch_online(player)
     })
 
@@ -130,5 +173,21 @@ socket.on('connect', () => {
 
     socket.on('add_notification', (notification: Notification) => {
         add_notification(notification)
+    })
+
+    socket.emit('get_friends', (friends: Player[]) => {
+        add_friends(friends)
+        console.log('Fetched friends')
+
+        // TEST:
+        for(let friend of friends){
+            console.log('sent dms')
+            socket.emit('send_dm', {to: friend.id, text: 'Hello '+friend.name+'!'})
+        }
+    })
+
+    socket.emit('get_rooms', (rooms: Room[]) => {
+        add_rooms(rooms)
+        console.log('Fetched rooms')
     })
 })
