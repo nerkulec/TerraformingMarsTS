@@ -42,9 +42,7 @@ console.log('Server started')
 
 app.get('/', async (req, res) =>{
     if(req.session!.user && !req.session!.user.guest){
-        const rooms = await get_rooms({n: 20, only_public: true, not_full: true})
-        const friends = await get_friends(req.session!.user.id)
-        res.render('main', {session: req.session, rooms: rooms, friends: friends})
+        res.render('main', {session: req.session})
     }else{
         res.render('main', {session: req.session})
     }
@@ -113,5 +111,13 @@ io.on('connection', async (socket) => {
             delete sockets[id]
             await send_status(id, false)
         }
-    })    
+    })
+    socket.on('get_friends', async (add_friends) => {
+        const friends = await get_friends(socket.request.session!.user.id)
+        add_friends(friends)
+    })
+    socket.on('get_rooms', async (add_rooms) => {
+        const rooms = await get_rooms({n: 20, only_public: true, not_full: true})
+        add_rooms(rooms)
+    })
 })

@@ -17,9 +17,7 @@ type Room = {
 }
 
 function add_rooms(rooms: Room[]){
-    for(let room of rooms){
-        add_room(room);
-    }
+    rooms.forEach(add_room)
 }
 
 function add_room(room: Room){
@@ -69,6 +67,34 @@ function add_room(room: Room){
                 room_info_details.appendChild(room_players)
         room_el.appendChild(room_creator)
         room_el.appendChild(room_enter)
+}
+
+function add_friends(friends: Player[]){
+    friends.forEach(add_friend)
+}
+
+function add_friend(friend: Player){
+
+//     roomStatus = user.in_room ? 'In room' : ''
+//     gameStatus = user.in_game ? 'In game' : ''
+
+// <li class="list-group-item d-flex align-items-center bg-transparent border-0 rounded-0" id="<%= user.id %>">
+//     <span class="status-dot online mr-3"></span>
+//     <span class="mr-2"><i onclick="show_message()" class="fas fa-envelope-square message-icon"></i></span>
+//     <span class="mr-2"><a ><i class="far fa-user profile-icon"></i></a></span>
+//     <span class="icon mr-1"></span>
+//     <span class="friend-name"><%= user.name %></span>
+    
+        
+//     <% if (roomStatus === 'In room') { %>
+//         <span class="ml-auto in-room font-weight-bolder"> <%= roomStatus %> </span>
+//         <span class="ml-2"><a href="/room/<%= room.id %>"><i class="fas fa-sign-in-alt in-room friend-room-icon font-weight-bolder"></i></a></span>    
+//     <% } %>
+//     <% if (gameStatus === 'In game') { %>
+//         <span class="ml-auto in-game font-weight-bolder"> <%= gameStatus %> </span>
+//     <% } %>
+// </li>
+// <% } %>
 }
 
 function remove_room(room_id: number){
@@ -132,5 +158,14 @@ socket.on('connect', () => {
 
     socket.on('add_notification', (notification: Notification) => {
         add_notification(notification)
+    })
+
+    socket.emit('get_friends', (friends: Player[]) => {
+        add_friends(friends)
+    })
+
+    socket.emit('get_rooms', (rooms: Room[]) => {
+        add_rooms(rooms)
+        console.log('requested rooms')
     })
 })
