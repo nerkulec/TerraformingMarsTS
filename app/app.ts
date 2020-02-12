@@ -3,7 +3,10 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import connect_mongo from 'connect-mongo'
-import {register, login, get_rooms, get_room, get_friends, get_users, remove_user, get_friends_inv, make_room} from './db'
+import {register, login, get_rooms, get_room, get_friends,
+        get_users, remove_user, get_friends_inv, make_room,
+        add_message,
+        get_messages} from './db'
 require('dotenv').config()
 
 const MongoStore = connect_mongo(session)
@@ -113,11 +116,24 @@ io.on('connection', async (socket) => {
         }
     })
     socket.on('get_friends', async (add_friends) => {
-        const friends = await get_friends(socket.request.session!.user.id)
-        add_friends(friends)
+        if(socket.request.session.user){
+            const friends = await get_friends(socket.request.session.user.id)
+            add_friends(friends)
+        }
     })
     socket.on('get_rooms', async (add_rooms) => {
         const rooms = await get_rooms({n: 20, only_public: true, not_full: true})
         add_rooms(rooms)
+    })
+    socket.on('send_dm', async (message) => {
+        const id = socket.request.session.user.id
+        add_message(id, message.to, message.text)
+        if(message.to in sockets){
+            sockets[message.to].emit('add_message', {from: id, to: message.to, text: message.text})
+        }
+    })
+    socket.on('get_dms', async (id: number, add_messages) => {
+        const messages = await get_messages(id, socket.request.session.user.id)
+        add_messages(messages)
     })
 })

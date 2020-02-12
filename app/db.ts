@@ -176,3 +176,16 @@ export async function login(req: any, res: any, next: Function) {
 export async function record_game(game: Game){
     const num_players = game.players.length
 }
+
+export async function add_message(from: number, to: number, message: string){
+    await db.query(`INSERT INTO direct_messages (sender_id, receiver_id, text)
+        VALUES ($1, $2, $3)`, [from, to, message])
+}
+
+export async function get_messages(from: number, to: number){
+    const messages = (await db.query(`
+        SELECT sender_id AS from, receiver_id AS to, text
+        FROM direct_messages
+        WHERE (sender_id=$1 AND receiver_id=$2) OR (sender_id=$2 AND receiver_id=$1)`)).rows
+    return messages
+}
