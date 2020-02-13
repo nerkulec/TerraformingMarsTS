@@ -151,7 +151,7 @@
                     <h5 class="m-0 text-warning">Friends</h5>
                 </div>
                 <div class="card-body p-0">
-                    <ul class="list-group">
+                    <ul class="list-group friends-list">
                         <script>
                             function message(user){
                                 let msgs_panel = document.querySelector('.messages-panel')
@@ -195,31 +195,6 @@
                                 msg_window.classList.remove('message-panel-visible')
                             }
                         </script>
-                        <% 
-                            for(let user of friends){
-                                let roomStatus, gameStatus
-    
-                                roomStatus = user.in_room ? 'In room' : ''
-                                gameStatus = user.in_game ? 'In game' : '' 
-                        %>
-                        
-                        <li class="list-group-item d-flex align-items-center bg-transparent border-0 rounded-0" id="<%= user.id %>">
-                            <span class="status-dot online mr-3"></span>
-                            <span class="mr-2"><i class="fas fa-envelope-square message-icon"></i></span>
-                            <span class="mr-2"><a ><i class="far fa-user profile-icon"></i></a></span>
-                            <span class="icon mr-1"></span>
-                            <span class="friend-name"><%= user.name %></span>
-                            
-                                
-                            <% if (roomStatus === 'In room') { %>
-                                <span class="ml-auto in-room font-weight-bolder"> <%= roomStatus %> </span>
-                                <span class="ml-2"><a href="/room/<%= room.id %>"><i class="fas fa-sign-in-alt in-room friend-room-icon font-weight-bolder"></i></a></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') { %>
-                                <span class="ml-auto in-game font-weight-bolder"> <%= gameStatus %> </span>
-                            <% } %>
-                        </li>
-                        <% } %>
                     </ul>
                 </div>
             </div>
