@@ -93,7 +93,7 @@ function add_friend(friend: Player){
             friend_status.classList.add('status-dot', 'mr-3')
             let msg_btn = document.createElement('span')
             msg_btn.classList.add('mr-2')
-            msg_btn.innerHTML = '<i onclick="show_message()" class="fas fa-envelope-square message-icon"></i>'
+            msg_btn.innerHTML = '<i onclick="'+ show_message(friend) +'" class="fas fa-envelope-square message-icon"></i>'
             let profile_btn = document.createElement('span')
             profile_btn.classList.add('mr-2')
             profile_btn.innerHTML = '<a href="/user/'+ friend.id +'"><i class="far fa-user profile-icon"></i></a>'
@@ -162,7 +162,7 @@ function add_message(message: Message){
     console.log(message)
 }
 
-function message(friend: Player){
+function show_message(friend: Player){
     let msgs_panel = document.querySelector('.messages-panel')
 
     let msg_window = document.createElement('div')
@@ -177,7 +177,7 @@ function message(friend: Player){
             msg_name.classList.add('friend-name')
             msg_name.innerHTML = friend.name
             let msg_close = document.createElement('span')
-            msg_close.innerHTML = '<span class="ml-auto"><i onclick="close_message()" class="fas fa-times close-msg"></i></span>'
+            msg_close.innerHTML = '<span class="ml-auto"><i onclick="'+close_message()+'" class="fas fa-times close-msg"></i></span>'
         let msg_content = document.createElement('div')
         msg_content.classList.add('msg-content', 'd-flex', 'flex-column', 'justify-content-between', 'bg-secondary')
             let msg_body = document.createElement('div')
