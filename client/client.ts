@@ -78,12 +78,9 @@ function add_room(room: Room){
 
 function add_friends(friends: Player[]){
     friends.forEach(add_friend)
-    friends.forEach(switch_online)
 }
 
 function add_friend(friend: Player){
-
-
 
     let roomStatus = friend.in_room ? 'In room' : ''
     let gameStatus = friend.in_game ? 'In game' : ''
@@ -163,6 +160,47 @@ function add_messages(messages: Message[]){
 function add_message(message: Message){
     console.log('Added message:')
     console.log(message)
+}
+
+function message(friend: Player){
+    let msgs_panel = document.querySelector('.messages-panel')
+
+    let msg_window = document.createElement('div')
+    msg_window.classList.add('h-100', 'message-panel')
+        let msg_top = document.createElement('div')
+        msg_top.classList.add('top-msg-panel', 'd-flex', 'align-items-center', 'px-3', 'bg-dark')
+            let msg_online_status = document.createElement('span')
+            msg_online_status.classList.add('status-dot', 'mr-3')
+            let msg_icon = document.createElement('span')
+            msg_icon.classList.add('icon', 'mr-1')
+            let msg_name = document.createElement('span')
+            msg_name.classList.add('friend-name')
+            msg_name.innerHTML = friend.name
+            let msg_close = document.createElement('span')
+            msg_close.innerHTML = '<span class="ml-auto"><i onclick="close_message()" class="fas fa-times close-msg"></i></span>'
+        let msg_content = document.createElement('div')
+        msg_content.classList.add('msg-content', 'd-flex', 'flex-column', 'justify-content-between', 'bg-secondary')
+            let msg_body = document.createElement('div')
+            msg_body.classList.add('d-flex', 'flex-column-reverse')
+            let msg_write = document.createElement('input')
+            msg_write.classList.add('w-100', 'p-2')
+            msg_write.setAttribute('type', 'text')
+            msg_write.setAttribute('placeholder', 'Type a message')
+
+    msgs_panel!.appendChild(msg_window)
+        msg_window.appendChild(msg_top)
+            msg_top.appendChild(msg_online_status)
+            msg_top.appendChild(msg_icon)
+            msg_top.appendChild(msg_name)
+            msg_top.appendChild(msg_close)
+        msg_window.appendChild(msg_content)
+            msg_content.appendChild(msg_body)
+            msg_content.appendChild(msg_write)
+}
+
+function close_message(){
+    let msg_window = document.querySelector('.message-panel')
+    msg_window!.classList.remove('message-panel-visible')
 }
 
 type Info = {
