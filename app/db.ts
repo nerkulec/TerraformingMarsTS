@@ -135,13 +135,27 @@ export async function get_friends(user_id: number){
     return users
 }
 
-export async function get_friends_inv(user_id: number){ // Get users for which this user is a friend of
-    const users = (await db.query(`SELECT users.id AS id, name, elo, icon, in_room
-        FROM users
-        JOIN friends ON users.id = friend1
-        WHERE friend2 = $1`, [user_id])).rows
-    return users
+export async function invite_friend(inviter: number, invited: number){
+    // TODO: check if already friends
+    // TODO: check if reverse invite is present -> then automatically add friend
+    await db.query(`INSERT INTO friend_invites (inviter, invited)
+        VALUES ($1, $2)`, [inviter, invited])
 }
+
+async function add_friends(id1: number, id2: number){
+    await db.query(`INSERT INTO friends (friend1, friend2)
+        VALUES ($1, $2), ($2, $1)`, [id1, id2])
+}
+
+export async function accept_invite(inviter: number, invited: number){
+    // TODO: check if already friends
+    // TODO: check if invited
+    const q1 = db.query(`DELETE FROM friend_invites
+        WHERE inviter = $1 AND invited = $2`, [inviter, invited])
+    const q2 = add_friends(inviter, invited)
+    await Promise.all([q1, q2])
+}
+
 
 export async function login(req: any, res: any, next: Function) {
     const {name, password, guest} = req.body

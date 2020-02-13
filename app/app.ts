@@ -4,7 +4,7 @@ import bodyParser from 'body-parser'
 import session from 'express-session'
 import connect_mongo from 'connect-mongo'
 import {register, login, get_rooms, get_room, get_friends,
-        get_users, remove_user, get_friends_inv, make_room,
+        get_users, remove_user, make_room,
         add_message,
         get_messages} from './db'
 require('dotenv').config()
@@ -86,7 +86,7 @@ app.get('/style.css', (req, res) =>{
 })
 
 async function send_status(id: number, online: boolean){
-    const friends = await get_friends_inv(id)
+    const friends = await get_friends(id)
     const info = {
         id: id,
         online: online
@@ -135,5 +135,8 @@ io.on('connection', async (socket) => {
     socket.on('get_dms', async (id: number, add_messages) => {
         const messages = await get_messages(id, socket.request.session.user.id)
         add_messages(messages)
+    })
+    socket.on('invite_friend', async (id: number) => {
+
     })
 })

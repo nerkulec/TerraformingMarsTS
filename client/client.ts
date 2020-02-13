@@ -142,8 +142,12 @@ function add_notification(notification: Info){
     // Room invite
 }
 
-async function get_dms(id: number){
+function get_dms(id: number){
     socket.emit('get_dms', id, add_messages)
+}
+
+function invite_friend(id: number){
+    socket.emit('invite_friend', id)
 }
 
 console.log('Client started')
