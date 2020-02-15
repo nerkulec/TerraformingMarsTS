@@ -1,6 +1,7 @@
-const LOG_LEVEL = 3
+const LOG_LEVEL = 1
 
 const socket = io()
+let my_id: number
 
 let friends: {[key: number]: Player} = {}
 
@@ -95,6 +96,7 @@ function add_room(room: Room){
 
 function add_friends(friends: Player[]){
     friends.forEach(add_friend)
+    friends.forEach(switch_online)
 }
 
 function add_friend(friend: Player){
@@ -150,7 +152,74 @@ function add_messages(messages: Message[]){
 }
 
 function add_message(message: Message){
+    const friend = message.to === my_id ? message.from : message.to
+    const left = friend === message.from
+    let msg_panel = document.getElementById('message-panel'+friend)
+    if(!msg_panel){
+        show_message(friend)
+        msg_panel = document.getElementById('message-panel'+friend)
+    }
+    let msg_content = msg_panel!.querySelector('.msg-content')
+    let messages = msg_content!.querySelector('.messages')
 
+    let from_msg = document.createElement('div')
+    from_msg.classList.add('out-message', 'message')
+    let msg = document.createElement('p')
+    msg.classList.add('m-0')
+    msg.innerText = message.text
+    
+    messages!.appendChild(from_msg)
+        from_msg.appendChild(msg)
+}
+
+function show_message(id: number){
+    get_dms(id)
+    let friend = friends[id]
+    let msgs_panel = document.querySelector('.messages-panel')
+    let el_id = document.getElementById('message-panel'+id+'')
+    if(el_id){
+        el_id.classList.remove('message-panel-invisible')
+    }
+    else{
+        let msg_window = document.createElement('div')
+        msg_window.classList.add('h-100', 'message-panel')
+        msg_window.setAttribute('id', 'message-panel'+id+'')
+        let msg_top = document.createElement('div')
+        msg_top.classList.add('top-msg-panel', 'd-flex', 'align-items-center', 'px-3', 'bg-dark')
+            let msg_online_status = document.createElement('span')
+            msg_online_status.classList.add('status-dot', 'mr-3')
+            let msg_icon = document.createElement('span')
+            msg_icon.classList.add('icon', 'mr-1')
+            let msg_name = document.createElement('span')
+            msg_name.classList.add('friend-name')
+            msg_name.innerHTML = friend.name
+            let msg_close = document.createElement('span')
+            msg_close.classList.add('ml-auto')
+            msg_close.innerHTML = '<i onclick="close_message('+id+')" class="fas fa-times close-msg"></i>'
+        let msg_content = document.createElement('div')
+        msg_content.classList.add('msg-content', 'd-flex', 'flex-column', 'justify-content-between', 'bg-secondary')
+            let msg_body = document.createElement('div')
+            msg_body.classList.add('d-flex', 'messages','flex-column-reverse')
+            let msg_write = document.createElement('input')
+            msg_write.classList.add('w-100', 'p-2')
+            msg_write.setAttribute('type', 'text')
+            msg_write.setAttribute('placeholder', 'Type a message')
+
+    msgs_panel!.appendChild(msg_window)
+        msg_window.appendChild(msg_top)
+            msg_top.appendChild(msg_online_status)
+            msg_top.appendChild(msg_icon)
+            msg_top.appendChild(msg_name)
+            msg_top.appendChild(msg_close)
+        msg_window.appendChild(msg_content)
+            msg_content.appendChild(msg_body)
+            msg_content.appendChild(msg_write)
+    }
+}
+
+function close_message(id: number){
+    let msg_window = document.getElementById('message-panel'+id+'')
+    msg_window!.classList.add('message-panel-invisible')
 }
 
 function add_notifications(notifications: Notif[]){
@@ -174,10 +243,16 @@ function delete_notification(id: number){
     socket.emit('delete_notification', id)
 }
 
+function send_dm(message: any){
+    socket.emit('send_dm', message)
+}
+
 console.log('Client started')
 
 socket.on('connect', () => {
     console.log('Connected to server')
+
+    socket.emit('get_id', (id: number) => my_id = id)
 
     socket.on('add_room', log(add_room, "Added room", 3))
 

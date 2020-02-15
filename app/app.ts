@@ -5,7 +5,7 @@ import session from 'express-session'
 import connect_mongo from 'connect-mongo'
 import {register, login, get_rooms, get_room, get_friends, get_users, remove_user,
         make_room, add_message, invite_friend, get_messages, get_notifications,
-        delete_notification, add_notification} from './db'
+        delete_notification, add_notification, get_user} from './db'
 require('dotenv').config()
 
 const MongoStore = connect_mongo(session)
@@ -70,8 +70,9 @@ app.post('/logout', (req, res) =>{
     res.redirect('/')
 })
 
-app.get('/user/:name', (req: any, res: any) =>{
-    res.render('user_profile', {session: req.session})
+app.get('/user/:id', async (req: any, res: any) =>{
+    const user = await get_user(req.params.id)
+    res.render('user_profile', {session: req.session, user: user})
 })
 
 app.get('/room/:room_id', get_room, make_room)
@@ -142,6 +143,9 @@ io.on('connection', (socket) => {
             console.log('Removed socket for '+socket.request.session.user.name)
             send_status(id, false)
         }
+    })
+    socket.on('get_id', (get_id)=>{
+        get_id(socket.request.session.user.id)
     })
     socket.on('get_friends', (add_friends) => {
         if(socket.request.session.user){

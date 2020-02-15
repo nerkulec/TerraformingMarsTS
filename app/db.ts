@@ -118,6 +118,11 @@ export async function get_users(){
     return users
 }
 
+export async function get_user(id: number){
+    const user = (await db.query(`SELECT * FROM users WHERE id = $1`, [id])).rows[0]
+    return user
+}
+
 export async function get_friends(user_id: number){
     const users = (await db.query(`SELECT users.id AS id, name, elo, icon, in_room
         FROM users
@@ -232,6 +237,6 @@ export async function get_messages(from: number, to: number){
     const messages = (await db.query(`
         SELECT sender_id AS from, receiver_id AS to, text
         FROM direct_messages
-        WHERE (sender_id=$1 AND receiver_id=$2) OR (sender_id=$2 AND receiver_id=$1)`)).rows
+        WHERE (sender_id=$1 AND receiver_id=$2) OR (sender_id=$2 AND receiver_id=$1)`, [from, to])).rows
     return messages
 }
