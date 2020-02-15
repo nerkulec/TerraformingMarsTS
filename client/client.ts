@@ -1,6 +1,7 @@
-const LOG_LEVEL = 3
+const LOG_LEVEL = 1
 
 const socket = io()
+let my_id: number
 
 let friends: {[key: number]: Player} = {}
 
@@ -100,6 +101,7 @@ function add_room(room: Room){
 function add_friends(friends: Player[]){
     console.log(friends)
     friends.forEach(add_friend)
+    friends.forEach(switch_online)
 }
 
 function add_friend(friend: Player){
@@ -180,10 +182,28 @@ function add_messages(messages: Message[]){
 }
 
 function add_message(message: Message){
+    const friend = message.to === my_id ? message.from : message.to
+    const left = friend === message.from
+    let msg_panel = document.getElementById('message-panel'+friend)
+    if(!msg_panel){
+        show_message(friend)
+        msg_panel = document.getElementById('message-panel'+friend)
+    }
+    let msg_content = msg_panel!.querySelector('.msg-content')
+    let messages = msg_content!.querySelector('.messages')
 
+    let from_msg = document.createElement('div')
+    from_msg.classList.add('out-message', 'message')
+    let msg = document.createElement('p')
+    msg.classList.add('m-0')
+    msg.innerText = message.text
+    
+    messages!.appendChild(from_msg)
+        from_msg.appendChild(msg)
 }
 
 function show_message(id: number){
+    get_dms(id)
     let friend = friends[id]
     let msgs_panel = document.querySelector('.messages-panel')
     let el_id = document.getElementById('message-panel'+id+'')
@@ -209,7 +229,7 @@ function show_message(id: number){
         let msg_content = document.createElement('div')
         msg_content.classList.add('msg-content', 'd-flex', 'flex-column', 'justify-content-between', 'bg-secondary')
             let msg_body = document.createElement('div')
-            msg_body.classList.add('d-flex', 'flex-column-reverse')
+            msg_body.classList.add('d-flex', 'messages','flex-column-reverse')
             let msg_write = document.createElement('input')
             msg_write.classList.add('w-100', 'p-2')
             msg_write.setAttribute('type', 'text')
@@ -253,10 +273,16 @@ function delete_notification(id: number){
     socket.emit('delete_notification', id)
 }
 
+function send_dm(message: any){
+    socket.emit('send_dm', message)
+}
+
 console.log('Client started')
 
 socket.on('connect', () => {
     console.log('Connected to server')
+
+    socket.emit('get_id', (id: number) => my_id = id)
 
     socket.on('add_room', log(add_room, "Added room", 3))
 
