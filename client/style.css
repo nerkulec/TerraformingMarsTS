@@ -47,6 +47,11 @@ label{
     padding-top: 58px;
 }
 
+.alert-style{
+    margin-top: 58px;
+    position: absolute;
+}
+
 .top-0{
     top: 0;
 }
@@ -240,24 +245,46 @@ label{
     margin-left: -15px;
     bottom: 0;
     right: 20%;
-    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .message-panel{
-    display: none;
+    display: block;
+    margin-left: 10px;
 }
 
-.message-panel-visible{
-    display: block;
+.message-panel-invisible{
+    display: none;
 }
 
 .top-msg-panel{
     height: 15%;
     width: 300px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px
 }
 
 .msg-content{
     height: 85%;
+}
+
+.message{
+    width: auto;
+    max-width: 70%;
+    padding: 5px;
+    border-radius: 15px;
+    margin-bottom: 6px;
+}
+
+.int-message{
+    text-align: right;
+    background-color: #48a313;
+    border-bottom-left-radius: 0;
+}
+
+.out-message{
+    text-align: left;
+    background-color: darkgray;
+    border-bottom-right-radius: 0;
 }
 
 .close-msg{

@@ -77,6 +77,7 @@ function add_room(room: Room){
 }
 
 function add_friends(friends: Player[]){
+    console.log(friends)
     friends.forEach(add_friend)
 }
 
@@ -93,7 +94,7 @@ function add_friend(friend: Player){
             friend_status.classList.add('status-dot', 'mr-3')
             let msg_btn = document.createElement('span')
             msg_btn.classList.add('mr-2')
-            msg_btn.innerHTML = '<i onclick="'+ show_message(friend) +'" class="fas fa-envelope-square message-icon"></i>'
+            msg_btn.innerHTML = '<i onclick="show_message('+friend.id+')" class="fas fa-envelope-square message-icon"></i>'
             let profile_btn = document.createElement('span')
             profile_btn.classList.add('mr-2')
             profile_btn.innerHTML = '<a href="/user/'+ friend.id +'"><i class="far fa-user profile-icon"></i></a>'
@@ -162,11 +163,17 @@ function add_message(message: Message){
     console.log(message)
 }
 
-function show_message(friend: Player){
+function show_message(id: number){
+    let friend = friends[id]
     let msgs_panel = document.querySelector('.messages-panel')
-
-    let msg_window = document.createElement('div')
-    msg_window.classList.add('h-100', 'message-panel')
+    let el_id = document.getElementById('message-panel'+id+'')
+    if(el_id){
+        el_id.classList.remove('message-panel-invisible')
+    }
+    else{
+        let msg_window = document.createElement('div')
+        msg_window.classList.add('h-100', 'message-panel')
+        msg_window.setAttribute('id', 'message-panel'+id+'')
         let msg_top = document.createElement('div')
         msg_top.classList.add('top-msg-panel', 'd-flex', 'align-items-center', 'px-3', 'bg-dark')
             let msg_online_status = document.createElement('span')
@@ -177,7 +184,8 @@ function show_message(friend: Player){
             msg_name.classList.add('friend-name')
             msg_name.innerHTML = friend.name
             let msg_close = document.createElement('span')
-            msg_close.innerHTML = '<span class="ml-auto"><i onclick="'+close_message()+'" class="fas fa-times close-msg"></i></span>'
+            msg_close.classList.add('ml-auto')
+            msg_close.innerHTML = '<i onclick="close_message('+id+')" class="fas fa-times close-msg"></i>'
         let msg_content = document.createElement('div')
         msg_content.classList.add('msg-content', 'd-flex', 'flex-column', 'justify-content-between', 'bg-secondary')
             let msg_body = document.createElement('div')
@@ -196,11 +204,12 @@ function show_message(friend: Player){
         msg_window.appendChild(msg_content)
             msg_content.appendChild(msg_body)
             msg_content.appendChild(msg_write)
+    }
 }
 
-function close_message(){
-    let msg_window = document.querySelector('.message-panel')
-    msg_window!.classList.remove('message-panel-visible')
+function close_message(id: number){
+    let msg_window = document.getElementById('message-panel'+id+'')
+    msg_window!.classList.add('message-panel-invisible')
 }
 
 type Info = {
