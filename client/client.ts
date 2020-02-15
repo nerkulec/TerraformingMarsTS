@@ -1,4 +1,4 @@
-const LOG_LEVEL = 1
+const LOG_LEVEL = 3
 
 const socket = io()
 
@@ -29,6 +29,15 @@ type Room = {
     max_players: number, // wyświetlać players/max_players
     elo_range: undefined | number[], // albo nic albo dwie liczby np [1500, 1800], wyświetlić 1500-1800
     ranked: boolean
+}
+
+type Notif = {
+    text: string,
+    references?:{
+        user?: number,
+        room?: number,
+        game?: number
+    }
 }
 
 function add_rooms(rooms: Room[]){
@@ -144,15 +153,11 @@ function add_message(message: Message){
 
 }
 
-type Info = {
-
-}
-
-function add_notifications(notifications: Notification[]){
+function add_notifications(notifications: Notif[]){
     notifications.forEach(add_notification)
 }
 
-function add_notification(notification: Info){
+function add_notification(notification: Notif){
     // Friend invite
     // Room invite
 }
@@ -163,6 +168,10 @@ function get_dms(id: number){
 
 function invite_friend(id: number){
     socket.emit('invite_friend', id)
+}
+
+function delete_notification(id: number){
+    socket.emit('delete_notification', id)
 }
 
 console.log('Client started')

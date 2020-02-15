@@ -126,7 +126,48 @@ export async function get_friends(user_id: number){
     return users
 }
 
+export async function add_notification(user_id: number, text: string,
+                        references?: {user?: number, room?: number, game?: number}){
+    let num_ref = 2
+    let fields = 'user_id, text'
+    let values = '$1, $2'
+    let args = [user_id, text]
+    if(references){
+        if(references.user){
+            num_ref += 1
+            fields += ', referenced_user'
+            values += ', $'+num_ref
+            args.push(references.user)
+        }
+        if(references.room){
+            num_ref += 1
+            fields += ', referenced_room'
+            values += ', $'+num_ref
+            args.push(references.room)
+        }
+        if(references.game){
+            num_ref += 1
+            fields += ', referenced_game'
+            values += ', $'+num_ref
+            args.push(references.game)
+        }
+    }
+    await db.query(`INSERT INTO notifications (${fields}) VALUES (${values})`, args)
+}
+
+export async function delete_notification(id: number){
+    // TODO: check if exists
+    await db.query(`DELETE FROM notifications WHERE id = $1`, [id])
+}
+
+export async function get_notifications(user_id: number){
+    const notifications = (await db.query(`
+        SELECT * FROM notifications WHERE user_id = $1`, [user_id])).rows
+    return notifications
+}
+
 export async function invite_friend(inviter: number, invited: number){
+    // TODO: check if already invited
     // TODO: check if already friends
     // TODO: check if reverse invite is present -> then automatically add friend
     await db.query(`INSERT INTO friend_invites (inviter, invited)
