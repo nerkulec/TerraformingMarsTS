@@ -1,6 +1,6 @@
 const socket = io()
 
-let friends: Player[] = [] 
+let friends: {[key: number]: Player} = {}
 
 type Player = {
     id: number,
@@ -98,7 +98,7 @@ function add_friend(friend: Player){
 //     <% } %>
 // </li>
 // <% } %>
-    friends.push(friend)
+    friends[friend.id] = friend
 }
 
 function remove_room(room_id: number){
