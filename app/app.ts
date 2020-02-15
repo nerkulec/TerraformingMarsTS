@@ -3,10 +3,9 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import connect_mongo from 'connect-mongo'
-import {register, login, get_rooms, get_room, get_friends,
-        get_users, remove_user, make_room,
-        add_message,
-        get_messages} from './db'
+import {register, login, get_rooms, get_room, get_friends, get_users, remove_user,
+        make_room, add_message, invite_friend, get_messages, get_notifications,
+        delete_notification, add_notification} from './db'
 require('dotenv').config()
 
 const MongoStore = connect_mongo(session)
@@ -99,6 +98,35 @@ async function send_status(id: number, online: boolean){
     }
 }
 
+async function invite_friend_combined(inviter: {id: number, name: string}, invited: number){
+    const q1 = invite_friend(inviter.id, invited)
+    const notification = {
+        text: inviter.name+' invited you as a friend!',
+        referenced_user: inviter.id
+    }
+    const q2 = add_notification(invited, notification.text,
+                                {user: notification.referenced_user})
+    await Promise.all([q1, q2])
+    if(invited in sockets){
+        const socket = sockets[invited]
+        socket.emit('add_notification', notification)
+    }
+}
+
+async function invite_room_combined(inviter: {id: number, name: string},
+                                    invited: number, room: number){
+    // TODO: check if inviter in room and invited online
+    const notification = {
+        text: `${inviter.name} invited you to play!`,
+        references: {user: inviter.id, room: room}
+    }
+    await add_notification(invited, notification.text, notification.references)
+    if(invited in sockets){
+        const socket = sockets[invited]
+        socket.emit('add_notification', notification)
+    }
+}
+
 io.on('connection', (socket) => {
     console.log('Client connected to server')
     const id = socket.request.session?.user?.id
@@ -126,6 +154,11 @@ io.on('connection', (socket) => {
     socket.on('get_rooms', (add_rooms) => {
         get_rooms({n: 20, only_public: true, not_full: true}).then(add_rooms)
     })
+    socket.on('get_notifications', (add_notifications) => {
+        get_notifications(socket.request.session.user.id).then(add_notifications)
+    })
+    socket.on('delete_notification', delete_notification)
+    // TODO: check if user deletes his own notification
     socket.on('send_dm', (message) => {
         const id = socket.request.session.user.id
         add_message(id, message.to, message.text)
@@ -136,7 +169,10 @@ io.on('connection', (socket) => {
     socket.on('get_dms', (id, add_messages) => {
         get_messages(id, socket.request.session.user.id).then(add_messages)
     })
-    socket.on('invite_friend', async (id: number) => {
-
+    socket.on('invite_friend', (id: number) => {
+        invite_friend_combined(socket.request.session.user, id)
+    })
+    socket.on('invite_to_room', (user_id: number, room_id: number) => {
+        invite_room_combined(socket.request.session.user, user_id, room_id)
     })
 })

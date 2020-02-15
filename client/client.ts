@@ -1,6 +1,18 @@
+const LOG_LEVEL = 3
+
 const socket = io()
 
 let friends: {[key: number]: Player} = {}
+
+function log(fun: Function, message: string, level: number = 1){
+    return(...args: any[]) => {
+        if(level <= LOG_LEVEL)
+            console.log(message)
+        if(LOG_LEVEL >= 3)
+            console.log(...args)
+        return fun(...args)
+    }
+}
 
 type Player = {
     id: number,
@@ -21,6 +33,15 @@ type Room = {
     max_players: number, // wyświetlać players/max_players
     elo_range: undefined | number[], // albo nic albo dwie liczby np [1500, 1800], wyświetlić 1500-1800
     ranked: boolean
+}
+
+type Notif = {
+    text: string,
+    references?:{
+        user?: number,
+        room?: number,
+        game?: number
+    }
 }
 
 function add_rooms(rooms: Room[]){
@@ -159,8 +180,7 @@ function add_messages(messages: Message[]){
 }
 
 function add_message(message: Message){
-    console.log('Added message:')
-    console.log(message)
+
 }
 
 function show_message(id: number){
@@ -212,11 +232,11 @@ function close_message(id: number){
     msg_window!.classList.add('message-panel-invisible')
 }
 
-type Info = {
-
+function add_notifications(notifications: Notif[]){
+    notifications.forEach(add_notification)
 }
 
-function add_notification(notification: Info){
+function add_notification(notification: Notif){
     // Friend invite
     // Room invite
 }
@@ -229,42 +249,30 @@ function invite_friend(id: number){
     socket.emit('invite_friend', id)
 }
 
+function delete_notification(id: number){
+    socket.emit('delete_notification', id)
+}
+
 console.log('Client started')
 
 socket.on('connect', () => {
     console.log('Connected to server')
 
-    socket.on('add_room', (room: Room) => {
-        add_room(room)
-    })
+    socket.on('add_room', log(add_room, "Added room", 3))
 
-    socket.on('remove_room', (id: number) => {
-        remove_room(id)
-    })
+    socket.on('remove_room', log(remove_room, "Removed room", 3))
 
-    socket.on('switch_online', (player: Player) => {
-        switch_online(player)
-    })
+    socket.on('switch_online', log(switch_online, "Switched online", 3))
 
-    socket.on('update_player', (player: Player) => {
-        update_player(player)
-    })
+    socket.on('update_player', log(update_player, "Player updated", 3))
 
-    socket.on('add_message', (message: Message) => {
-        add_message(message)
-    })
+    socket.on('add_message', log(add_message, "Message added", 3))
 
-    socket.on('add_notification', (notification: Notification) => {
-        add_notification(notification)
-    })
+    socket.on('add_notification', log(add_notification, "Notification added", 3))
 
-    socket.emit('get_friends', (friends: Player[]) => {
-        add_friends(friends)
-        console.log('Fetched friends')
-    })
+    socket.emit('get_friends', log(add_friends, 'Fetched friends'))
 
-    socket.emit('get_rooms', (rooms: Room[]) => {
-        add_rooms(rooms)
-        console.log('Fetched rooms')
-    })
+    socket.emit('get_rooms', log(add_rooms, 'Fetched rooms'))
+
+    socket.emit('get_notifications', log(add_notifications, 'Fetched notifications'))
 })
