@@ -6,7 +6,8 @@ const db = new pg.Pool({
     host: process.env.DATABASE_URL || 'localhost',
     database: process.env.DB_NAME || 'terraformingmars',
     user: process.env.DB_USER || 'admin',
-    password: process.env.DB_PASSWORD || 'secret-password'
+    password: process.env.DB_PASSWORD || 'secret-password',
+    max: 1
 })
 
 export async function register(req: any, res: any) {

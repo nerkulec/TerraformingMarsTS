@@ -182,12 +182,6 @@ socket.on('connect', () => {
     socket.emit('get_friends', (friends: Player[]) => {
         add_friends(friends)
         console.log('Fetched friends')
-
-        // TEST:
-        for(let friend of friends){
-            console.log('sent dms')
-            socket.emit('send_dm', {to: friend.id, text: 'Hello '+friend.name+'!'})
-        }
     })
 
     socket.emit('get_rooms', (rooms: Room[]) => {
