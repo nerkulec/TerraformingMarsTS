@@ -212,8 +212,12 @@ function add_notification(notification: Info){
     // Room invite
 }
 
-async function get_dms(id: number){
+function get_dms(id: number){
     socket.emit('get_dms', id, add_messages)
+}
+
+function invite_friend(id: number){
+    socket.emit('invite_friend', id)
 }
 
 console.log('Client started')
@@ -248,12 +252,6 @@ socket.on('connect', () => {
     socket.emit('get_friends', (friends: Player[]) => {
         add_friends(friends)
         console.log('Fetched friends')
-
-        // TEST:
-        for(let friend of friends){
-            console.log('sent dms')
-            socket.emit('send_dm', {to: friend.id, text: 'Hello '+friend.name+'!'})
-        }
     })
 
     socket.emit('get_rooms', (rooms: Room[]) => {
