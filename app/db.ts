@@ -67,16 +67,6 @@ export async function get_rooms(settings: any){
     return rooms
 
 }
-// SELECT rooms.name,
-// 	   rooms.id,
-// 	   owner_id,
-// 	   ranked,
-// 	   min_elo, max_elo,
-// 	   COUNT(users),
-// 	   max_players
-// -- 	   owner name
-// FROM rooms
-// JOIN users ON users.in_room = rooms.id
 
 export async function get_room(req: any, res: any, next: Function) {
     const {room_id} = req.params

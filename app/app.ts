@@ -5,7 +5,7 @@ import session from 'express-session'
 import connect_mongo from 'connect-mongo'
 import {register, login, get_rooms, get_room, get_friends,
         get_users, remove_user, make_room,
-        add_message,
+        add_message, invite_friend,
         get_messages} from './db'
 require('dotenv').config()
 
@@ -137,6 +137,6 @@ io.on('connection', (socket) => {
         get_messages(id, socket.request.session.user.id).then(add_messages)
     })
     socket.on('invite_friend', async (id: number) => {
-
+        invite_friend(socket.request.session.user.id, id)
     })
 })
