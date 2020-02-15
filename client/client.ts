@@ -1,6 +1,6 @@
 const socket = io()
 
-let friends: Player[] = [] 
+let friends: {[key: number]: Player} = {}
 
 type Player = {
     id: number,
@@ -127,7 +127,7 @@ function add_friend(friend: Player){
         if(gameStatus === 'In game'){
             friend_el.appendChild(in_game_info)
         }
-    friends.push(friend)
+    friends[friend.id] = friend
 }
 
 function remove_room(room_id: number){
