@@ -243,6 +243,14 @@ label{
     background-color: rgba(0, 0, 0, 0.5);
 }
 
+.message-panel{
+    display: none;
+}
+
+.message-panel-visible{
+    display: block;
+}
+
 .top-msg-panel{
     height: 15%;
     width: 300px;

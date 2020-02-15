@@ -129,18 +129,18 @@
                 </div>
             </div>
             <div class="d-flex flex-row-reverse position-fixed messages-panel">
-                <div class="h-100">
+                <div class="h-100 message-panel">
                     <div class="top-msg-panel d-flex align-items-center px-3 bg-dark">
                         <span class="status-dot online mr-3"></span>
                         <span class="icon mr-1"></span>
                         <span class="friend-name">Testname</span>
-                        <span class="ml-auto"><i class="fas fa-times close-msg"></i></span>
+                        <span class="ml-auto"><i onclick="close_message()" class="fas fa-times close-msg"></i></span>
                     </div>
-                    <div class="msg-content bg-secondary">
+                    <div class="msg-content d-flex flex-column justify-content-between bg-secondary">
+                        <div class="d-flex flex-column-reverse">
 
-                    </div>
-                    <div class="w-100">
-                        <input type="text">
+                        </div>
+                        <input class="w-100 p-2" type="text" placeholder="Type a message">
                     </div>
                 </div>
             </div>
@@ -151,7 +151,8 @@
                     <h5 class="m-0 text-warning">Friends</h5>
                 </div>
                 <div class="card-body p-0">
-                    <ul class="list-group">
+                    <ul class="list-group friends-list">
+                        
                     </ul>
                 </div>
             </div>
