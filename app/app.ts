@@ -203,6 +203,12 @@ io.on('connection', (socket) => {
     socket.on('invite_friend', (id: number) => {
         invite_friend_combined(socket.request.session.user, id)
     })
+    socket.on('accept_invite', (id: number) => {
+        accept_invite(id, socket.request.session.user.id)
+        socket.emit('add_friend', get_user(id))
+        if(id in sockets)
+            sockets[id].emit('add_friend', get_user(socket.request.session.user.id))
+    })
     socket.on('invite_to_room', (user_id: number, room_id: number) => {
         invite_room_combined(socket.request.session.user, user_id, room_id)
     })

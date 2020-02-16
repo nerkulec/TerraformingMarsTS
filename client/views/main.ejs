@@ -26,10 +26,11 @@
                 </div>
                 <div class="guest-panel">
                     <h4>Enter as guest: </h4>
-                    <form action="/guest" method="post">
+                    <form action="/login" method="post">
                         <div class="form-group row align-items-center">
                             <label for="guestNameInput" class="col-4 m-0 text-center">Nick: </label>
                             <input type="text" name="name" id="guestNameInput" class="col-8 form-control"/>
+                            <input type="hidden" name="guest" value="true"/>
                         </div>
                         <div class="form-group row align-items-center">
                             <input type="submit" value="Join" class="col-5 mx-auto btn btn-primary">
@@ -132,7 +133,9 @@
                 
             </div>
         </div>
+        <% if(!session.user.guest) {%>
         <%- include('side_bar') %>
+        <% } %>
     </div>
 
 <% } %>

@@ -195,7 +195,7 @@ function add_message(message: Message){
     if(!msg_panel){
         show_message(friend)
         msg_panel = document.getElementById('message-panel'+friend)
-    }
+    }else{
     let msg_content = msg_panel!.querySelector('.msg-content')
     let messages = msg_content!.querySelector('.messages')
 
@@ -211,6 +211,7 @@ function add_message(message: Message){
         msg.innerText = message.text
         messages!.insertAdjacentElement('afterbegin', from_msg)
         from_msg.appendChild(msg)
+    }
 }
 
 function send_on_enter(id: number){
@@ -223,14 +224,12 @@ function send_on_enter(id: number){
 }
 
 function show_message(id: number){
-    get_dms(id)
+    if(!document.getElementById('message-panel'+id+'')){
+        get_dms(id)
     let friend = friends[id]
     let msgs_panel = document.querySelector('.messages-panel')
     let el_id = document.getElementById('message-panel'+id+'')
-    if(el_id){
-        el_id.classList.remove('message-panel-invisible')
-    }
-    else{
+
         let msg_window = document.createElement('div')
         msg_window.classList.add('h-100', 'message-panel')
         msg_window.setAttribute('id', 'message-panel'+id+'')
@@ -277,12 +276,13 @@ function show_message(id: number){
             msg_content.appendChild(form)
                 form.appendChild(msg_write)
                 form.appendChild(submit)
+
     }
 }
 
 function close_message(id: number){
     let msg_window = document.getElementById('message-panel'+id+'')
-    msg_window!.classList.add('message-panel-invisible')
+    msg_window!.outerHTML = ""
 }
 
 function add_notifications(notifications: Notif[]){
@@ -292,6 +292,10 @@ function add_notifications(notifications: Notif[]){
 function add_notification(notification: Notif){
     // Friend invite
     // Room invite
+    let notifications = document.getElementById('notifications')
+    let notif_div = document.createElement('div')
+    notif_div.innerHTML = notification.text + '<button onclick=accept_invite('+notification.references!.user+')/>'
+    notifications!.appendChild(notif_div)
 }
 
 function get_dms(id: number){
@@ -310,6 +314,10 @@ function send_dm(to: number, text: string){
     socket.emit('send_dm', {to: to, text: text})
 }
 
+function accept_invite(id: number){
+    socket.emit('accept_invite', id)
+}
+
 console.log('Client started')
 
 socket.on('connect', () => {
@@ -324,6 +332,8 @@ socket.on('connect', () => {
     socket.on('switch_online', log(switch_online, "Switched online", 3))
 
     socket.on('update_player', log(update_player, "Player updated", 3))
+
+    socket.on('add_friend', log(add_friend, "Added friend", 3))
 
     socket.on('add_message', log(add_message, "Message added", 3))
 
