@@ -6,7 +6,6 @@ import connect_mongo from 'connect-mongo'
 import {register, login, get_rooms, get_room, get_friends, get_users, remove_user,
         make_room, add_message, invite_friend, get_messages, get_notifications,
         delete_notification, add_notification, get_user} from './db'
-// require('dotenv').config()
 
 const MongoStore = connect_mongo(session)
 const dburl = process.env.MONGODB_URI || 'mongodb://localhost:27017/TerraformingMarsDB'
