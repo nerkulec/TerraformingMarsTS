@@ -24,6 +24,10 @@ label{
     font-size: 18px;
 }
 
+.hidden{
+    margin-bottom: -100px
+}
+
 ::-webkit-scrollbar{
     width: 0;
     margin: 0;
@@ -33,6 +37,7 @@ label{
 ::-webkit-scrollbar-track{
     width: 0;
     background-color: darkgray;
+    height: 0;
 }
 
 ::-webkit-scrollbar-thumb{
@@ -41,6 +46,7 @@ label{
 
 ::-webkit-scrollbar{
     width: 0;
+    height: 0;
 }
 
 .content{
@@ -265,6 +271,10 @@ label{
 
 .msg-content{
     height: 85%;
+}
+
+.messages{
+    overflow: scroll;
 }
 
 .message{

@@ -3,9 +3,10 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import connect_mongo from 'connect-mongo'
-import {register, login, get_rooms, get_room, get_friends, get_users, remove_user,
+import {register, login, get_rooms, enter_room, get_friends, get_users, remove_user,
         make_room, add_message, invite_friend, get_messages, get_notifications,
-        delete_notification, add_notification, get_user} from './db'
+        delete_notification, add_notification, get_user, leave_room, get_room} from './db'
+// require('dotenv').config()
 
 const MongoStore = connect_mongo(session)
 const dburl = process.env.MONGODB_URI || 'mongodb://localhost:27017/TerraformingMarsDB'
@@ -74,7 +75,8 @@ app.get('/user/:id', async (req: any, res: any) =>{
     res.render('user_profile', {session: req.session, user: user})
 })
 
-app.get('/room/:room_id', get_room, make_room)
+app.get('/room/:room_id', enter_room)
+app.get('/create_room', create_room_combined)
 
 app.get('/client.js', (req, res) =>{
     res.sendFile('client.js', {root: './build/client'})
@@ -127,6 +129,27 @@ async function invite_room_combined(inviter: {id: number, name: string},
     }
 }
 
+async function create_room_combined(req: any, res: any){
+    const id = await make_room(req, res)
+    const room = await get_room(id)
+    for(let sio in sockets){
+        const socket = sockets[sio]
+        socket.emit('add_room', room)
+    }
+
+}
+
+async function leave_room_combined(id: number){
+    const removed = await leave_room(id)
+    if(removed){
+        for(let sid in sockets){
+            const socket = sockets[sid]
+            socket.emit('remove_room', id)
+            console.log('sending remove room to '+sid)
+        }
+    }
+}
+
 io.on('connection', (socket) => {
     console.log('Client connected to server')
     const id = socket.request.session?.user?.id
@@ -140,6 +163,10 @@ io.on('connection', (socket) => {
         if(id && id in sockets){
             delete sockets[id]
             console.log('Removed socket for '+socket.request.session.user.name)
+            const regex = /https?:\/\/\S+\/room\/\d+/
+            if(regex.test(socket.request.headers.referer)){
+                leave_room_combined(id)
+            }
             send_status(id, false)
         }
     })
@@ -165,6 +192,7 @@ io.on('connection', (socket) => {
     socket.on('send_dm', (message) => {
         const id = socket.request.session.user.id
         add_message(id, message.to, message.text)
+        socket.emit('add_message', {from: id, to: message.to, text: message.text})
         if(message.to in sockets){
             sockets[message.to].emit('add_message', {from: id, to: message.to, text: message.text})
         }
