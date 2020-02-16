@@ -15,7 +15,7 @@
 
 <nav class="navbar navbar-expand navbar-dark bg-dark position-fixed sticky-top w-100">
 <div class="collapse navbar-collapse d-flex align-items-center pos-relative">
-    <ul class="navbar-nav mr-5">
+    <ul class="navbar-nav mr-2 mr-lg-5">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" role="button" id="dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="navbar-toggler-icon"></span>
@@ -37,12 +37,13 @@
     </ul>
     <% if(session.user){ %>
         <div class="mr-3 text-center"> 
-            <h5 class="text-light m-0">Logged in as: <span class="badge badge-info"><%= session.user.name %></span></h5>
+            <h5 class="logged-info text-light m-0 d-inline-block">Logged in as: </h5>
+            <h5 class="d-inline-block m-0"><span class="badge badge-info"><%= session.user.name %></span></h5>
         </div>
     <% } %>
 
     <div class="title pos-absolute">
-        <a href="/"><h1 class="text-warning">TERRAFORMING MARS</h1></a>
+        <a href="/"><h1 class="text-warning m-0">TERRAFORMING MARS</h1></a>
     </div>
 
     <% if(session.user){ %>
