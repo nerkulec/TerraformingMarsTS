@@ -224,14 +224,12 @@ function send_on_enter(id: number){
 }
 
 function show_message(id: number){
-    get_dms(id)
+    if(!document.getElementById('message-panel'+id+'')){
+        get_dms(id)
     let friend = friends[id]
     let msgs_panel = document.querySelector('.messages-panel')
     let el_id = document.getElementById('message-panel'+id+'')
-    if(el_id){
-        el_id.classList.remove('message-panel-invisible')
-    }
-    else{
+
         let msg_window = document.createElement('div')
         msg_window.classList.add('h-100', 'message-panel')
         msg_window.setAttribute('id', 'message-panel'+id+'')
@@ -278,12 +276,13 @@ function show_message(id: number){
             msg_content.appendChild(form)
                 form.appendChild(msg_write)
                 form.appendChild(submit)
+
     }
 }
 
 function close_message(id: number){
     let msg_window = document.getElementById('message-panel'+id+'')
-    msg_window!.classList.add('message-panel-invisible')
+    msg_window!.outerHTML = ""
 }
 
 function add_notifications(notifications: Notif[]){
