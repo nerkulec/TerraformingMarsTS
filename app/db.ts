@@ -2,13 +2,14 @@ import pg from 'pg'
 import {Game} from '../game/Game'
 // require('dotenv').config()
 
-const db = new pg.Pool({
-    host: process.env.DATABASE_URL || 'localhost',
-    database: process.env.DB_NAME || 'terraformingmars',
-    user: process.env.DB_USER || 'admin',
-    password: process.env.DB_PASSWORD || 'secret-password',
-    max: 1
-})
+// const db = new pg.Pool({
+//     host: process.env.DATABASE_URL || 'localhost',
+//     database: process.env.DB_NAME || 'terraformingmars',
+//     user: process.env.DB_USER || 'admin',
+//     password: process.env.DB_PASSWORD || 'secret-password',
+//     max: 1
+// })
+const db = new pg.Pool()
 
 export async function register(req: any, res: any) {
     const {name, password} = req.body
