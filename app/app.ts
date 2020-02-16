@@ -5,7 +5,8 @@ import session from 'express-session'
 import connect_mongo from 'connect-mongo'
 import {register, login, get_rooms, enter_room, get_friends, get_users, remove_user,
         make_room, add_message, invite_friend, get_messages, get_notifications,
-        delete_notification, add_notification, get_user, leave_room, get_room} from './db'
+        delete_notification, add_notification, get_user, leave_room, get_room,
+        accept_invite} from './db'
 // require('dotenv').config()
 
 const MongoStore = connect_mongo(session)
