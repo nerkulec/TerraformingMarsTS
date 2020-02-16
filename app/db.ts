@@ -9,7 +9,7 @@ import {Game} from '../game/Game'
 //     password: process.env.DB_PASSWORD || 'secret-password',
 //     max: 1
 // })
-const db = new pg.Pool()
+const db = new pg.Pool({connectionString: process.env.DATABASE_URL})
 
 export async function register(req: any, res: any) {
     const {name, password} = req.body
