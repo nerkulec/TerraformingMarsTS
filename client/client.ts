@@ -193,12 +193,16 @@ function add_message(message: Message){
     let messages = msg_content!.querySelector('.messages')
 
     let from_msg = document.createElement('div')
-    from_msg.classList.add('out-message', 'message')
-    let msg = document.createElement('p')
-    msg.classList.add('m-0')
-    msg.innerText = message.text
-    
-    messages!.appendChild(from_msg)
+        if(left){
+            from_msg.classList.add('out-message', 'message', 'd-flex', 'align-self-start')
+        }
+        else{
+            from_msg.classList.add('int-message', 'message', 'd-flex', 'align-self-end')
+        }
+        let msg = document.createElement('p')
+        msg.classList.add('m-0')
+        msg.innerText = message.text
+        messages!.appendChild(from_msg)
         from_msg.appendChild(msg)
 }
 
@@ -229,7 +233,7 @@ function show_message(id: number){
         let msg_content = document.createElement('div')
         msg_content.classList.add('msg-content', 'd-flex', 'flex-column', 'justify-content-between', 'bg-secondary')
             let msg_body = document.createElement('div')
-            msg_body.classList.add('d-flex', 'messages','flex-column-reverse')
+            msg_body.classList.add('d-flex', 'messages','flex-column-reverse', 'p-2', 'h-100')
             let msg_write = document.createElement('input')
             msg_write.classList.add('w-100', 'p-2')
             msg_write.setAttribute('type', 'text')

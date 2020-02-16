@@ -267,6 +267,10 @@ label{
     height: 85%;
 }
 
+.messages{
+    overflow: scroll;
+}
+
 .message{
     width: auto;
     max-width: 70%;
