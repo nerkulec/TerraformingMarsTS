@@ -53,20 +53,4 @@
     <% } %>
 </div>
 </nav>
-<% if(session.error){ %>
-    <div class="alert alert-danger alert-style w-100 mb-0 rounded-0 alert-dismissible fade show" role="alert">
-        <strong>Error:</strong> <%= session.error %>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-<% delete session.error} %>
 
-<% if(session.message){ %>
-    <div class="alert alert-info alert-style w-100 mb-0 rounded-0 alert-dismissible fade show" role="alert">
-        <strong>Message:</strong> <%= session.message %>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-<% delete session.message} %>
