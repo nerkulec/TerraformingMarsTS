@@ -1,4 +1,4 @@
-const LOG_LEVEL = 1
+const LOG_LEVEL = 3
 
 const socket = io()
 let my_id: number
@@ -301,8 +301,9 @@ socket.on('connect', () => {
     socket.on('add_notification', log(add_notification, "Notification added", 3))
 
     socket.emit('get_friends', log(add_friends, 'Fetched friends'))
-
-    socket.emit('get_rooms', log(add_rooms, 'Fetched rooms'))
+    if(window.location.pathname === '/'){
+        socket.emit('get_rooms', log(add_rooms, 'Fetched rooms'))
+    }
 
     socket.emit('get_notifications', log(add_notifications, 'Fetched notifications'))
 })

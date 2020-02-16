@@ -65,20 +65,36 @@ export async function get_rooms(settings: any){
         WHERE rooms.id IS NOT NULL
         GROUP BY rooms.id`)).rows
     return rooms
-
 }
 
-export async function get_room(req: any, res: any, next: Function) {
+export async function get_room(room_id: number){
+    const room = (await db.query(`
+        SELECT rooms.id as room_id, rooms.name, owner_id, ranked, min_elo, max_elo,
+        max_players, rooms.name AS creator, COUNT(room_players) as players
+        FROM rooms
+        JOIN users AS owner ON rooms.owner_id = owner.id
+        FULL OUTER JOIN users AS room_players ON room_players.in_room = rooms.id
+        WHERE rooms.id=$1
+        GROUP BY rooms.id`, [room_id])).rows[0]
+    return room
+}
+
+export async function enter_room(req: any, res: any) {
     const {room_id} = req.params
     const users = (await db.query(`
         SELECT users.id, users.name, elo, icon
         FROM rooms
         JOIN users ON users.in_room = rooms.id
         WHERE rooms.id = $1`, [room_id])).rows
-    if(users.length === 0){
-        next()
-    }else{
+    if(users.length >= 0){
         res.render('room', {session: req.session, users: users})
+        db.query(`
+            UPDATE users
+            SET in_room=$1
+            WHERE id=$2`, [req.session.user.id, room_id])
+    }else{
+        req.session.error = 'Room does not exist'
+        res.render('main', {session: req.session})
     }
 }
 
@@ -88,10 +104,11 @@ export async function make_room(req: any, res: any) {
     const room_id = (await db.query(`INSERT INTO rooms
         (owner_id, name) VALUES ($1, $2)
         RETURNING id`, [id, name])).rows[0].id
-    db.query(`UPDATE users
+    await db.query(`UPDATE users
         SET in_room=$1
         WHERE id=$2`, [room_id, id])
     res.redirect('/room/' + room_id)
+    return room_id
 }
 
 export async function leave_room(user_id: number){
@@ -101,10 +118,17 @@ export async function leave_room(user_id: number){
         await db.query(`UPDATE users SET in_room=NULL WHERE id=$1`, [user_id])
         const num = (await db.query(`SELECT COUNT(*)
             FROM users WHERE in_room=$1`, [room_id])).rows[0].count
-        if(num === 0){
-            await db.query(`DELETE FROM rooms WHERE id=$1`, [room_id])
+        if(num === "0"){
+            await remove_room(room_id)
+            return true
         }
+        return false
     }
+}
+
+export async function remove_room(room_id: number){
+    console.log('Removing room: '+room_id)
+    await db.query(`DELETE FROM rooms WHERE id=$1`, [room_id])
 }
 
 export async function history(req: any, res: any) {
