@@ -192,6 +192,7 @@ io.on('connection', (socket) => {
     socket.on('send_dm', (message) => {
         const id = socket.request.session.user.id
         add_message(id, message.to, message.text)
+        socket.emit('add_message', {from: id, to: message.to, text: message.text})
         if(message.to in sockets){
             sockets[message.to].emit('add_message', {from: id, to: message.to, text: message.text})
         }

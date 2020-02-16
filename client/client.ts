@@ -174,7 +174,7 @@ function switch_online(player: Player){
         let message_status = message_nu!.querySelector('.status-dot')
         message_status!.classList.toggle('online', player.online)
     }
-
+    friends[player.id].online = player.online
     console.log(`User ${player.id} became ${player.online?'online':'offline'}`)
 }
 
