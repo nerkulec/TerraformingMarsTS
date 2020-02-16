@@ -164,9 +164,12 @@ function update_player(player: Player){
 
 function switch_online(player: Player){
     let player_nu = document.getElementById(''+player.id+'')
+    let message_nu = document.getElementById('message-panel'+player.id)!.querySelector('.top-msg-panel')
 
     let status = player_nu!.querySelector('.status-dot')
+    let message_status = message_nu!.querySelector('.status-dot')
     status!.classList.toggle('online', player.online)
+    message_status!.classList.toggle('online', player.online)
 
     console.log(`User ${player.id} became ${player.online?'online':'offline'}`)
 }
@@ -236,8 +239,10 @@ function show_message(id: number){
             msg_body.classList.add('d-flex', 'messages','flex-column-reverse', 'p-2', 'h-100')
             let msg_write = document.createElement('input')
             msg_write.classList.add('w-100', 'p-2')
+            msg_write.setAttribute('id', 'msg-text')
             msg_write.setAttribute('type', 'text')
             msg_write.setAttribute('placeholder', 'Type a message')
+            msg_write.setAttribute('onkeypress', 'send_dm('+friend.id+','+msg_write.value+')')
 
     msgs_panel!.appendChild(msg_window)
         msg_window.appendChild(msg_top)
@@ -277,8 +282,8 @@ function delete_notification(id: number){
     socket.emit('delete_notification', id)
 }
 
-function send_dm(message: any){
-    socket.emit('send_dm', message)
+function send_dm(to: number, text: string){
+    socket.emit('send_dm', {to: to, text: text})
 }
 
 console.log('Client started')
