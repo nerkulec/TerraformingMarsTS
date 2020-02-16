@@ -209,7 +209,7 @@ function add_message(message: Message){
         let msg = document.createElement('p')
         msg.classList.add('m-0')
         msg.innerText = message.text
-        messages!.appendChild(from_msg)
+        messages!.insertAdjacentElement('afterbegin', from_msg)
         from_msg.appendChild(msg)
 }
 
