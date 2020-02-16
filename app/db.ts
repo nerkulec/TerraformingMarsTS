@@ -237,11 +237,11 @@ export async function login(req: any, res: any, next: Function) {
     const {name, password, guest} = req.body
     if(guest){
         const users = (await db.query('SELECT * FROM users WHERE name = $1', [name])).rows
-        if(users.length >= 0){
+        if(users.length >= 1){
             req.session.error = 'There exists a user with that name'
             res.redirect('/')
         }else{
-            res.session.user = {
+            req.session.user = {
                 name: 'guest-'+name,
                 guest: true
             }
