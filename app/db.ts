@@ -1,6 +1,6 @@
 import pg from 'pg'
 import {Game} from '../game/Game'
-require('dotenv').config()
+// require('dotenv').config()
 
 const db = new pg.Pool({
     host: process.env.DATABASE_URL || 'localhost',
