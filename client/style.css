@@ -24,6 +24,10 @@ label{
     font-size: 18px;
 }
 
+.hidden{
+    margin-bottom: -100px
+}
+
 ::-webkit-scrollbar{
     width: 0;
     margin: 0;

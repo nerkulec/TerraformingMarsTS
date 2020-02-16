@@ -164,12 +164,16 @@ function update_player(player: Player){
 
 function switch_online(player: Player){
     let player_nu = document.getElementById(''+player.id+'')
-    let message_nu = document.getElementById('message-panel'+player.id)!.querySelector('.top-msg-panel')
-
     let status = player_nu!.querySelector('.status-dot')
-    let message_status = message_nu!.querySelector('.status-dot')
     status!.classList.toggle('online', player.online)
-    message_status!.classList.toggle('online', player.online)
+    
+    let message_panel = document.getElementById('message-panel'+player.id+'')
+    if(message_panel){
+        console.log('switchin online')
+        let message_nu = message_panel.querySelector('.top-msg-panel')
+        let message_status = message_nu!.querySelector('.status-dot')
+        message_status!.classList.toggle('online', player.online)
+    }
 
     console.log(`User ${player.id} became ${player.online?'online':'offline'}`)
 }
@@ -209,6 +213,15 @@ function add_message(message: Message){
         from_msg.appendChild(msg)
 }
 
+function send_on_enter(id: number){
+    let input = <HTMLInputElement>document.getElementById('msg-text'+id+'')
+    let text = input.value
+    console.log('sending msg to'+id+'text: '+text+'')
+    input.value = ''
+    send_dm(id, text || '')
+    return false
+}
+
 function show_message(id: number){
     get_dms(id)
     let friend = friends[id]
@@ -225,6 +238,9 @@ function show_message(id: number){
         msg_top.classList.add('top-msg-panel', 'd-flex', 'align-items-center', 'px-3', 'bg-dark')
             let msg_online_status = document.createElement('span')
             msg_online_status.classList.add('status-dot', 'mr-3')
+            if(friend.online){
+                msg_online_status.classList.add('online')
+            }
             let msg_icon = document.createElement('span')
             msg_icon.classList.add('icon', 'mr-1')
             let msg_name = document.createElement('span')
@@ -237,12 +253,18 @@ function show_message(id: number){
         msg_content.classList.add('msg-content', 'd-flex', 'flex-column', 'justify-content-between', 'bg-secondary')
             let msg_body = document.createElement('div')
             msg_body.classList.add('d-flex', 'messages','flex-column-reverse', 'p-2', 'h-100')
+            let form = document.createElement('form')
+            form.setAttribute('onsubmit', 'return send_on_enter('+friend.id+')')
             let msg_write = document.createElement('input')
             msg_write.classList.add('w-100', 'p-2')
-            msg_write.setAttribute('id', 'msg-text')
+            msg_write.setAttribute('id', 'msg-text'+friend.id+'')
             msg_write.setAttribute('type', 'text')
             msg_write.setAttribute('placeholder', 'Type a message')
-            msg_write.setAttribute('onkeypress', 'send_dm('+friend.id+','+msg_write.value+')')
+            let submit = document.createElement('input')
+            submit.classList.add('hidden')
+            submit.setAttribute('type', 'submit')
+
+            
 
     msgs_panel!.appendChild(msg_window)
         msg_window.appendChild(msg_top)
@@ -252,7 +274,9 @@ function show_message(id: number){
             msg_top.appendChild(msg_close)
         msg_window.appendChild(msg_content)
             msg_content.appendChild(msg_body)
-            msg_content.appendChild(msg_write)
+            msg_content.appendChild(form)
+                form.appendChild(msg_write)
+                form.appendChild(submit)
     }
 }
 
