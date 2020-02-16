@@ -5,7 +5,8 @@ import session from 'express-session'
 import connect_mongo from 'connect-mongo'
 import {register, login, get_rooms, enter_room, get_friends, get_users, remove_user,
         make_room, add_message, invite_friend, get_messages, get_notifications,
-        delete_notification, add_notification, get_user, leave_room, get_room} from './db'
+        delete_notification, add_notification, get_user, leave_room, get_room,
+        accept_invite} from './db'
 require('dotenv').config()
 
 const MongoStore = connect_mongo(session)
@@ -202,6 +203,12 @@ io.on('connection', (socket) => {
     })
     socket.on('invite_friend', (id: number) => {
         invite_friend_combined(socket.request.session.user, id)
+    })
+    socket.on('accept_invite', (id: number) => {
+        accept_invite(id, socket.request.session.user.id)
+        socket.emit('add_friend', get_user(id))
+        if(id in sockets)
+            sockets[id].emit('add_friend', get_user(socket.request.session.user.id))
     })
     socket.on('invite_to_room', (user_id: number, room_id: number) => {
         invite_room_combined(socket.request.session.user, user_id, room_id)

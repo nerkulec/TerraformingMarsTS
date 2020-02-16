@@ -192,6 +192,21 @@ export async function delete_notification(id: number){
 export async function get_notifications(user_id: number){
     const notifications = (await db.query(`
         SELECT * FROM notifications WHERE user_id = $1`, [user_id])).rows
+    for(let notification of notifications){
+        notification.references = {}
+        if(notification.referenced_user){
+            notification.references['user'] = notification.referenced_user
+            delete notification.referenced_user
+        }
+        if(notification.referenced_room){
+            notification.references['room'] = notification.referenced_room
+            delete notification.referenced_room
+        }
+        if(notification.referenced_game){
+            notification.references['game'] = notification.referenced_game
+            delete notification.referenced_game
+        }
+    }
     return notifications
 }
 
@@ -261,6 +276,7 @@ export async function get_messages(from: number, to: number){
     const messages = (await db.query(`
         SELECT sender_id AS from, receiver_id AS to, text
         FROM direct_messages
-        WHERE (sender_id=$1 AND receiver_id=$2) OR (sender_id=$2 AND receiver_id=$1)`, [from, to])).rows
+        WHERE (sender_id=$1 AND receiver_id=$2) OR (sender_id=$2 AND receiver_id=$1)
+        ORDER BY timestamp ASC`, [from, to])).rows
     return messages
 }
