@@ -1,18 +1,21 @@
 <link rel="stylesheet" href="/style.css">
+<link href="https://fonts.googleapis.com/css?family=Russo+One&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <script src="https://kit.fontawesome.com/a25f0b73b2.js" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<% if(session.user){ %>
 <script src="/socket.io/socket.io.js"></script>
-<script src="client.js"></script>
+<script src="/client.js"></script>
+<% } %>
 
 <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
 <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
 
 <nav class="navbar navbar-expand navbar-dark bg-dark position-fixed sticky-top w-100">
 <div class="collapse navbar-collapse d-flex align-items-center pos-relative">
-    <ul class="navbar-nav mr-5">
+    <ul class="navbar-nav mr-2 mr-lg-5">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" role="button" id="dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="navbar-toggler-icon"></span>
@@ -34,35 +37,23 @@
     </ul>
     <% if(session.user){ %>
         <div class="mr-3 text-center"> 
-            <h5 class="text-light m-0">Logged in as: <span class="badge badge-info"><%= session.user.name %></span></h5>
+            <h5 class="logged-info text-light m-0 d-inline-block">Logged in as: </h5>
+            <h5 class="d-inline-block m-0"><span class="badge badge-info"><%= session.user.name %></span></h5>
         </div>
     <% } %>
 
     <div class="title pos-absolute">
-        <a href="/"><h1 class="text-warning">Terraforming Mars</h1></a>
+        <a href="/"><h1 class="text-warning m-0">TERRAFORMING MARS</h1></a>
     </div>
 
     <% if(session.user){ %>
+        <li id="notifications">
+            
+        </li>
         <form method="post" action="/logout" class="form-inline ml-auto">
             <input type="submit" class="btn btn-danger" value="Logout">
         </form>
     <% } %>
 </div>
 </nav>
-<% if(session.error){ %>
-    <div class="alert alert-danger w-100 mb-0 rounded-0 alert-dismissible fade show" role="alert">
-        <strong>Error:</strong> <%= session.error %>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-<% delete session.error} %>
 
-<% if(session.message){ %>
-    <div class="alert alert-info w-100 mb-0 rounded-0 alert-dismissible fade show" role="alert">
-        <strong>Message:</strong> <%= session.message %>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-<% delete session.message} %>

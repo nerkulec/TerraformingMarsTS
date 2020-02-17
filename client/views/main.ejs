@@ -1,18 +1,35 @@
 <%- include('top_bar') %>
 <div class="content">
+    <% if(session.error){ %>
+        <div class="alert alert-danger alert-style w-100 mb-0 rounded-0 alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> <%= session.error %>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% delete session.error} %>
+    
+    <% if(session.message){ %>
+        <div class="alert alert-info alert-style w-100 mb-0 rounded-0 alert-dismissible fade show" role="alert">
+            <strong>Message:</strong> <%= session.message %>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% delete session.message} %>
 <% if(!session.user){ %>
     <div class="container margin-minus">
-        <div class="row justify-content-center px-5 pt-5">
+        <div class="row justify-content-center px-5 py-5">
             <div class="flex-column col-8 d-flex">
                 <div class="login-panel">
                     <h4>Login: </h4>
                     <form action="/login" method="post">
                         <div class="form-group row align-items-center">
-                            <label for="nameInput" class="col-2 mb-0 mr-2">Username: </label>
+                            <label for="nameInput" class="col-4 mb-0 text-center">Username: </label>
                             <input type="text" name="name" id="nameInput" class="col-8 form-control"/>
                         </div>
                         <div class="form-group row align-items-center">
-                            <label for="passwdInput" class="col-2 mb-0 mr-2">Password: </label>
+                            <label for="passwdInput" class="col-4 mb-0 text-center">Password: </label>
                             <input type="password" name="password" id="passwdInput" class="col-8 form-control"/>
                         </div>
                         <div class="form-group row align-items-center">
@@ -26,10 +43,11 @@
                 </div>
                 <div class="guest-panel">
                     <h4>Enter as guest: </h4>
-                    <form action="/guest" method="post">
+                    <form action="/login" method="post">
                         <div class="form-group row align-items-center">
-                            <label for="guestNameInput" class="col-2 m-0">Nick: </label>
+                            <label for="guestNameInput" class="col-4 m-0 text-center">Nick: </label>
                             <input type="text" name="name" id="guestNameInput" class="col-8 form-control"/>
+                            <input type="hidden" name="guest" value="true"/>
                         </div>
                         <div class="form-group row align-items-center">
                             <input type="submit" value="Join" class="col-5 mx-auto btn btn-primary">
@@ -46,7 +64,7 @@
         <div class="left-panel pt-5 h-100">
             <div class="row justify-content-center">
                 <div class="flex-column col-8 d-flex align-items-center">
-                    <a href="#">
+                    <a href="/create_room">
                         <button class="btn btn-info">CREATE ROOM</button>
                     </a>
                     <hr class="w-100">
@@ -96,11 +114,8 @@
                             function eloSwitcher() {
                                 let switchValue = document.getElementById('eloSwitch');
                                 let eloInputs = document.querySelector('.elo-input');
-                                
-                                switchValue.checked ? 
-                                eloInputs.classList.add('elo-input-animate') : 
-                                eloInputs.classList.remove('elo-input-animate');
-        
+
+                                eloInputs.classList.toggle('elo-input-animate', switchValue.checked)
                             }
                         </script>
                         
@@ -128,116 +143,17 @@
                     </form>
                     
                     <div class="list-group w-100">
-                        <% for(room of rooms){ %>
-                            <%
-                                let ifRank, eloRange;
-                                room.ranked === false ? ifRank = 'Unranked' : ifRank = 'Ranked';
-                            
-                                room.elo_range === undefined ? 
-                                eloRange = 'Any elo' : 
-                                eloRange = room.elo_range[0] + ' - ' + room.elo_range[1];    
-                            %>
-                            
-                            <div class="row d-flex mx-0 my-3 p-0 border-0 room-box rounded">
-                                <div class="col-9 d-flex w-100 px-3 align-items-center">
-                                    <div class="row d-flex room-details w-100 h-100 py-3">
-                                        <div class="col-3"><%= room.name %></div>
-                                        <div class="col-3"><%= ifRank %></div>
-                                        <div class="col-3"><%= eloRange %></div>
-                                        <div class="col-3"><%= room.players %>/<%= room.max_players %></div>  
-                                    </div>
-                                </div>
-                                <div class="col-2 room-creator-name d-flex align-items-center justify-content-center">
-                                    by &nbsp;<a href="/user/<%= room.creator_id %>"><%= room.creator %></a>
-                                </div>
-                                <div class="col-1 d-flex align-items-center room-link p-0 justify-content-center">
-                                    <a href="/room/<%= room.id %>"><i class="fas fa-sign-in-alt enter-icon"></i></a>
-                                </div>
-                            </div>
-                        <% } %>
                     </div>
-        
-                    <!--
-                        nazwa, kto stworzyl, ilosc graczy, czy ranked, elo-zakres(jezeli jest)
-                    -->
                 </div>
             </div>
-        </div>
-        <div class="right-panel m-0 position-fixed h-100">
-            <div class="card text-center rounded-0 h-100 w-100 border-0">
-                <div class="card-header">
-                    <h5 class="m-0 text-warning">Friends</h5>
-                </div>
-                <div class="card-body p-0">
-                    <ul class="list-group">
-                        <% 
-                            for(let user of friends){
-                                let roomStatus, gameStatus
-    
-                                roomStatus = user.in_room ? 'In room' : ''
-                                gameStatus = user.in_game ? 'In game' : '' 
-                        %>
-                        <li class="list-group-item d-flex align-items-center bg-transparent border-0 rounded-0">
-                            <span class="status-dot online mr-3"></span>
-                            <span class="mr-2"><a href="#"><i class="fas fa-envelope-square message-icon"></i></a></span>
-                            <span class="mr-2"><a href="#"><i class="far fa-user profile-icon"></i></a></span>
-                            <span class="icon mr-1"></span>
-                            <span class="friend-name"><a href="/user/<%= user.id %>"><%= user.name %></a></span>
-                            
-                                
-                            <% if (roomStatus === 'In room') { %>
-                                <span class="ml-auto in-room font-weight-bolder"> <%= roomStatus %> </span>
-                                <span class="ml-2"><a href="/room/<%= room.id %>"><i class="fas fa-sign-in-alt in-room friend-room-icon font-weight-bolder"></i></a></span>    
-                            <% } %>
-                            <% if (gameStatus === 'In game') { %>
-                                <span class="ml-auto in-game font-weight-bolder"> <%= gameStatus %> </span>
-                            <% } %>
-                        </li>
-                        <% } %>
-                    </ul>
-                </div>
+            <div class="d-flex flex-row-reverse position-fixed messages-panel messages-panel-moved">
+                
             </div>
         </div>
+        <% if(!session.user.guest) {%>
+        <%- include('side_bar') %>
+        <% } %>
     </div>
 
 <% } %>
-<!-- 
-    Wejście:
-
-    user = {
-    favoriteCorporations: string[3],
-    info: string, // dluzszy opis, taki na 4 linijki mozna sie spodziewać
-    recent_games: Game[0-20], // jak wygląda Game wytłumaczone dalej
-    icon_num: int, // numerek ikonki
-    rating: float, //1-5
-    comments: Comment[0-20]
-}
-
-    rooms = Room[1-20]
-
-    Room = {
-        name: string,
-        room_id: int,
-        creator: string,
-        creator_id: int, // klikanie w nazwe gracza przenosi na /user/creator_id
-        mode: string,
-        players: int,
-        max_players: int, // wyświetlać players/max_players
-        elo_range: undefined or int[2], // albo nic albo dwie liczby np [1500, 1800], wyświetlić 1500-1800
-        ranked: boolean
-    }
-
-    Dla zalogowanych:
-    - u góry "stwórz pokój"
-    - niżej lista pokoi w postaci listy ładnych prostokątów, klikanie zaznacza pokój (podświetla się)
-    - na dole jest przycisk "join room" - przenosi na /room/room_id
-    - wyżej filtry - suwaki i pola do wpisywania - jak narazie: 
-                                                    - suwak ranked: [nieranked, obojetne, ranked]
-                                                    - min elo
-                                                    - max elo
-                                                    - przycisk "find more" (stronka się przeładuje, do session musisz wrzucić wszystkie dane z filtra - najlepiej w obiekcie o nazwie 'filter')
-    - w trakcie wybierania filtrów filtruj też widoczne pokoje (będzie ich ubywać, użytkownik kliknie "find more" i się przeładuje)
--->
-
-    </div>
 </div>
